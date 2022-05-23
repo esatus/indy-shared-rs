@@ -1,8 +1,11 @@
 ﻿using System;
 
-public class Class1
+namespace indy_shared_rs_dotnet.bindings
 {
-	public Class1()
+	public class Class1
 	{
+		public Class1()
+		{
+		}
 	}
 }
