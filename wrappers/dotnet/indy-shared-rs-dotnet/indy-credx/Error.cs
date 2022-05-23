@@ -2,12 +2,12 @@
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
-    public static class PresReq
+    public static class Error
     {
-        public static Task<string> GenerateNonceAsync()
+        public static Task<string> GetCurrentErrorAsync()
         {
             string result = "";
-            NativeMethods.credx_generate_nonce(ref result);
+            NativeMethods.credx_get_current_error(ref result);
             return Task.FromResult(result);
         }
     }
