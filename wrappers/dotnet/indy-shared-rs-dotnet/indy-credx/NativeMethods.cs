@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using indy_shared_rs_dotnet.bindings;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using static indy_shared_rs_dotnet.bindings.Structures;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
@@ -40,6 +44,19 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern string credx_credential_get_attribute(uint ObjectHandle, string name, ref string result_p);
+        #endregion
+
+        #region MasterSecret
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_master_secret(ref uint objectHandle);
+        #endregion
+
+        #region ....
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_object_get_type_name(uint handle, ref string result);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_object_get_json(uint handle, ref ByteBuffer result);
         #endregion
     }
 }

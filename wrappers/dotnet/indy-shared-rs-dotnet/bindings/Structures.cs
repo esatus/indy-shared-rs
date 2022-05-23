@@ -11,5 +11,12 @@ namespace indy_shared_rs_dotnet.bindings
 			public uint count;
 			public string data;
         }
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct ByteBuffer
+		{
+			public uint len;
+            public IntPtr value;
+        }
 	}
 }
