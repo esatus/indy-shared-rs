@@ -1,34 +1,23 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentAssertions;
 using indy_shared_rs_dotnet.indy_credx;
+using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
-    class PresReqTests
+    public class PresReqTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
         [Test]
-        public async Task Test1()
+        [TestCase(TestName = "GenerateNonceAsync returns a string that is not empty.")]
+        public async Task GenerateNonce()
         {
-            var x = await PresReq.GenerateNonceAsync();
-            Assert.IsTrue(x is string);
-            Console.WriteLine(x);
-        }
+            //Arrange
 
-        [Test]
-        public async Task Test2()
-        {
-            /*string schemaJson = "{id:{}}";
-            var x = await PresReq.SchemaGetAttributeAsync();
-            Assert.IsTrue(x is string);
-            Console.WriteLine(x);*/
+            //Act
+            string actual = await PresReq.GenerateNonceAsync();
+
+            //Assert
+            actual.Should().NotBeEmpty();
         }
     }
 }
