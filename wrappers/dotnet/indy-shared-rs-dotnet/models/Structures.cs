@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace indy_shared_rs_dotnet.bindings
+namespace indy_shared_rs_dotnet.models
 {
 	public class Structures
 	{
@@ -13,10 +13,10 @@ namespace indy_shared_rs_dotnet.bindings
         }
 
 		[StructLayout(LayoutKind.Sequential)]
-		public struct ByteBuffer
+		unsafe public struct ByteBuffer
 		{
 			public uint len;
-            public IntPtr value;
+            public byte* value;
         }
 	}
 }

@@ -7,6 +7,14 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
@@ -17,10 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\indy-shared-rs-dotnet\indy-shared-rs-dotnet.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="bindings\" />
   </ItemGroup>
 
 </Project>

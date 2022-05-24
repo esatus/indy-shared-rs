@@ -1,9 +1,9 @@
-﻿using indy_shared_rs_dotnet.bindings;
+﻿using indy_shared_rs_dotnet.models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using static indy_shared_rs_dotnet.bindings.Structures;
+using static indy_shared_rs_dotnet.models.Structures;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
@@ -57,6 +57,8 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_object_get_json(uint handle, ref ByteBuffer result);
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_object_free(uint handle);
         #endregion
     }
 }

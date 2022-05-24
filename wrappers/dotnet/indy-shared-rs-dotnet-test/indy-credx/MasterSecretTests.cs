@@ -1,14 +1,15 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet.bindings;
+using indy_shared_rs_dotnet.models;
 using indy_shared_rs_dotnet.indy_credx;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static indy_shared_rs_dotnet.bindings.Structures;
+using static indy_shared_rs_dotnet.models.Structures;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
@@ -27,8 +28,8 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             string testStr = await test.TypeName();
 
             IndyObject indyObj = new(objHandle);
-            ByteBuffer stream = await indyObj.toJson();
-
+            string ms_objectAsJson = await indyObj.toJson();
+            string ms = indyObj.objectAsJson;
 
             uint objHandle2 = await MasterSecret.CreateMasterSecret();
             ObjectHandle test2 = new(objHandle2);

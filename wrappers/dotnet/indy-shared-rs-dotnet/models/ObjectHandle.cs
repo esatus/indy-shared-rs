@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace indy_shared_rs_dotnet.bindings
+namespace indy_shared_rs_dotnet.models
 {
     public class ObjectHandle
     {
@@ -24,6 +24,11 @@ namespace indy_shared_rs_dotnet.bindings
             string result = "";
             NativeMethods.credx_object_get_type_name(handle, ref result);
             return Task.FromResult(result);
+        }
+
+        public void ObjectFree()
+        {
+            NativeMethods.credx_object_free(_handle);
         }
 
         public Task<IndyObject> loadIndyObject()
