@@ -2,7 +2,7 @@
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
-    public static class Error
+    public static class ErrorApi
     {
         public static Task<string> GetCurrentErrorAsync()
         {

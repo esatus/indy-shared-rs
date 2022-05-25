@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
-    public static class Credentials
+    public static class PresReq
     {
         public static Task<string> GenerateNonceAsync()
         {
