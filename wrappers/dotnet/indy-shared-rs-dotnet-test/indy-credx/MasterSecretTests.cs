@@ -3,13 +3,7 @@ using indy_shared_rs_dotnet.indy_credx;
 using indy_shared_rs_dotnet.models;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
-using static indy_shared_rs_dotnet.models.Structures;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
@@ -17,18 +11,30 @@ namespace indy_shared_rs_dotnet_test.indy_credx
     {
         [Test]
         [TestCase(TestName = "CreateMasterSecret does not throw an exception.")]
-        public async Task CreateMasterSecret()
+        public async Task CreateMasterSecretNoThrow()
         {
             //Arrange
 
             //Act
-            //Action act = () => { MasterSecret.CreateMasterSecret(); };
-            MasterSecret ms = await MasterSecretApi.CreateMasterSecretAsync();
-            IndyObject indyObj = new(ms.Handle);
-            string typeName = indyObj.TypeName().GetAwaiter().GetResult();
-            string content = await indyObj.toJson();
+            Func<Task> act = async () => {await MasterSecretApi.CreateMasterSecretAsync(); };
+
             //Assert
-            //act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
+        }
+
+        [Test]
+        [TestCase(TestName = "CreateMasterSecret works.")]
+        public async Task CreateMasterSecretWorks()
+        {
+            //Arrange
+
+            //Act
+            MasterSecret testObject = await MasterSecretApi.CreateMasterSecretAsync();
+
+            //Assert
+            testObject.Should().BeOfType(typeof(MasterSecret));
+            testObject.Value.Ms.Should().NotBeNull();
+            Console.WriteLine("MasterSecret: " + testObject.Value.Ms);
         }
     }
 }

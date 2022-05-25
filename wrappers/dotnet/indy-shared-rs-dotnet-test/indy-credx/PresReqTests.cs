@@ -14,7 +14,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Arrange
 
             //Act
-            string actual = await PresReq.GenerateNonceAsync();
+            string actual = await PresentationRequestApi.GenerateNonceAsync();
 
             //Assert
             actual.Should().NotBeEmpty();
