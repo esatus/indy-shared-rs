@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet.models;
 using indy_shared_rs_dotnet.indy_credx;
+using indy_shared_rs_dotnet.models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -23,9 +23,8 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             //Act
             //Action act = () => { MasterSecret.CreateMasterSecret(); };
-            var test = await MasterSecret.CreateMasterSecret();
-
-            IndyObject indyObj = new(test);
+            MasterSecret ms = await MasterSecretApi.CreateMasterSecretAsync();
+            IndyObject indyObj = new(ms.Handle);
             string typeName = indyObj.TypeName().GetAwaiter().GetResult();
             string content = await indyObj.toJson();
             //Assert

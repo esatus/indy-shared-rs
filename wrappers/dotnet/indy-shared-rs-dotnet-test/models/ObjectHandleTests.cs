@@ -20,17 +20,19 @@ namespace indy_shared_rs_dotnet_test.models
         public async Task RemovingObjectHandles()
         {
             //Arrange
-            ObjectHandle objHandle1 = new(await MasterSecret.CreateMasterSecret());
-            ObjectHandle objHandle2 = new(await MasterSecret.CreateMasterSecret());
-            string objHandleName1 = await objHandle1.TypeName();
-            string objHandleName2 = await objHandle2.TypeName();
+            MasterSecret ms1 = await MasterSecretApi.CreateMasterSecretAsync();
+            MasterSecret ms2 = await MasterSecretApi.CreateMasterSecretAsync();
+            IndyObject indyObj1 = new(ms1.Handle);
+            IndyObject indyObj2 = new(ms2.Handle);
+            string objHandleName1 = await indyObj1.TypeName();
+            string objHandleName2 = await indyObj2.TypeName();
             
             //Act
-            objHandle2.ObjectFree();
-            ObjectHandle objHandle3 = new(await MasterSecret.CreateMasterSecret());
-            objHandleName1 = await objHandle1.TypeName();
-            string objHandleName3 = await objHandle3.TypeName();
-            objHandleName2 = await objHandle2.TypeName();
+            indyObj2.ObjectFree();
+            MasterSecret ms3 = await MasterSecretApi.CreateMasterSecretAsync();
+            IndyObject indyObj3 = new(ms3.Handle);
+            string objHandleName3 = await indyObj3.TypeName();
+            objHandleName2 = await indyObj2.TypeName();
 
             //Assert
             objHandleName1.Should().Be("MasterSecret");

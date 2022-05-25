@@ -59,7 +59,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         #region Schema
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_create_schema(ref string origin_did, string schema_name, string schema_version, string[] attr_names, uint seq_no, ref uint schema_p);
+        internal static extern int credx_create_schema(string origin_did, string schema_name, string schema_version, string[] attr_names, uint seq_no, ref uint schema_p);
 
         #endregion
 
