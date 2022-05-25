@@ -22,10 +22,14 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Arrange
 
             //Act
-            Action act = () => { MasterSecret.CreateMasterSecret(); };
+            //Action act = () => { MasterSecret.CreateMasterSecret(); };
+            var test = await MasterSecret.CreateMasterSecret();
 
+            IndyObject indyObj = new(test);
+            string typeName = indyObj.TypeName().GetAwaiter().GetResult();
+            string content = await indyObj.toJson();
             //Assert
-            act.Should().NotThrow();
+            //act.Should().NotThrow();
         }
     }
 }

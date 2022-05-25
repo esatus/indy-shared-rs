@@ -16,18 +16,29 @@ namespace indy_shared_rs_dotnet_test
             //Arrange
 
             //Act
-            Action act = () => { MasterSecret.CreateMasterSecret(); };
+            //Action act = () => { MasterSecret.CreateMasterSecret(); };
             uint objHandle = await MasterSecret.CreateMasterSecret();
-            ObjectHandle test = new(objHandle);
-            string testStr = await test.TypeName();
-
             IndyObject indyObj = new(objHandle);
-            string ms_objectAsJson = await indyObj.toJson();
-            string ms = indyObj.objectAsJson;
+            string testStr = await indyObj.TypeName();
+            string ms_content1 = await indyObj.toJson();
+            string ms_content2 = indyObj.objectAsJson;
 
-            uint objHandle2 = await MasterSecret.CreateMasterSecret();
-            ObjectHandle test2 = new(objHandle2);
-            string testStr2 = await test2.TypeName();
+            //Assert
+            //act.Should().NotThrow();
+        }
+
+        [Test]
+        [TestCase(TestName = "Create CredDef.")]
+        public async Task CreateACredDef()
+        {
+            //Arrange
+            Byte bytey = (Byte)5;
+            string[] attr = { "a", "b", "c" };
+            //Act
+            //Action act = () => { MasterSecret.CreateMasterSecret(); };
+            Schema testSchema = new("did", "name", "version", attr, 10);
+
+            CredDef test = new("did", 1, "tag", "signature", bytey);
 
             //Assert
             //act.Should().NotThrow();

@@ -30,13 +30,6 @@ namespace indy_shared_rs_dotnet.models
         {
             NativeMethods.credx_object_free(_handle);
         }
-
-        public Task<IndyObject> loadIndyObject()
-        {
-            //_indyObject = await credx_LOAD_INDY_OBJECT() //gibts das?
-            //return _indyObject;
-            return null;
-        }
     }
 }
 

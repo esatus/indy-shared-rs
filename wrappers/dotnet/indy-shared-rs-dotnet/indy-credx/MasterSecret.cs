@@ -12,7 +12,8 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint result = 0;
             NativeMethods.credx_create_master_secret(ref result);
-            return Task.FromResult(result);
+            var x = Task.FromResult(result);
+            return x;
         }
         
     }

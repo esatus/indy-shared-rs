@@ -27,6 +27,12 @@ namespace indy_shared_rs_dotnet.indy_credx
         internal static extern string credx_generate_nonce(ref string nonce_p);
         #endregion
 
+        #region CredDef
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_credential_definition(string origin_did, uint schema_handle, string tag, string signature_type, byte support_revocation, 
+                                                                      ref uint cred_def_p_handle, ref uint cred_def_pvt_p_handle, ref uint key_proof_p_handle);
+        #endregion
+
         #region CredReq
         //[DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         //internal static extern string credx_create_credential_request(string proverDid, uint credDefObjectHandle, uint masterSecretObjectHandle, string masterSecretIdObjectHandle, uint credOfferObjectHandle, ref uint credReqPObjectHandle, ref uint credReqMetaPObjectHandle);
@@ -51,7 +57,13 @@ namespace indy_shared_rs_dotnet.indy_credx
         internal static extern int credx_create_master_secret(ref uint objectHandle);
         #endregion
 
-        #region ....
+        #region Schema
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_schema(ref string origin_did, string schema_name, string schema_version, string[] attr_names, uint seq_no, ref uint schema_p);
+
+        #endregion
+
+        #region ObjectHandle
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_object_get_type_name(uint handle, ref string result);
 

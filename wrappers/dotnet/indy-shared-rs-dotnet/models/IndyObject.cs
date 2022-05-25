@@ -18,12 +18,29 @@ namespace indy_shared_rs_dotnet.models
 			objectAsJson = toJson().GetAwaiter().GetResult();
 		}
 
+		public Task<string> TypeName()
+		{
+			return ObjectGetTypeName(_handle);
+		}
+
+		public void ObjectFree()
+		{
+			NativeMethods.credx_object_free(_handle);
+		}
+
 		public unsafe Task<string> toJson()
 		{
 			ByteBuffer byteBuffer = ObjectGetJson(_handle);
 			return Task.FromResult(DecodeToString(byteBuffer));
 		}
 
+		private Task<string> ObjectGetTypeName(uint handle)
+		{
+			string result = "";
+			NativeMethods.credx_object_get_type_name(handle, ref result);
+			return Task.FromResult(result);
+
+		}
 		private unsafe ByteBuffer ObjectGetJson(uint handle)
 		{
 			ByteBuffer result = new()
