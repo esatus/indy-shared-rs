@@ -15,7 +15,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Arrange
 
             //Act
-            Action act = () => { Mod.SetDefaultLogger(); };
+            Action act = () => { ModApi.SetDefaultLogger(); };
 
             //Assert
             act.Should().NotThrow();
@@ -28,7 +28,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Arrange
 
             //Act
-            string actual = await Mod.GetVersionAsync();
+            string actual = await ModApi.GetVersionAsync();
 
             //Assert
             actual.Should().NotBeEmpty();

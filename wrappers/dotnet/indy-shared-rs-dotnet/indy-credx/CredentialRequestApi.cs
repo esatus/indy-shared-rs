@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
-    public static class Credentials
+    public static class CredentialRequestApi
     {
         public static Task<string> GenerateNonceAsync()
         {

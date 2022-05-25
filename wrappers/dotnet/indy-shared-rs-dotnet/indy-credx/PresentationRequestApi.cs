@@ -2,12 +2,12 @@
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
-    public static class Error
+    public static class PresentationRequestApi
     {
-        public static Task<string> GetCurrentErrorAsync()
+        public static Task<string> GenerateNonceAsync()
         {
             string result = "";
-            NativeMethods.credx_get_current_error(ref result);
+            NativeMethods.credx_generate_nonce(ref result);
             return Task.FromResult(result);
         }
     }

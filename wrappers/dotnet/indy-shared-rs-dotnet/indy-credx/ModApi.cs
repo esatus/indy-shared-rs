@@ -2,7 +2,7 @@
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
-    public static class Mod
+    public static class ModApi
     {
         public static void SetDefaultLogger()
         {

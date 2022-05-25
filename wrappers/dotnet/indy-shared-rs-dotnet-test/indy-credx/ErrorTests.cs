@@ -15,7 +15,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             //Act
             string expected = "{\"code\":0,\"message\":null}";
-            string actual = await Error.GetCurrentErrorAsync();
+            string actual = await ErrorApi.GetCurrentErrorAsync();
 
             //Assert
             actual.Should().Be(expected);
