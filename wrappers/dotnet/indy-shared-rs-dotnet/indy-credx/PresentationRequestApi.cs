@@ -2,7 +2,7 @@
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
-    public static class PresReq
+    public static class PresentationRequestApi
     {
         public static Task<string> GenerateNonceAsync()
         {
