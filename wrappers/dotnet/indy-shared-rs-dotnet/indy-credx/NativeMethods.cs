@@ -1,7 +1,4 @@
 ﻿using indy_shared_rs_dotnet.models;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Runtime.InteropServices;
 using static indy_shared_rs_dotnet.models.Structures;
 
@@ -29,27 +26,38 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         #region CredDef
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_create_credential_definition(string origin_did, uint schema_handle, string tag, string signature_type, byte support_revocation, 
+        internal static extern int credx_create_credential_definition(string origin_did, uint schema_handle, string tag, string signature_type, byte support_revocation,
                                                                       ref uint cred_def_p_handle, ref uint cred_def_pvt_p_handle, ref uint key_proof_p_handle);
         #endregion
 
-        #region CredReq
-        //[DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        //internal static extern string credx_create_credential_request(string proverDid, uint credDefObjectHandle, uint masterSecretObjectHandle, string masterSecretIdObjectHandle, uint credOfferObjectHandle, ref uint credReqPObjectHandle, ref uint credReqMetaPObjectHandle);
+        #region CredentialRequest
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern string credx_create_credential_request(string proverDid, uint credDefObjectHandle, uint masterSecretObjectHandle, string masterSecretId, uint credOfferObjectHandle, ref uint credReqObjectHandle, ref uint credReqMetaObjectHandle);
         #endregion
 
-        #region Credentials
-        //[DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        //internal static extern string credx_create_credential();
+        #region Credential
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern string credx_create_credential(
+            uint credDefObjectHandle,
+            uint credDefPrivateObjectHandle,
+            uint credOfferObjectHandle,
+            uint credRequestObjectHandle,
+            string[] attrNames,
+            string[] attrRawValues,
+            string[] attrEncValues,
+            ref CredentialRevocationInfo revocation,
+            ref uint credObjectHandle,
+            ref uint revRegObjectHandle,
+            ref uint revDeltaObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_encode_credential_attributes(List<string> attr_raw_values, ref string result_p); //(string[] attr_raw_values, ref string result_p);
-
-        //[DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        //internal static extern string credx_process_credential(uint credObjectHandle, uint credReqObjectHandle, uint masterSecretObjectHandle, uint credDefObjectHandle, uint revRegDefObjectHandle, ref uint resultObjectHandle);
+        internal static extern string credx_encode_credential_attributes(string[] attrRawValues, ref string result);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_credential_get_attribute(uint ObjectHandle, string name, ref string result_p);
+        internal static extern string credx_process_credential(uint credObjectHandle, uint credReqObjectHandle, uint masterSecretObjectHandle, uint credDefObjectHandle, uint revRegDefObjectHandle, ref uint resultObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern string credx_credential_get_attribute(uint ObjectHandle, string name, ref string result);
         #endregion
 
         #region MasterSecret

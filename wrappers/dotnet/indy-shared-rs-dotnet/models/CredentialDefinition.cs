@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.models
 {
-    public class CredentialDefiniton
+    public class CredentialDefinition
     {
         public uint Handle { get; set; }
        
