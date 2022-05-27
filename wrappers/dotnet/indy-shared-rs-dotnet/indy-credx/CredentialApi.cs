@@ -1,12 +1,14 @@
 ﻿using indy_shared_rs_dotnet.models;
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
     public static class CredentialApi
     {
-        //public static async Task<IndyObject> CreateCredentialAsync()
+        //public static async Task<(Credential, RevocationRegistry, RevocationDelta)> CreateCredentialAsync()
         //{
         //    string result = NativeMethods.credx_create_credential();
         //    return await Task.FromResult(result);
@@ -15,7 +17,9 @@ namespace indy_shared_rs_dotnet.indy_credx
         public static async Task<string> EncodeCredentialAttributesAsync(List<string> rawAttributes)
         {
             string result = "";
-            NativeMethods.credx_encode_credential_attributes(rawAttributes.ToArray(), ref result);
+            string[] attributeArray = rawAttributes.ToArray();
+            
+            NativeMethods.credx_encode_credential_attributes(attributeArray, ref result);
             return await Task.FromResult(result);
         }
 
