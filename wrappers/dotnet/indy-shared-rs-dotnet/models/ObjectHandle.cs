@@ -1,13 +1,12 @@
 ﻿using indy_shared_rs_dotnet.indy_credx;
-using System;
 using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.models
 {
     public class ObjectHandle
     {
-        private uint _handle;
-        private IndyObject _indyObject;
+        private readonly uint _handle;
+        private readonly IndyObject _indyObject;
 
         public ObjectHandle(uint handle)
         {

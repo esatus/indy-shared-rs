@@ -31,7 +31,7 @@
 
     public class ShortDidValue
     {
-        private string _value;
+        private readonly string _value;
         public ShortDidValue(string value)
         {
             _value = value;
