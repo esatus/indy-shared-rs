@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using indy_shared_rs_dotnet.Models;
+using System.Collections.Generic;
 
 namespace indy_shared_rs_dotnet.models
 {
@@ -12,11 +13,5 @@ namespace indy_shared_rs_dotnet.models
         public string SignatureCorrectnessProof { get; set; }
         public RevocationRegistry RevocationRegistry { get; set; } = null;
         public string Witness { get; set; } = null;
-    }
-
-    public class AttributeValue
-    {
-        public string raw { get; set; }
-        public string encoded { get; set; }
     }
 }

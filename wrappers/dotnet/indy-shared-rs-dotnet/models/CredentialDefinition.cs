@@ -17,10 +17,4 @@ namespace indy_shared_rs_dotnet.models
         public string tag { get; set; }
         public CredentialDefinitionData Value { get; set; }
     }
-
-    public class CredentialDefinitionData
-    {
-        public string Primary { get; set; }
-        public string Revocation { get; set; }
-    }
 }
