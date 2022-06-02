@@ -52,9 +52,9 @@ namespace indy_shared_rs_dotnet.indy_credx
                 credDefObject.Value.Primary.r = new List<KeyProofAttributeValue>();
                 foreach (var ele in jObj["value"]["primary"]["r"])
                 {
-                    //Todo : Find better way to extract strings from ele object -> {"age":"123"}
-                    string[] json = ele.ToString().Split(':','"');
-                    KeyProofAttributeValue attribute = new(json[1], json[4]);
+                    //Todo : Find better way to extract strings from ele object -> "age":"123"
+                    string[] attrFields = ele.ToString().Split(':','"');
+                    KeyProofAttributeValue attribute = new(attrFields[1], attrFields[4]);
                     credDefObject.Value.Primary.r.Add(attribute);
                 }
             }
