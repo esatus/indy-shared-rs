@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using indy_shared_rs_dotnet.indy_credx;
-using indy_shared_rs_dotnet.models;
+using indy_shared_rs_dotnet.Models;
 using NUnit.Framework;
 using System.Threading.Tasks;
 

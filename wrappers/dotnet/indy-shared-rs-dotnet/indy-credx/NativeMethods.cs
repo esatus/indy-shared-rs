@@ -1,6 +1,7 @@
-﻿using indy_shared_rs_dotnet.models;
+﻿using indy_shared_rs_dotnet.Models;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using static indy_shared_rs_dotnet.models.Structures;
+using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
@@ -24,10 +25,18 @@ namespace indy_shared_rs_dotnet.indy_credx
         internal static extern string credx_generate_nonce(ref string nonce_p);
         #endregion
 
-        #region CredDef
+        #region CredentialDefinition
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_create_credential_definition(string origin_did, uint schema_handle, string tag, string signature_type, byte support_revocation,
-                                                                      ref uint cred_def_p_handle, ref uint cred_def_pvt_p_handle, ref uint key_proof_p_handle);
+        internal static extern string credx_create_credential_definition([MarshalAs(UnmanagedType.LPUTF8Str)] string originDid, uint schemaObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string tag, [MarshalAs(UnmanagedType.LPUTF8Str)] string signatureType, byte supportRevocation,
+                                                                         ref uint credDefObjectHandle, ref uint credDefPvtObjectHandle, ref uint keyProofObjectHandle);
+        
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern string credx_credential_definition_get_attribute(uint handle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref string result_p);
+        #endregion
+        
+        #region CredentialOffer 
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern string credx_create_credential_offer([MarshalAs(UnmanagedType.LPUTF8Str)] string schemaId, uint credDefObjectHandle, uint keyProofObjectHandle, ref uint credOfferHandle);
         #endregion
 
         #region CredentialRequest
@@ -66,8 +75,13 @@ namespace indy_shared_rs_dotnet.indy_credx
         #endregion
 
         #region Schema
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true, CallingConvention = CallingConvention.Cdecl)]
+        //internal static extern int credx_create_schema(FfiStr origin_did, [MarshalAs(UnmanagedType.LPUTF8Str)] string schema_name, FfiStr schema_version, [MarshalAs(UnmanagedType.LPArray, SizeConst = 128)] string[] attr_names, uint seq_no, ref uint schema_p);
+        //internal static extern int credx_create_schema(FfiStr origin_did, [MarshalAs(UnmanagedType.LPUTF8Str)] string schema_name, FfiStr schema_version, [MarshalAs(UnmanagedType.LPArray, ArraySubType=UnmanagedType.LPStr)] string[] attr_names, uint seq_no, ref uint schema_p);
+        internal static extern int credx_create_schema(FfiStr origin_did, [MarshalAs(UnmanagedType.LPUTF8Str)] string schema_name, FfiStr schema_version, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] attr_names, uint seq_no, ref uint schema_p);
+        //internal static extern int credx_create_schema(FfiStr origin_did, [MarshalAs(UnmanagedType.LPUTF8Str)] string schema_name, FfiStr schema_version, FfiStrList attr_names, uint seq_no, ref uint schema_p);
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_create_schema(string origin_did, string schema_name, string schema_version, string[] attr_names, uint seq_no, ref uint schema_p);
+        internal static extern int credx_schema_get_attribute(uint handle, FfiStr name, ref string result_p);
 
         #endregion
 

@@ -1,7 +1,6 @@
-﻿using indy_shared_rs_dotnet.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace indy_shared_rs_dotnet.models
+namespace indy_shared_rs_dotnet.Models
 {
     public class Credential
     {

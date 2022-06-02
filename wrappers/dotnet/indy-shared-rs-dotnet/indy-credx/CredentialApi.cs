@@ -1,4 +1,4 @@
-﻿using indy_shared_rs_dotnet.models;
+﻿using indy_shared_rs_dotnet.Models;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet.models;
+using indy_shared_rs_dotnet.Models;
 using indy_shared_rs_dotnet.indy_credx;
 using NUnit.Framework;
 using System;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static indy_shared_rs_dotnet.models.Structures;
+using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet_test.models
 {

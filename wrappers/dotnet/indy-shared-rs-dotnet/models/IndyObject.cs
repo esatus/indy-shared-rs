@@ -1,13 +1,13 @@
 ﻿using indy_shared_rs_dotnet.indy_credx;
 using System.Text;
 using System.Threading.Tasks;
-using static indy_shared_rs_dotnet.models.Structures;
+using static indy_shared_rs_dotnet.Models.Structures;
 
-namespace indy_shared_rs_dotnet.models
+namespace indy_shared_rs_dotnet.Models
 {
     public class IndyObject
     {
-        private readonly uint _handle;
+        public readonly uint _handle;
         public string objectAsJson { get; }
 
         public IndyObject(uint handle)
