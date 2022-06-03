@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.Models
 {
-    public class RevocationRegistry
+    public class RevocationDelta
     {
         public uint Handle { get; set; }
     }

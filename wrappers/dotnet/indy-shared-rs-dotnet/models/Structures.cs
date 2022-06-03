@@ -51,6 +51,6 @@ namespace indy_shared_rs_dotnet.Models
         {
             public uint len;
             public byte* value;
-        }
+        }   
     }
 }

@@ -15,25 +15,18 @@ namespace indy_shared_rs_dotnet_test
         [TestCase(TestName = "FFiStringList test  in progress.")]
         public async Task FFiStringListInProgess()
         {
-            //string[] attrNames = { "gender", "age", "sex" };
-            List<string> attrNames = new() { "gender", "age"};
-            string did = "NcYxiDXkpYi6ov5FcYDi1e";
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
             string schemaName = "gvt";
             string schemaVersion = "1.0";
-            FfiStrList FfiAttrNames = FfiStrList.Create(attrNames);
-            FfiStr FfiDid = FfiStr.Create(did);
-            FfiStr FfiSchemaName = FfiStr.Create(schemaName);
-            FfiStr FfiSchemaVersion = FfiStr.Create(schemaVersion);
 
             //Todo discuss error with team -> mix of [Marshal.Unmanaged...] string and FfiStrList
-            Schema schemaObject = await SchemaApi.CreateSchemaAsync(FfiDid, FfiSchemaName, FfiSchemaVersion, FfiAttrNames, 0);
-            
-            IndyObject neu = new(schemaObject.Handle);
-            string SchemaType = await neu.TypeName();
-            string SchemaJson = await neu.toJson();
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
-            string SchemaAttributeId = await SchemaApi.GetSchemaAttribute(neu._handle, FfiStr.Create("id")); ////should return id string (only one supported in rust)
-            string SchemaAttributeVer = await SchemaApi.GetSchemaAttribute(neu._handle, FfiStr.Create("version")); //should return "" -> not supported in rust
+            string SchemaAttributeId = await SchemaApi.GetSchemaAttribute(schemaObject, "id"); ////should return id string (only one supported in rust)
+            string SchemaAttributeVer = await SchemaApi.GetSchemaAttribute(schemaObject, "version"); //should return "" -> not supported in rust
 
             Console.WriteLine("CreateSchema test");
         }

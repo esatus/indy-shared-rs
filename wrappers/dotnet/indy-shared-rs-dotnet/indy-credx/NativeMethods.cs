@@ -1,4 +1,5 @@
 ﻿using indy_shared_rs_dotnet.Models;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -51,22 +52,22 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint credDefPrivateObjectHandle,
             uint credOfferObjectHandle,
             uint credRequestObjectHandle,
-            string[] attrNames,
-            string[] attrRawValues,
-            string[] attrEncValues,
+            FfiStrList attrNames,
+            FfiStrList attrRawValues,
+            FfiStrList attrEncValues,
             ref CredentialRevocationInfo revocation,
             ref uint credObjectHandle,
             ref uint revRegObjectHandle,
             ref uint revDeltaObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_encode_credential_attributes(string[] attrRawValues, ref string result);
+        internal static extern string credx_encode_credential_attributes(FfiStrList attrRawValues, ref string result);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern string credx_process_credential(uint credObjectHandle, uint credReqObjectHandle, uint masterSecretObjectHandle, uint credDefObjectHandle, uint revRegDefObjectHandle, ref uint resultObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_credential_get_attribute(uint ObjectHandle, string name, ref string result);
+        internal static extern string credx_credential_get_attribute(uint ObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref string result);
         #endregion
 
         #region MasterSecret
