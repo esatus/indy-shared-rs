@@ -6,47 +6,27 @@ namespace indy_shared_rs_dotnet.Models
 {
     public class Structures
     {
-
-        /**
         [StructLayout(LayoutKind.Sequential)]
-        public struct FfiStrList
+        public unsafe struct FfiStrList
         {
             public uint count;
-            public FfiStr[] data;
+            public FfiStr* data;
             public static FfiStrList Create(string[] args)
             {
                 FfiStrList list = new();
                 list.count = (uint)args.Length;
-                list.data = new FfiStr[list.count];
+                FfiStr[] ffiStrings = new FfiStr[list.count];
                 for (int i = 0; i < args.Length; i++)
                 {
-                    list.data[i] = FfiStr.Create(args[i]);
+                    ffiStrings[i] = FfiStr.Create(args[i]);
+                }
+                fixed(FfiStr* ffiStr_p = &ffiStrings[0])
+                {
+                    list.data = ffiStr_p;
                 }
                 return list;
             }
-            public static FfiStrList Create(List<string> args)
-            {
-                return Create(args.ToArray());
-            }
-        }**/
 
-        
-        [StructLayout(LayoutKind.Sequential)]
-        public struct FfiStrList
-        {
-            public uint count;
-            public IntPtr[] data;
-            public static FfiStrList Create(string[] args)
-            {
-                FfiStrList list = new();
-                list.count = (uint)args.Length;
-                list.data = new IntPtr[list.count];
-                for (int i = 0; i < args.Length; i++)
-                {
-                    list.data[i] = Marshal.StringToCoTaskMemUTF8(args[i]);
-                }
-                return list;
-            }
             public static FfiStrList Create(List<string> args)
             {
                 return Create(args.ToArray());
@@ -62,24 +42,9 @@ namespace indy_shared_rs_dotnet.Models
                 FfiStr FfiString = new();
                 FfiString.data = new IntPtr();
                 FfiString.data = Marshal.StringToCoTaskMemUTF8(arg);
-                
                 return FfiString;
             }
         }
-
-        /**
-        [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct FfiStr
-        {
-            public char* data;
-        }
-        /** aus Rust
-            #[repr(transparent)]
-            pub struct FfiStr<'a> {
-            cstr: *const c_char,
-            _boo: PhantomData<&'a ()>,
-}
-         **/
 
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct ByteBuffer

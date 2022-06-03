@@ -6,7 +6,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 {
     public class SchemaApi
     {
-        public static Task<uint> CreateSchema(FfiStr originDid, string schemaName, FfiStr schemaVersion, string[] attrNames, uint seqNo)
+        public static Task<uint> CreateSchema(FfiStr originDid, string schemaName, FfiStr schemaVersion, FfiStrList attrNames, uint seqNo)
         {
             uint result = 0;
             NativeMethods.credx_create_schema(originDid, schemaName, schemaVersion, attrNames, seqNo, ref result);

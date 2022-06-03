@@ -34,7 +34,7 @@ namespace indy_shared_rs_dotnet_test
         public async Task FFiStringListInProgess()
         {
             //string[] attrNames = { "gender", "age", "sex" };
-            List<string> attrNames = new() { "gender", "age", "sex" };
+            List<string> attrNames = new() { "gender", "age"};
             string did = "NcYxiDXkpYi6ov5FcYDi1e";
             string schemaName = "gvt";
             string schemaVersion = "1.0";
@@ -43,7 +43,7 @@ namespace indy_shared_rs_dotnet_test
             FfiStr FfiSchemaName = FfiStr.Create(schemaName);
             FfiStr FfiSchemaVersion = FfiStr.Create(schemaVersion);
 
-            uint handle = await SchemaApi.CreateSchema(FfiDid, schemaName, FfiSchemaVersion, attrNames.ToArray(), 0);
+            uint handle = await SchemaApi.CreateSchema(FfiDid, schemaName, FfiSchemaVersion, FfiAttrNames, 0);
             
             IndyObject neu = new(handle);
             string SchemaType = await neu.TypeName();
@@ -55,7 +55,7 @@ namespace indy_shared_rs_dotnet_test
             Console.WriteLine("CreateSchema test");
 
         }
-        
+        /**
         [Test]
         [TestCase(TestName = "CreateCredentialDefinition test  in progress.")]
         public async Task CreateCredentialDefinitionInProgess()
@@ -74,8 +74,7 @@ namespace indy_shared_rs_dotnet_test
                 await CredentialDefinitionApi.CreateCredentialDefinition(did, handle, "tag", "CL", 1);
 
             Console.WriteLine("CreateSchema test");
-
-        }
+        }**/
         
         [Test]
         [TestCase(TestName = "CreateSchema test  in progress.")]
