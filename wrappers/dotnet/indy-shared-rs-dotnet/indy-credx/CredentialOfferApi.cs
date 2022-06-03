@@ -10,7 +10,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 {
     public static class CredentialOfferApi
     {
-        public static async Task<CredentialOffer> CreateCredentialOffer(
+        public static async Task<CredentialOffer> CreateCredentialOfferAsync(
             string schemaId,
             CredentialDefinition credDefObject,
             CredentialKeyCorrectnessProof keyProofObject)
@@ -25,7 +25,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             IndyObject indyObject = new(objectHandle);
             string credOfferJson = await indyObject.toJson();
-            CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson);
+            CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.jsonSettings);
             credOfferObject.Handle = objectHandle;
 
             try

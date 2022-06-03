@@ -11,7 +11,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint result = 0;
             NativeMethods.credx_create_master_secret(ref result);
             IndyObject indyObj = new(result);
-            MasterSecret msObject = JsonConvert.DeserializeObject<MasterSecret>(await indyObj.toJson());
+            MasterSecret msObject = JsonConvert.DeserializeObject<MasterSecret>(await indyObj.toJson(), Settings.jsonSettings);
             msObject.Handle = result;
             return await Task.FromResult(msObject);
         }

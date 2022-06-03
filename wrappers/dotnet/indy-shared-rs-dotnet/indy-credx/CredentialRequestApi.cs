@@ -13,24 +13,38 @@ namespace indy_shared_rs_dotnet.indy_credx
             string masterSecretId,
             CredentialOffer credentialOffer)
         {
-            uint requestRef = 0;
-            uint metadataRef = 0;
+            uint requestHandle = 0;
+            uint metadataHandle = 0;
             NativeMethods.credx_create_credential_request(
                 proverDid,
                 credentialDefinition.Handle,
                 masterSecret.Handle,
                 masterSecretId,
                 credentialOffer.Handle,
-                ref requestRef,
-                ref metadataRef);
+                ref requestHandle,
+                ref metadataHandle);
 
-            IndyObject requestObject = new(requestRef);
-            IndyObject metadataObject = new(metadataRef);
+            CredentialRequest requestObject = await CreateCredentialRequestObject(requestHandle);
+            CredentialRequestMetadata metadataObject = await CreateCredentialRequestMetadataObject(metadataHandle);
+            return (requestObject, metadataObject);
+        }
 
-            CredentialRequest request = JsonConvert.DeserializeObject<CredentialRequest>(await requestObject.toJson());
-            CredentialRequestMetadata metadata = JsonConvert.DeserializeObject<CredentialRequestMetadata>(await metadataObject.toJson());
+        private static async Task<CredentialRequest> CreateCredentialRequestObject(uint objectHandle)
+        {
+            IndyObject indyObject = new(objectHandle);
+            string credReqJson = await indyObject.toJson();
+            CredentialRequest requestObject = JsonConvert.DeserializeObject<CredentialRequest>(credReqJson, Settings.jsonSettings);
+            requestObject.Handle = objectHandle;
+            return await Task.FromResult(requestObject);
+        }
 
-            return (request, metadata);
+        private static async Task<CredentialRequestMetadata> CreateCredentialRequestMetadataObject(uint objectHandle)
+        {
+            IndyObject indyObject = new(objectHandle);
+            string credReqJson = await indyObject.toJson();
+            CredentialRequestMetadata requestObject = JsonConvert.DeserializeObject<CredentialRequestMetadata>(credReqJson, Settings.jsonSettings);
+            requestObject.Handle = objectHandle;
+            return await Task.FromResult(requestObject);
         }
     }
 }

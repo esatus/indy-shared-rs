@@ -22,9 +22,9 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             FfiStr FfiSchemaName = FfiStr.Create(schemaName);
             FfiStr FfiSchemaVersion = FfiStr.Create(schemaVersion);
 
-            uint handle = await SchemaApi.CreateSchema(FfiDid, schemaName, FfiSchemaVersion, FfiAttrNames, 0);
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(FfiDid, FfiSchemaName, FfiSchemaVersion, FfiAttrNames, 0);
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinition(did, handle, "tag", "CL", 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(did, schemaObject, "tag", "CL", 1);
 
             //Assert
             credDef.Should().BeOfType(typeof(CredentialDefinition));

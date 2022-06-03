@@ -10,9 +10,9 @@ namespace indy_shared_rs_dotnet.indy_credx
 {
     public static class CredentialDefinitionApi
     {
-        public static async Task<(CredentialDefinition, CredentialDefinitionPrivate, CredentialKeyCorrectnessProof)> CreateCredentialDefinition(
+        public static async Task<(CredentialDefinition, CredentialDefinitionPrivate, CredentialKeyCorrectnessProof)> CreateCredentialDefinitionAsync(
             string originDid, 
-            uint schemaHandle,
+            Schema schemaObject,
             string tag,
             string signatureType, 
             byte supportRevocation)
@@ -21,7 +21,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint credDefPvtHandle = 0;
             uint keyProofHandle = 0;
             //note: only signatureType "CL" supported so far.
-            NativeMethods.credx_create_credential_definition(originDid, schemaHandle, tag, signatureType, supportRevocation, 
+            NativeMethods.credx_create_credential_definition(originDid, schemaObject.Handle, tag, signatureType, supportRevocation, 
                                                              ref credDefHandle, ref credDefPvtHandle, ref keyProofHandle);
 
             CredentialDefinition credDefObject = await CreateCredentialDefinitonObject(credDefHandle);
@@ -31,11 +31,11 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult((credDefObject, credDefPvtObject, keyProofObject));
          }
 
-        public static async Task<string> GetCredentialDefinitionAttribute(uint objectHandle, string attributeName)
+        public static async Task<string> GetCredentialDefinitionAttribute(CredentialDefinition credDefObject, string attributeName)
         {
             //note: only "id" and "schema_id" as attributeName supported so far.
             string result = "";
-            NativeMethods.credx_credential_definition_get_attribute(objectHandle, attributeName, ref result);
+            NativeMethods.credx_credential_definition_get_attribute(credDefObject.Handle, attributeName, ref result);
             return await Task.FromResult(result);
         }
 
@@ -43,7 +43,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             IndyObject indyObject = new(objectHandle);
             string credDefJson = await indyObject.toJson();
-            CredentialDefinition credDefObject = JsonConvert.DeserializeObject<CredentialDefinition>(credDefJson);
+            CredentialDefinition credDefObject = JsonConvert.DeserializeObject<CredentialDefinition>(credDefJson, Settings.jsonSettings);
             credDefObject.Handle = objectHandle;
 
             try
@@ -69,7 +69,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         private static async Task<CredentialDefinitionPrivate> CreateCredentialDefinitonPrivateObject(uint objectHandle)
         {
             IndyObject indyObject = new(objectHandle);
-            CredentialDefinitionPrivate credDefPvtObject = JsonConvert.DeserializeObject<CredentialDefinitionPrivate>(await indyObject.toJson());
+            CredentialDefinitionPrivate credDefPvtObject = JsonConvert.DeserializeObject<CredentialDefinitionPrivate>(await indyObject.toJson(), Settings.jsonSettings);
             credDefPvtObject.Handle = objectHandle;
             return await Task.FromResult(credDefPvtObject);
         }
@@ -78,7 +78,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             IndyObject indyObject = new(objectHandle);
             string keyProofJson = await indyObject.toJson();
-            CredentialKeyCorrectnessProof keyProofObject = JsonConvert.DeserializeObject<CredentialKeyCorrectnessProof>(keyProofJson);
+            CredentialKeyCorrectnessProof keyProofObject = JsonConvert.DeserializeObject<CredentialKeyCorrectnessProof>(keyProofJson, Settings.jsonSettings);
             keyProofObject.Handle = objectHandle;
 
             try
