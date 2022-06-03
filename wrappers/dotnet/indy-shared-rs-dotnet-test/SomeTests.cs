@@ -55,7 +55,7 @@ namespace indy_shared_rs_dotnet_test
             Console.WriteLine("CreateSchema test");
 
         }
-        /**
+        
         [Test]
         [TestCase(TestName = "CreateCredentialDefinition test  in progress.")]
         public async Task CreateCredentialDefinitionInProgess()
@@ -69,12 +69,12 @@ namespace indy_shared_rs_dotnet_test
             FfiStr FfiSchemaName = FfiStr.Create(schemaName);
             FfiStr FfiSchemaVersion = FfiStr.Create(schemaVersion);
 
-            uint handle = await SchemaApi.CreateSchema(FfiDid, schemaName, FfiSchemaVersion, attrNames, 0);
+            uint handle = await SchemaApi.CreateSchema(FfiDid, schemaName, FfiSchemaVersion, FfiAttrNames, 0);
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) = 
                 await CredentialDefinitionApi.CreateCredentialDefinition(did, handle, "tag", "CL", 1);
 
             Console.WriteLine("CreateSchema test");
-        }**/
+        }
         
         [Test]
         [TestCase(TestName = "CreateSchema test  in progress.")]
