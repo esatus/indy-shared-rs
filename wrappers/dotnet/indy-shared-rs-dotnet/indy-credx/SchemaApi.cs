@@ -23,6 +23,22 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(schemaObject);
         }
 
+        public static async Task<Schema> CreateSchemaFromJsonAsync(string schemaJson)
+        {
+            uint schemaObjectHandle = 0;
+            int errorCode = NativeMethods.credx_schema_from_json(ByteBuffer.Create(schemaJson), ref schemaObjectHandle);
+            
+            if (errorCode != 0)
+            {
+                string error = "";
+                NativeMethods.credx_get_current_error(ref error);
+                Debug.WriteLine(error);
+            }
+
+            Schema schemaObject = await CreateSchemaObject(schemaObjectHandle);
+            return await Task.FromResult(schemaObject);
+        }
+
         public static async Task<string> GetSchemaAttribute(Schema schema, string attributeName)
         {
             string result = "";

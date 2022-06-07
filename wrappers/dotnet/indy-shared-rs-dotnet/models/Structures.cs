@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace indy_shared_rs_dotnet.Models
 {
@@ -51,6 +52,34 @@ namespace indy_shared_rs_dotnet.Models
         {
             public uint len;
             public byte* value;
-        }   
+
+            public static ByteBuffer Create(string json)
+            {
+                UTF8Encoding decoder = new UTF8Encoding(true, true);
+                byte[] bytes = new byte[json.Length];
+                decoder.GetBytes(json, 0, json.Length, bytes, 0);
+                ByteBuffer buffer = new();
+                buffer.len = (uint)json.Length;
+                fixed (byte* bytebuffer_p = &bytes[0]) 
+                {
+                    buffer.value = bytebuffer_p;
+                }
+                return buffer;
+            }
+        }
+
+        /**
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FfiCredRevInfo
+        {
+            public uint regDefHandle;
+            public uint regDefPvtHandle;
+            public uint registry;
+            public long regIdx;
+            public FfiLongList regUsed;
+            public FfiStr tailsPath;
+
+        }
+        **/
     }
 }

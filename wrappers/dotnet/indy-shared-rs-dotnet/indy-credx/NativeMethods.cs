@@ -24,6 +24,8 @@ namespace indy_shared_rs_dotnet.indy_credx
         #region PresReq
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_generate_nonce(ref string nonce_p);
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_presentation_request_from_json(ByteBuffer presentationRequestJson, ref uint presentationRequestObjectHandle);
         #endregion
 
         #region CredentialDefinition
@@ -80,6 +82,9 @@ namespace indy_shared_rs_dotnet.indy_credx
         internal static extern int credx_create_schema(FfiStr origin_did, FfiStr schema_name, FfiStr schema_version, FfiStrList attr_names, uint seq_no, ref uint schema_p);
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_schema_get_attribute(uint handle, FfiStr name, ref string result_p);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_schema_from_json(ByteBuffer schemaJson, ref uint schemaHandle);
 
         #endregion
 
