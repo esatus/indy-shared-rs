@@ -84,7 +84,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             string result = "";
             //note: only attributeName "schema_id", "cred_def_id", "rev_reg_id", "rev_reg_index" supported so far.
-            NativeMethods.credx_credential_get_attribute(credential.Handle, attributeName, ref result);
+            NativeMethods.credx_credential_get_attribute(credential.Handle, FfiStr.Create(attributeName), ref result);
             return await Task.FromResult(result);
         }
 

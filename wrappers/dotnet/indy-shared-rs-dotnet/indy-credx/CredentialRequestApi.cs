@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
@@ -17,10 +18,10 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint requestHandle = 0;
             uint metadataHandle = 0;
             int errorCode =  NativeMethods.credx_create_credential_request(
-                proverDid,
+                FfiStr.Create(proverDid),
                 credentialDefinition.Handle,
                 masterSecret.Handle,
-                masterSecretId,
+                FfiStr.Create(masterSecretId),
                 credentialOffer.Handle,
                 ref requestHandle,
                 ref metadataHandle);

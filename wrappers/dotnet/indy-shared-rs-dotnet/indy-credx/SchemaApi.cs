@@ -43,7 +43,6 @@ namespace indy_shared_rs_dotnet.indy_credx
             Schema schemaObject = JsonConvert.DeserializeObject<Schema>(schemaJson, Settings.jsonSettings);
             schemaObject.Handle = objectHandle;
             return await Task.FromResult(schemaObject);
-
         }
     }
 }

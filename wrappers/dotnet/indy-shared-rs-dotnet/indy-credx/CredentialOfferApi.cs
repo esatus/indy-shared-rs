@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
@@ -16,7 +17,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             CredentialKeyCorrectnessProof keyProofObject)
         {
             uint credOfferObjectHandle = 0;
-            int errorCode = NativeMethods.credx_create_credential_offer(schemaId, credDefObject.Handle, keyProofObject.Handle, ref credOfferObjectHandle);
+            int errorCode = NativeMethods.credx_create_credential_offer(FfiStr.Create(schemaId), credDefObject.Handle, keyProofObject.Handle, ref credOfferObjectHandle);
             
             if (errorCode != 0)
             {
@@ -33,7 +34,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             string credOfferJson = await ObjectApi.ToJson(objectHandle);
             CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.jsonSettings);
             credOfferObject.Handle = objectHandle;
-
+            
             try
             {
                 JObject jObj = JObject.Parse(credOfferJson);

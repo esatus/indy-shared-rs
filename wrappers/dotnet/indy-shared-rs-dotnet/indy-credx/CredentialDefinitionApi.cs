@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
@@ -22,9 +23,10 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint keyProofHandle = 0;
             //note: only signatureType "CL" supported so far.
             int errorCode = NativeMethods.credx_create_credential_definition(
-                originDid, 
-                schemaObject.Handle, 
-                tag, signatureType, 
+                FfiStr.Create(originDid), 
+                schemaObject.Handle,
+                FfiStr.Create(tag),
+                FfiStr.Create(signatureType), 
                 supportRevocation, 
                 ref credDefHandle, 
                 ref credDefPvtHandle, 
@@ -47,7 +49,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             //note: only "id" and "schema_id" as attributeName supported so far.
             string result = "";
-            int errorCode = NativeMethods.credx_credential_definition_get_attribute(credDefObject.Handle, attributeName, ref result);
+            int errorCode = NativeMethods.credx_credential_definition_get_attribute(credDefObject.Handle, FfiStr.Create(attributeName), ref result);
             
             if (errorCode != 0)
             {
@@ -63,7 +65,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             string credDefJson = await ObjectApi.ToJson(objectHandle);
             CredentialDefinition credDefObject = JsonConvert.DeserializeObject<CredentialDefinition>(credDefJson, Settings.jsonSettings);
             credDefObject.Handle = objectHandle;
-
+            
             try
             {
                 JObject jObj = JObject.Parse(credDefJson);
@@ -96,7 +98,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             string keyProofJson = await ObjectApi.ToJson(objectHandle);
             CredentialKeyCorrectnessProof keyProofObject = JsonConvert.DeserializeObject<CredentialKeyCorrectnessProof>(keyProofJson, Settings.jsonSettings);
             keyProofObject.Handle = objectHandle;
-
+            
             try
             {
                 JObject jObj = JObject.Parse(keyProofJson);
