@@ -9,5 +9,6 @@ namespace indy_shared_rs_dotnet.Models
         public string Version { get; set; }
         public Dictionary<string, AttributeInfo> RequestedAttributes { get; set; }
         public Dictionary<string, PredicateInfo> RequestedPredicates { get; set; }
+        public uint Handle { get; set; }
     }
 }
