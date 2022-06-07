@@ -75,12 +75,26 @@ namespace indy_shared_rs_dotnet.indy_credx
         internal static extern int credx_create_master_secret(ref uint objectHandle);
         #endregion
 
+        #region Presentation
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_presentation(
+            uint presReqObjectHandle,
+            FfiCredentialEntryList credentials,
+            FfiCredentialProveList credentialsProof,
+            FfiStrList selfAttestNames,
+            FfiStrList selfAttestValues,
+            uint masterSecret,
+            FfiUIntList schemas,
+            FfiUIntList credDefs,
+            ref uint presentationP);
+        #endregion
+
         #region Schema
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int credx_create_schema(FfiStr origin_did, FfiStr schema_name, FfiStr schema_version, FfiStrList attr_names, uint seq_no, ref uint schema_p);
+
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_schema_get_attribute(uint handle, FfiStr name, ref string result_p);
-
         #endregion
 
         #region ObjectHandle

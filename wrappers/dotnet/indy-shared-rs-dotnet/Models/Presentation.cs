@@ -7,5 +7,6 @@ namespace indy_shared_rs_dotnet.Models
         public Proof Proof { get; set; }
         public RequestedProof RequestedProof { get; set; }
         public List<Identifier> Identifiers { get; set; }
+        public uint Handle { get; set; }
     }
 }
