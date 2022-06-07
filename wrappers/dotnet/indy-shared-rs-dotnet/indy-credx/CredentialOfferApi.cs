@@ -16,15 +16,21 @@ namespace indy_shared_rs_dotnet.indy_credx
             CredentialKeyCorrectnessProof keyProofObject)
         {
             uint credOfferObjectHandle = 0;
-            NativeMethods.credx_create_credential_offer(schemaId, credDefObject.Handle, keyProofObject.Handle, ref credOfferObjectHandle);
+            int errorCode = NativeMethods.credx_create_credential_offer(schemaId, credDefObject.Handle, keyProofObject.Handle, ref credOfferObjectHandle);
+            
+            if (errorCode != 0)
+            {
+                string error = "";
+                NativeMethods.credx_get_current_error(ref error);
+                Debug.WriteLine(error);
+            }
             CredentialOffer credOfferObject = await CreateCredentialOfferObject(credOfferObjectHandle);
             return await Task.FromResult(credOfferObject);
         }
 
         private static async Task<CredentialOffer> CreateCredentialOfferObject(uint objectHandle)
         {
-            IndyObject indyObject = new(objectHandle);
-            string credOfferJson = await indyObject.toJson();
+            string credOfferJson = await ObjectApi.ToJson(objectHandle);
             CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.jsonSettings);
             credOfferObject.Handle = objectHandle;
 

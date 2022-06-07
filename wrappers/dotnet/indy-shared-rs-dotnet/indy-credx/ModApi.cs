@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
@@ -6,7 +7,13 @@ namespace indy_shared_rs_dotnet.indy_credx
     {
         public static void SetDefaultLogger()
         {
-            NativeMethods.credx_set_default_logger();
+            int errorCode = NativeMethods.credx_set_default_logger();
+            if (errorCode != 0)
+            {
+                string error = "";
+                NativeMethods.credx_get_current_error(ref error);
+                Debug.WriteLine(error);
+            }
         }
 
         public static Task<string> GetVersionAsync()

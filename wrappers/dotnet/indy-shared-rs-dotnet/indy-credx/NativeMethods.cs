@@ -10,12 +10,12 @@ namespace indy_shared_rs_dotnet.indy_credx
     {
         #region Error
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_get_current_error(ref string error_json_p);
+        internal static extern int credx_get_current_error(ref string error_json_p);
         #endregion
 
         #region Mod
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern void credx_set_default_logger();
+        internal static extern int credx_set_default_logger();
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern string credx_version();
@@ -23,31 +23,31 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         #region PresReq
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_generate_nonce(ref string nonce_p);
+        internal static extern int credx_generate_nonce(ref string nonce_p);
         #endregion
 
         #region CredentialDefinition
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_create_credential_definition([MarshalAs(UnmanagedType.LPUTF8Str)] string originDid, uint schemaObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string tag, [MarshalAs(UnmanagedType.LPUTF8Str)] string signatureType, byte supportRevocation,
+        internal static extern int credx_create_credential_definition([MarshalAs(UnmanagedType.LPUTF8Str)] string originDid, uint schemaObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string tag, [MarshalAs(UnmanagedType.LPUTF8Str)] string signatureType, byte supportRevocation,
                                                                          ref uint credDefObjectHandle, ref uint credDefPvtObjectHandle, ref uint keyProofObjectHandle);
         
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_credential_definition_get_attribute(uint handle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref string result_p);
+        internal static extern int credx_credential_definition_get_attribute(uint handle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref string result_p);
         #endregion
         
         #region CredentialOffer 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_create_credential_offer([MarshalAs(UnmanagedType.LPUTF8Str)] string schemaId, uint credDefObjectHandle, uint keyProofObjectHandle, ref uint credOfferHandle);
+        internal static extern int credx_create_credential_offer([MarshalAs(UnmanagedType.LPUTF8Str)] string schemaId, uint credDefObjectHandle, uint keyProofObjectHandle, ref uint credOfferHandle);
         #endregion
 
         #region CredentialRequest
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_create_credential_request([MarshalAs(UnmanagedType.LPUTF8Str)] string proverDid, uint credDefObjectHandle, uint masterSecretObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string masterSecretId, uint credOfferObjectHandle, ref uint credReqObjectHandle, ref uint credReqMetaObjectHandle);
+        internal static extern int credx_create_credential_request([MarshalAs(UnmanagedType.LPUTF8Str)] string proverDid, uint credDefObjectHandle, uint masterSecretObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string masterSecretId, uint credOfferObjectHandle, ref uint credReqObjectHandle, ref uint credReqMetaObjectHandle);
         #endregion
 
         #region Credential
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_create_credential(
+        internal static extern int credx_create_credential(
             uint credDefObjectHandle,
             uint credDefPrivateObjectHandle,
             uint credOfferObjectHandle,
@@ -61,13 +61,13 @@ namespace indy_shared_rs_dotnet.indy_credx
             ref uint revDeltaObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_encode_credential_attributes(FfiStrList attrRawValues, ref string result);
+        internal static extern int credx_encode_credential_attributes(FfiStrList attrRawValues, ref string result);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_process_credential(uint credObjectHandle, uint credReqObjectHandle, uint masterSecretObjectHandle, uint credDefObjectHandle, uint revRegDefObjectHandle, ref uint resultObjectHandle);
+        internal static extern int credx_process_credential(uint credObjectHandle, uint credReqObjectHandle, uint masterSecretObjectHandle, uint credDefObjectHandle, uint revRegDefObjectHandle, ref uint resultObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern string credx_credential_get_attribute(uint ObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref string result);
+        internal static extern int credx_credential_get_attribute(uint ObjectHandle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref string result);
         #endregion
 
         #region MasterSecret
