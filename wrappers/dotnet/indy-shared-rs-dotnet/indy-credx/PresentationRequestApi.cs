@@ -1,4 +1,5 @@
 ﻿using indy_shared_rs_dotnet.Models;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -20,7 +21,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return Task.FromResult(result);
         }
 
-        public static Task<string> credx_presentation_request_from_json(string presReqJson)
+        public static async Task<PresentationRequest> credx_presentation_request_from_json(string presReqJson)
         {
             uint presReqObjectHandle = 0;
             int errorCode = NativeMethods.credx_presentation_request_from_json(ByteBuffer.Create(presReqJson) ,ref presReqObjectHandle);
@@ -30,9 +31,15 @@ namespace indy_shared_rs_dotnet.indy_credx
                 NativeMethods.credx_get_current_error(ref error);
                 Debug.WriteLine(error);
             }
-            //PresentationRequest presReq = await CreatePresReqObject();
-            //return Task.FromResult(result);
-            return null;
+            PresentationRequest presReq = await CreatePresentationRequestObject(presReqObjectHandle);
+            return await Task.FromResult(presReq);
+        }
+        private static async Task<PresentationRequest> CreatePresentationRequestObject(uint objectHandle)
+        {
+            string presReqJson = await ObjectApi.ToJson(objectHandle);
+            PresentationRequest presentationRequestObject = JsonConvert.DeserializeObject<PresentationRequest>(presReqJson, Settings.jsonSettings);
+            presentationRequestObject.Handle = objectHandle;
+            return await Task.FromResult(presentationRequestObject);
         }
     }
 }
