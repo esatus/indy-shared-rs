@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace indy_shared_rs_dotnet.Models
@@ -32,8 +33,7 @@ namespace indy_shared_rs_dotnet.Models
         public MCaps MCaps { get; set; }
 
         [JsonProperty("r_caps")]
-        [JsonIgnore] //Todo: investigate how to parse empty fields with JsonConvert (Json: "r_caps" : {} ")
-        public string RCaps { get; set; }
+        public JObject RCaps { get; set; }
     }
 
     public class BlindedMs
@@ -46,8 +46,7 @@ namespace indy_shared_rs_dotnet.Models
         public List<string> HiddenAttributes { get; set; }
 
         [JsonProperty("committed_attributes")]
-        [JsonIgnore] //Todo: investigate how to parse empty fields with JsonConvert (Json: "committed_attributes" : {} ")
-        public string ComittedAttributes { get; set; }
+        public JObject ComittedAttributes { get; set; }
     }
 
     public class MCaps

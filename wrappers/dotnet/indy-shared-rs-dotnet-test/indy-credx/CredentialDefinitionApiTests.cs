@@ -20,11 +20,10 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             string schemaVersion = "1.0";
 
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            
+            //Act
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
                 await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
-
-            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttribute(credDef, "schema_id");
-            CredentialOffer testObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDef, keyProof);
 
             //Assert
             credDef.Should().BeOfType(typeof(CredentialDefinition));
