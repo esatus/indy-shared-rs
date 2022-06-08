@@ -64,10 +64,12 @@ namespace indy_shared_rs_dotnet.indy_credx
                 PredicateInfo info;
                 try
                 {
+                    //TODO: If Restrictions, create new AttributeFilter on $or and property on $and.
                     info = JsonConvert.DeserializeObject<PredicateInfo>(element.First.ToString());
                 }
-                catch
+                catch(System.Exception ex)
                 {
+                    Debug.WriteLine(ex.Message);
                     continue;
                 }
                 string key = element.Path.Split('.')[1];
