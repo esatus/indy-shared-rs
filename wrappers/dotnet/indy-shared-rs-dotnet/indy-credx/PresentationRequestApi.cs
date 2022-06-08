@@ -1,5 +1,7 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -21,7 +23,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return Task.FromResult(result);
         }
 
-        public static async Task<PresentationRequest> credx_presentation_request_from_json(string presReqJson)
+        public static async Task<PresentationRequest> CreatePresReqFromJsonAsync(string presReqJson)
         {
             uint presReqObjectHandle = 0;
             int errorCode = NativeMethods.credx_presentation_request_from_json(ByteBuffer.Create(presReqJson) ,ref presReqObjectHandle);
@@ -38,6 +40,40 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             string presReqJson = await ObjectApi.ToJson(objectHandle);
             PresentationRequest presentationRequestObject = JsonConvert.DeserializeObject<PresentationRequest>(presReqJson, Settings.jsonSettings);
+
+            presentationRequestObject.RequestedAttributes = new Dictionary<string, AttributeInfo>();
+            presentationRequestObject.RequestedPredicates = new Dictionary<string, PredicateInfo>();
+
+            JObject presReqJObject = JObject.Parse(presReqJson);
+            foreach(JToken element in presReqJObject["requested_attributes"])
+            {
+                AttributeInfo info;
+                try
+                {
+                    info = JsonConvert.DeserializeObject<AttributeInfo>(element.First.ToString());
+                }
+                catch
+                {
+                    continue;
+                }
+                string key = element.Path.Split('.')[1];
+                presentationRequestObject.RequestedAttributes.Add(key.ToString(), info);
+            }
+            foreach (JToken element in presReqJObject["requested_predicates"])
+            {
+                PredicateInfo info;
+                try
+                {
+                    info = JsonConvert.DeserializeObject<PredicateInfo>(element.First.ToString());
+                }
+                catch
+                {
+                    continue;
+                }
+                string key = element.Path.Split('.')[1];
+                presentationRequestObject.RequestedPredicates.Add(key.ToString(), info);
+            }
+
             presentationRequestObject.Handle = objectHandle;
             return await Task.FromResult(presentationRequestObject);
         }

@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using indy_shared_rs_dotnet.indy_credx;
+using indy_shared_rs_dotnet.Models;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
@@ -18,6 +20,56 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             //Assert
             actual.Should().NotBeEmpty();
+        }
+
+        [Test]
+        [TestCase(TestName = "Create PresentationRequest from Json.")]
+        public async Task CreatePresReq()
+        {
+            string nonce = await PresentationRequestApi.GenerateNonceAsync();
+            var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            string presReqJson = 
+                "{\"name\": \"proof\"," +
+                "\"version\": \"1.0\", " +
+                $"\"nonce\": \"{nonce}\"," +
+                "\"requested_attributes\": " +
+                "{" +
+                "\"reft\": " +
+                "{" +
+                "\"name\":\"attr\"," +
+                "\"non_revoked\":" +
+                "{ " +
+                $"\"from\": {timestamp}, " +
+                $"\"to\": {timestamp}" +
+                "}" +
+                "}" +
+                "}," +
+                "\"requested_predicates\": " +
+                "{" +
+                "\"light\": " +
+                "{" +
+                "\"name\":\"pred\"," +
+                "\"p_type\":\">=\"," +
+                "\"p_value\":18," +
+                "\"non_revoked\":" +
+                "{ " +
+                $"\"from\": {timestamp}, " +
+                $"\"to\": {timestamp}" +
+                "}" +
+                "}" +
+                "}," +
+                "\"non_revoked\": " +
+                "{ " +
+                $"\"from\": {timestamp}," +
+                $"\"to\": {timestamp}" +
+                "}," +
+                "\"ver\": \"1.0\"" +
+                "}";
+            PresentationRequest actual = await PresentationRequestApi.CreatePresReqFromJsonAsync(presReqJson);
+
+            actual.Name.Should().Be("proof");
+            actual.RequestedAttributes.Count.Should().Be(1);
+            actual.RequestedPredicates.Count.Should().Be(1);
         }
     }
 }
