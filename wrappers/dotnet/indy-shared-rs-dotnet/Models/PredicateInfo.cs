@@ -4,6 +4,7 @@ namespace indy_shared_rs_dotnet.Models
 {
     public class PredicateInfo
     {
+        [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("p_type")]
         public PredicateTypes PredicateType { get; set; }
@@ -11,6 +12,7 @@ namespace indy_shared_rs_dotnet.Models
         public int PredicateValue { get; set; }
         //TODO: Implement Query and AbstractQuery
         //public Query Restrictions { get; set; }
+        [JsonProperty("non_revoked")]
         public NonRevokedInterval NonRevoked { get; set; }
     }
 }
