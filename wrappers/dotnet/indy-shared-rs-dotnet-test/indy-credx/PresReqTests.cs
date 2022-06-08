@@ -71,5 +71,47 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             actual.RequestedAttributes.Count.Should().Be(1);
             actual.RequestedPredicates.Count.Should().Be(1);
         }
+
+        [Test, TestCase(TestName = "")]
+        public async Task PredicateTest()
+        {
+            string presReqJson = "{" +
+                "\"nonce\": nonce," +
+                "\"name\":\"pres_req_1\"," +
+                "\"version\":\"0.1\"," +
+                "\"requested_attributes\":{" +
+                    "\"attr1_referent\":{" +
+                        "\"name\":\"name\"" +
+                    "}," +
+                    "\"attr2_referent\":{" +
+                        "\"name\":\"sex\"" +
+                    "}," +
+                    "\"attr3_referent\":{ " +
+                        "\"name\":\"phone\"" +
+                    "}," +
+                    "\"attr4_referent\":{" +
+                        "\"names\": [\"name\", \"height\"]" +
+                    "}" +
+                "}," +
+                "\"requested_predicates\":{" +
+                    "\"predicate1_referent\":{ " +
+                        "\"name\":\"age\"," +
+                        "\"p_type\":\">=\"," +
+                        "\"p_value\":18" +
+                    "}" +
+                "}" +
+            "}";
+
+            string singlePredicateJson =
+                "\"predicate1_referent\":{ " +
+                        "\"name\":\"age\"," +
+                        "\"p_type\":\">=\"," +
+                        "\"p_value\":18" +
+                    "}";
+
+
+        }
+
     }
+}
 }

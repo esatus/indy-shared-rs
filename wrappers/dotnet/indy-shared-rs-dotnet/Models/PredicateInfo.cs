@@ -13,5 +13,10 @@ namespace indy_shared_rs_dotnet.Models
         public int PredicateValue { get; set; }
         public Query Restrictions { get; set; }
         public NonRevokedInterval NonRevoked { get; set; }
+
+        public PredicateInfo()
+        {
+            Restrictions = new Query();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using indy_shared_rs_dotnet.models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace indy_shared_rs_dotnet.Models
@@ -15,10 +16,9 @@ namespace indy_shared_rs_dotnet.Models
         public Query Restrictions { get; set; }
         public NonRevokedInterval NonRevoked { get; set; }
 
-        public AttributeInfo(string name, string value)
+        public AttributeInfo()
         {
-            Name = name;
-            Value = value;
+            Restrictions = new Query();
         }
     }
 }
