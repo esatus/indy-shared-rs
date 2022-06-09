@@ -12,7 +12,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         public static async Task<Schema> CreateSchemaAsync(string originDid, string schemaName, string schemaVersion, List<string> attrNames, uint seqNo)
         {
             uint schemaObjectHandle = 0;
-            int errorCode = NativeMethods.credx_create_schema(FfiStr.Create(originDid), FfiStr.Create(schemaName), FfiStr.Create(schemaVersion), FfiStrList2.Create(attrNames), seqNo, ref schemaObjectHandle);
+            int errorCode = NativeMethods.credx_create_schema(FfiStr.Create(originDid), FfiStr.Create(schemaName), FfiStr.Create(schemaVersion), FfiStrList.Create(attrNames), seqNo, ref schemaObjectHandle);
             if (errorCode != 0)
             {
                 string error = "";

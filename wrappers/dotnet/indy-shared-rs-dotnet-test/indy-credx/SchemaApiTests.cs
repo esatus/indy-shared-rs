@@ -12,28 +12,7 @@ using static indy_shared_rs_dotnet.Models.Structures;
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
     class SchemaApiTests
-    {/**
-        [Test]
-        [TestCase(TestName = "CreateSchema does not throw an exception.")]
-        public async Task CreateSchemaNoThrow()
-        {
-            //Arrange
-            string[] attrNames = { "gender", "age", "sex" };
-            FfiStrList FfiAttrNames = FfiStrList.Create(attrNames);
-            string did = "NcYxiDXkpYi6ov5FcYDi1e";
-            FfiStr FfiDid = FfiStr.Create(did);
-            string schemaName = "gvt";
-            FfiStr FfiSchemaName = FfiStr.Create(schemaName);
-            string schemaVersion = "1.0";
-            FfiStr FfiSchemaVersion = FfiStr.Create(schemaVersion);
-
-            //Act
-            Func<Task> act = async () => { await SchemaApi.CreateSchema(FfiDid, FfiSchemaName, FfiSchemaVersion, FfiAttrNames, 0); };
-
-            //Assert
-            await act.Should().NotThrowAsync();
-        }**/
-
+    {
         [Test]
         [TestCase(TestName = "CreateSchema works and creates a schema object.")]
         public async Task CreateSchemaWorks()
@@ -47,7 +26,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Act
             //Todo discuss error with team -> mix of [Marshal.Unmanaged...] string and FfiStrList
             Schema testObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
-            
+
             //Assert
             testObject.Should().BeOfType(typeof(Schema));
         }
@@ -71,6 +50,5 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             schemaAttributeId.Should().Be(testObject.Id);
             schemaAttributeVer.Should().Be("");
         }
-
     }
 }

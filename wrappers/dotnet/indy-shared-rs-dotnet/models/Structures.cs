@@ -8,15 +8,15 @@ namespace indy_shared_rs_dotnet.Models
 {
     public class Structures
     {
-        
+        /**
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct FfiStrList2
+        public unsafe struct FfiStrList
         {
             public uint count;
             public IntPtr* data;
-            public static FfiStrList2 Create(string[] args)
+            public static FfiStrList Create(string[] args)
             {
-                FfiStrList2 list = new();
+                FfiStrList list = new();
                 list.count = (uint)args.Length;
                 IntPtr[] ffiStrings = new IntPtr[list.count];
                 for (int i = 0; i < args.Length; i++)
@@ -31,22 +31,22 @@ namespace indy_shared_rs_dotnet.Models
                 return list;
             }
 
-            public static FfiStrList2 Create(List<string> args)
+            public static FfiStrList Create(List<string> args)
             {
                 return Create(args.ToArray());
             }
-        }
+        }**/
 
         /**
         //Note: This version doesnt work in credx_create_credential -> Access Memory issue
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct FfiStrList2
+        public unsafe struct FfiStrList
         {
             public uint count;
             public IntPtr data;
-            public static FfiStrList2 Create(string[] args)
+            public static FfiStrList Create(string[] args)
             {
-                FfiStrList2 list = new();
+                FfiStrList list = new();
                 list.count = (uint)args.Length;
                 list.data = new IntPtr();
                 list.data = Marshal.AllocHGlobal(args.Length * sizeof(IntPtr));
@@ -87,12 +87,12 @@ namespace indy_shared_rs_dotnet.Models
                 return list;
             }
 
-            public static FfiStrList2 Create(List<string> args)
+            public static FfiStrList Create(List<string> args)
             {
                 return Create(args.ToArray());
             }
         }**/
-
+        
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiStrList
         {
@@ -119,7 +119,7 @@ namespace indy_shared_rs_dotnet.Models
                 return Create(args.ToArray());
             }
         }
-
+        
         [StructLayout(LayoutKind.Sequential)]
         public struct FfiStr
         {
