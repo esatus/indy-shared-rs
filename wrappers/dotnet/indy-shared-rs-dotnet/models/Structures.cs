@@ -8,7 +8,7 @@ namespace indy_shared_rs_dotnet.Models
 {
     public class Structures
     {
-        /**
+        
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiStrList2
         {
@@ -35,7 +35,7 @@ namespace indy_shared_rs_dotnet.Models
             {
                 return Create(args.ToArray());
             }
-        }**/
+        }
 
         /**
         //Note: This version doesnt work in credx_create_credential -> Access Memory issue
