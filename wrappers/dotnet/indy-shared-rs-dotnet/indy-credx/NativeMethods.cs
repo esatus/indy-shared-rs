@@ -16,9 +16,10 @@ namespace indy_shared_rs_dotnet.indy_credx
         #region Mod
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_set_default_logger();
-
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern string credx_version();
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_buffer_free(ByteBuffer byteBuffer);
         #endregion
 
         #region PresReq
@@ -54,10 +55,10 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint credDefPrivateObjectHandle,
             uint credOfferObjectHandle,
             uint credRequestObjectHandle,
-            FfiStrList attrNames,
-            FfiStrList attrRawValues,
-            FfiStrList attrEncValues,
-            ref CredentialRevocationInfo revocation,
+            FfiStrList2 attrNames,
+            FfiStrList2 attrRawValues,
+            FfiStrList2 attrEncValues,
+            FfiCredRevInfo revocation,
             ref uint credObjectHandle,
             ref uint revRegObjectHandle,
             ref uint revDeltaObjectHandle);
@@ -93,7 +94,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         #region Schema
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int credx_create_schema(FfiStr origin_did, FfiStr schema_name, FfiStr schema_version, FfiStrList attr_names, uint seq_no, ref uint schema_p);
+        internal static extern int credx_create_schema(FfiStr origin_did, FfiStr schema_name, FfiStr schema_version, FfiStrList2 attr_names, uint seq_no, ref uint schema_p);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_schema_get_attribute(uint handle, FfiStr name, ref string result_p);

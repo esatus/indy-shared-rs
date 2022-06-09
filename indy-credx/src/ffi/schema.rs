@@ -13,29 +13,11 @@ use crate::services::{
     issuer::create_schema,
     types::{DidValue, Schema, SchemaId},
 };
-use log::{debug, error, log_enabled, info, Level};
-
-use crate::services::{prover::create_master_secret, types::MasterSecret};
 
 pub struct StoredCredDef {
     pub public: CredentialDefinition,
     pub private: CredentialDefinitionPrivate,
     pub key_proof: CredentialKeyCorrectnessProof,
-}
-pub const ISSUER_DID: &'static str = "NcYxiDXkpYi6ov5FcYDi1e";
-pub static GVT_SCHEMA_ATTRIBUTES: &[&'static str; 4] = &["name", "age", "sex", "height"];
-pub struct IssuerWallet {
-    pub did: DidValue,
-    pub cred_defs: Vec<StoredCredDef>,
-}
-
-impl Default for IssuerWallet {
-    fn default() -> Self {
-        Self {
-            did: DidValue::from(ISSUER_DID.to_string()),
-            cred_defs: vec![],
-        }
-    }
 }
 
 #[no_mangle]
@@ -49,17 +31,12 @@ pub extern "C" fn credx_create_schema(
 ) -> ErrorCode {
     catch_error(|| {
         check_useful_c_ptr!(result_p);
-		//env_logger::init();
-        //debug!("this is a debug {}", "message");
-        //error!("this is printed by default");
-
         let origin_did = {
             let did = origin_did
                 .as_opt_str()
                 .ok_or_else(|| err_msg!("Missing origin DID"))?;
             DidValue::from_str(did)?
-        };
-        //let mut issuer_wallet = IssuerWallet::default();
+        }; 
         let schema_name = schema_name
             .as_opt_str()
             .ok_or_else(|| err_msg!("Missing schema name"))?;
@@ -68,11 +45,9 @@ pub extern "C" fn credx_create_schema(
             .ok_or_else(|| err_msg!("Missing schema version"))?;
         let schema = create_schema(
             &origin_did,
-            //&issuer_wallet.did,
             schema_name,
             schema_version,
             attr_names.to_string_vec()?.into(),
-            //GVT_SCHEMA_ATTRIBUTES[..].into(),
             if seq_no > 0 {
                 Some(seq_no as u32)
             } else {

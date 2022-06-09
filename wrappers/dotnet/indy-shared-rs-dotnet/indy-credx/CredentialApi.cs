@@ -24,16 +24,15 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint credObjectHandle = 0;
             uint revRegObjectHandle = 0;
             uint revDeltaObjectHandle = 0;
-
             int errorCode = NativeMethods.credx_create_credential(
                 credDefObject.Handle,
                 credDefPvtObject.Handle, 
                 credOfferObject.Handle, 
-                credReqObject.Handle, 
-                FfiStrList.Create(attributeNames),
-                FfiStrList.Create(attributeRawValues),
-                FfiStrList.Create(attributeEncodedValues), 
-                ref credRevInfo,
+                credReqObject.Handle,
+                FfiStrList2.Create(attributeNames),
+                FfiStrList2.Create(attributeRawValues),
+                FfiStrList2.Create(attributeEncodedValues), 
+                FfiCredRevInfo.Create(credRevInfo),
                 ref credObjectHandle,
                 ref revRegObjectHandle,
                 ref revDeltaObjectHandle);
@@ -46,8 +45,16 @@ namespace indy_shared_rs_dotnet.indy_credx
             }
 
             Credential credObject = await CreateCredentialObjectAsync(credObjectHandle);
-            RevocationRegistry revRegObject = await CreateRevocationRegistryObjectAsync(revRegObjectHandle);
-            RevocationDelta revDeltaObject = await CreateRevocationDeltaObjectAsync(revDeltaObjectHandle);
+            
+            RevocationRegistry revRegObject = null;
+            if (revRegObjectHandle != 0) {
+                revRegObject = await CreateRevocationRegistryObjectAsync(revRegObjectHandle);
+            }
+
+            RevocationDelta revDeltaObject = null;
+            if (revDeltaObjectHandle != 0) {
+                revDeltaObject = await CreateRevocationDeltaObjectAsync(revDeltaObjectHandle);
+            }
 
             return await Task.FromResult((credObject, revRegObject, revDeltaObject));
         }
