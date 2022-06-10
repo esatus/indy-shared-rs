@@ -37,6 +37,8 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                     "\"reft\": " +
                     "{" +
                         "\"name\":\"attr\"," +
+                        "\"value\":\"myValue\","+
+                        "\"names\": [], " +
                         "\"non_revoked\":" +
                         "{ " +
                             $"\"from\": {timestamp}, " +
@@ -60,8 +62,9 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                         "[" +
                             "{\"schema_name\": \"blubb\"," +
                             "\"schema_version\": \"1.0\"}," +
-                            "{\"schema_name\": \"blubb2\"," +
-                            "\"schema_version\": \"2.0\"}" +
+                            "{\"cred_def_id\": \"blubb2\"," +
+                            "\"schema_version\": \"2.0\"}," +
+                            "{\"not_an_attribute\": \"should Fail\"}" +
                         "]" +
                     "}" +
                 "}," +
