@@ -28,40 +28,50 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         {
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-            string presReqJson = 
-                "{\"name\": \"proof\"," +
+            string presReqJson = "{" +
+                "\"name\": \"proof\"," +
                 "\"version\": \"1.0\", " +
                 $"\"nonce\": \"{nonce}\"," +
                 "\"requested_attributes\": " +
                 "{" +
-                "\"reft\": " +
-                "{" +
-                "\"name\":\"attr\"," +
-                "\"non_revoked\":" +
-                "{ " +
-                $"\"from\": {timestamp}, " +
-                $"\"to\": {timestamp}" +
-                "}" +
-                "}" +
+                    "\"reft\": " +
+                    "{" +
+                        "\"name\":\"attr\"," +
+                        "\"value\":\"myValue\","+
+                        "\"names\": [], " +
+                        "\"non_revoked\":" +
+                        "{ " +
+                            $"\"from\": {timestamp}, " +
+                            $"\"to\": {timestamp}" +
+                        "}" +
+                    "}" +
                 "}," +
                 "\"requested_predicates\": " +
                 "{" +
-                "\"light\": " +
-                "{" +
-                "\"name\":\"pred\"," +
-                "\"p_type\":\">=\"," +
-                "\"p_value\":18," +
-                "\"non_revoked\":" +
-                "{ " +
-                $"\"from\": {timestamp}, " +
-                $"\"to\": {timestamp}" +
-                "}" +
-                "}" +
+                    "\"light\": " +
+                    "{" +
+                        "\"name\":\"pred\"," +
+                        "\"p_type\":\">=\"," +
+                        "\"p_value\":18," +
+                        "\"non_revoked\":" +
+                        "{ " +
+                            $"\"from\": {timestamp}, " +
+                            $"\"to\": {timestamp}" +
+                        "}," +
+                        "\"restrictions\":" +
+                        "[" +
+                            "{\"schema_name\": \"blubb\"," +
+                            "\"schema_version\": \"1.0\"}," +
+                            "{\"cred_def_id\": \"blubb2\"," +
+                            "\"schema_version\": \"2.0\"}," +
+                            "{\"not_an_attribute\": \"should Fail\"}" +
+                        "]" +
+                    "}" +
                 "}," +
                 "\"non_revoked\": " +
                 "{ " +
-                $"\"from\": {timestamp}," +
-                $"\"to\": {timestamp}" +
+                    $"\"from\": {timestamp}," +
+                    $"\"to\": {timestamp}" +
                 "}," +
                 "\"ver\": \"1.0\"" +
                 "}";
