@@ -39,8 +39,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
 
@@ -77,8 +76,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
 
@@ -90,7 +88,14 @@ namespace indy_shared_rs_dotnet.indy_credx
         public static async Task<string> EncodeCredentialAttributesAsync(List<string> rawAttributes)
         {
             string result = "";
-            NativeMethods.credx_encode_credential_attributes(FfiStrList.Create(rawAttributes), ref result);
+            int errorCode = NativeMethods.credx_encode_credential_attributes(FfiStrList.Create(rawAttributes), ref result);
+            
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                Debug.WriteLine(error);
+            }
+
             return await Task.FromResult(result);
         }
 
@@ -98,7 +103,14 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             string result = "";
             //note: only attributeName "schema_id", "cred_def_id", "rev_reg_id", "rev_reg_index" supported so far.
-            NativeMethods.credx_credential_get_attribute(credential.Handle, FfiStr.Create(attributeName), ref result);
+            int errorCode = NativeMethods.credx_credential_get_attribute(credential.Handle, FfiStr.Create(attributeName), ref result);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                Debug.WriteLine(error);
+            }
+
             return await Task.FromResult(result);
         }
 

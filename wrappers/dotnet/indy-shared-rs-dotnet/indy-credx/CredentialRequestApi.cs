@@ -26,10 +26,9 @@ namespace indy_shared_rs_dotnet.indy_credx
                 ref requestHandle,
                 ref metadataHandle);
 
-            if (errorCode != 0)
+            if (errorCode != 0) 
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
             CredentialRequest requestObject = await CreateCredentialRequestObject(requestHandle);

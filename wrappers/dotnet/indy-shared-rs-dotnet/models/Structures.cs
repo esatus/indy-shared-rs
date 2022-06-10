@@ -37,8 +37,6 @@ namespace indy_shared_rs_dotnet.Models
             }
         }**/
 
-        /**
-        //Note: This version doesnt work in credx_create_credential -> Access Memory issue
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiStrList
         {
@@ -58,10 +56,97 @@ namespace indy_shared_rs_dotnet.Models
                 Marshal.Copy(ffiStrings, 0, list.data, args.Length);
 
                 //Debug for 3 entries in args
+                /**
                 UTF8Encoding decoder = new UTF8Encoding(true, true);
                 IntPtr debugPtr0 = Marshal.ReadIntPtr(list.data, 0* sizeof(IntPtr));
                 IntPtr debugPtr1 = Marshal.ReadIntPtr(list.data, 1* sizeof(IntPtr));
                 IntPtr debugPtr2 = Marshal.ReadIntPtr(list.data, 2* sizeof(IntPtr));
+                byte[] debugBytes0 = new byte[args[0].Length];
+                byte[] debugBytes1 = new byte[args[1].Length];
+                byte[] debugBytes2 = new byte[args[2].Length];
+                
+                for (int i = 0; i < args[0].Length; i++)
+                {
+                    debugBytes0[i] = Marshal.ReadByte(debugPtr0, i);
+                }
+                string debugStr0 = decoder.GetString(debugBytes0, 0, args[0].Length);
+
+                for (int i = 0; i < args[1].Length; i++)
+                {
+                    debugBytes1[i] = Marshal.ReadByte(debugPtr1, i);
+                }
+                string debugStr1 = decoder.GetString(debugBytes1, 0, args[1].Length);
+
+                for (int i = 0; i < args[2].Length; i++)
+                {
+                    debugBytes2[i] = Marshal.ReadByte(debugPtr2, i);
+                }
+                string debugStr2 = decoder.GetString(debugBytes2, 0, args[2].Length);
+                string[] debugArray = { debugStr0, debugStr1, debugStr2 };
+                **/
+                return list;
+            }
+
+            public static FfiStrList Create(List<string> args)
+            {
+                return Create(args.ToArray());
+            }
+        }
+
+        /**
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct FfiStrList
+        {
+            public uint count;
+            public FfiStr* data;
+            public static FfiStrList Create(string[] args)
+            {
+                FfiStrList list = new();
+                list.count = (uint)args.Length;
+                FfiStr[] ffiStrings = new FfiStr[list.count];
+                for (int i = 0; i < args.Length; i++)
+                {
+                    ffiStrings[i] = FfiStr.Create(args[i]);
+                }
+                fixed (FfiStr* ffiStr_p = &ffiStrings[0])
+                {
+                    list.data = ffiStr_p;
+                }
+                return list;
+            }
+
+            public static FfiStrList Create(List<string> args)
+            {
+                return Create(args.ToArray());
+            }
+        }**/
+
+        /**
+        //Note: This version doesnt work in credx_create_credential -> Access Memory issue
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct FfiStrList
+        {
+            public uint count;
+            public FfiStr data;
+            public static FfiStrList Create(string[] args)
+            {
+                FfiStrList list = new();
+                list.count = (uint)args.Length;
+                list.data = new FfiStr();
+                list.data.data = Marshal.AllocHGlobal(args.Length * sizeof(IntPtr));
+
+                IntPtr[] ffiStrings = new IntPtr[list.count];
+                for (int i = 0; i < args.Length; i++)
+                {
+                    ffiStrings[i] = Marshal.StringToCoTaskMemUTF8(args[i]);
+                }
+                Marshal.Copy(ffiStrings, 0, list.data.data, args.Length);
+
+                //Debug for 3 entries in args
+                UTF8Encoding decoder = new UTF8Encoding(true, true);
+                IntPtr debugPtr0 = Marshal.ReadIntPtr(list.data.data, 0* sizeof(IntPtr));
+                IntPtr debugPtr1 = Marshal.ReadIntPtr(list.data.data, 1* sizeof(IntPtr));
+                IntPtr debugPtr2 = Marshal.ReadIntPtr(list.data.data, 2* sizeof(IntPtr));
                 byte[] debugBytes0 = new byte[args[0].Length];
                 byte[] debugBytes1 = new byte[args[1].Length];
                 byte[] debugBytes2 = new byte[args[2].Length];
@@ -92,43 +177,19 @@ namespace indy_shared_rs_dotnet.Models
                 return Create(args.ToArray());
             }
         }**/
-        
-        [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct FfiStrList
-        {
-            public uint count;
-            public FfiStr* data;
-            public static FfiStrList Create(string[] args)
-            {
-                FfiStrList list = new();
-                list.count = (uint)args.Length;
-                FfiStr[] ffiStrings = new FfiStr[list.count];
-                for (int i = 0; i < args.Length; i++)
-                {
-                    ffiStrings[i] = FfiStr.Create(args[i]);
-                }
-                fixed (FfiStr* ffiStr_p = &ffiStrings[0])
-                {
-                    list.data = ffiStr_p;
-                }
-                return list;
-            }
 
-            public static FfiStrList Create(List<string> args)
-            {
-                return Create(args.ToArray());
-            }
-        }
-        
         [StructLayout(LayoutKind.Sequential)]
         public struct FfiStr
         {
             public IntPtr data;
+
             public static FfiStr Create(string arg)
             {
                 FfiStr FfiString = new();
                 FfiString.data = new IntPtr();
-                FfiString.data = Marshal.StringToCoTaskMemUTF8(arg);
+                if (arg != null) {
+                    FfiString.data = Marshal.StringToCoTaskMemUTF8(arg); 
+                }
                 return FfiString;
             }
         }

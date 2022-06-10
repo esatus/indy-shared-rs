@@ -18,13 +18,13 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint credOfferObjectHandle = 0;
             int errorCode = NativeMethods.credx_create_credential_offer(FfiStr.Create(schemaId), credDefObject.Handle, keyProofObject.Handle, ref credOfferObjectHandle);
-            
+
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
+
             CredentialOffer credOfferObject = await CreateCredentialOfferObject(credOfferObjectHandle);
             return await Task.FromResult(credOfferObject);
         }

@@ -20,8 +20,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             int errorCode = NativeMethods.credx_object_free(objectHandle);
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
         }
@@ -39,8 +38,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             int errorCode = NativeMethods.credx_object_get_type_name(handle, ref result);
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
             return await Task.FromResult(result);
@@ -57,8 +55,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             int errorCode = NativeMethods.credx_object_get_json(handle, ref result);
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = ErrorApi.GetCurrentErrorAsync().GetAwaiter().GetResult();
                 Debug.WriteLine(error);
             }
             return Task.FromResult(result).GetAwaiter().GetResult();

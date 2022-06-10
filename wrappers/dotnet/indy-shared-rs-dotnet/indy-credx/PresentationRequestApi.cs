@@ -10,17 +10,16 @@ namespace indy_shared_rs_dotnet.indy_credx
 {
     public static class PresentationRequestApi
     {
-        public static Task<string> GenerateNonceAsync()
+        public static async Task<string> GenerateNonceAsync()
         {
             string result = "";
             int errorCode = NativeMethods.credx_generate_nonce(ref result);
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
-            return Task.FromResult(result);
+            return await Task.FromResult(result);
         }
 
         public static async Task<PresentationRequest> CreatePresReqFromJsonAsync(string presReqJson)
@@ -29,8 +28,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             int errorCode = NativeMethods.credx_presentation_request_from_json(ByteBuffer.Create(presReqJson) ,ref presReqObjectHandle);
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
             PresentationRequest presReq = await CreatePresentationRequestObject(presReqObjectHandle);

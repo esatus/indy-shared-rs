@@ -10,7 +10,7 @@ namespace indy_shared_rs_dotnet.indy_credx
     {
         #region Error
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_get_current_error(ref string error_json_p);
+        internal static extern int credx_get_current_error(ref string errorJson);
         #endregion
 
         #region Mod
@@ -24,7 +24,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         #region PresReq
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_generate_nonce(ref string nonce_p);
+        internal static extern int credx_generate_nonce(ref string nonce);
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_presentation_request_from_json(ByteBuffer presentationRequestJson, ref uint presentationRequestObjectHandle);
         #endregion
@@ -35,7 +35,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                                                                          ref uint credDefObjectHandle, ref uint credDefPvtObjectHandle, ref uint keyProofObjectHandle);
         
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_credential_definition_get_attribute(uint handle, FfiStr name, ref string result_p);
+        internal static extern int credx_credential_definition_get_attribute(uint credDefObjectHandle, FfiStr attributeName, ref string result);
         #endregion
         
         #region CredentialOffer 
@@ -70,12 +70,12 @@ namespace indy_shared_rs_dotnet.indy_credx
         internal static extern int credx_process_credential(uint credObjectHandle, uint credReqObjectHandle, uint masterSecretObjectHandle, uint credDefObjectHandle, uint revRegDefObjectHandle, ref uint resultObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_credential_get_attribute(uint ObjectHandle, FfiStr name, ref string result);
+        internal static extern int credx_credential_get_attribute(uint credObjectHandle, FfiStr attributeName, ref string result);
         #endregion
 
         #region MasterSecret
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_create_master_secret(ref uint objectHandle);
+        internal static extern int credx_create_master_secret(ref uint masterSecretObjectHandle);
         #endregion
 
         #region Presentation
@@ -89,29 +89,86 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint masterSecret,
             FfiUIntList schemas,
             FfiUIntList credDefs,
-            ref uint presentationP);
+            ref uint presentationObjectHandle);
+        #endregion
+
+        #region Revocation
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_revocation_registry(
+            FfiStr originDid, 
+            uint credDefObjectHandle, 
+            FfiStr tag, 
+            FfiStr revRegType, 
+            FfiStr issuanceType, 
+            long maxCredNumber, 
+            FfiStr tailsDirPath,
+            ref uint regDefObjectHandle,
+            ref uint regDefPvtObjectHandle, 
+            ref uint regEntryObjectHandle, 
+            ref uint regInitDeltaObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_update_revocation_registry(
+            uint revRegDefObjectHandle,
+            uint revRegObjectHandle,
+            FfiLongList issued,
+            FfiLongList revoked,
+            FfiStr tailsPath,
+            ref uint revRegUpdatedObjectHandle,
+            ref uint revRegDeltaObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_revoke_credential(
+            uint revRegDefObjectHandle,
+            uint revRegObjectHandle,
+            long credRevIdx,
+            FfiStr tailsPath,
+            ref uint revRegUpdatedObjectHandle,
+            ref uint revRegDeltaObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_revocation_registry_definition_get_attribute(
+            uint regDefObjectHandle,
+            FfiStr attributeName,
+            ref string result);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_merge_revocation_registry_deltas(
+            uint revRegDelta1ObjectHandle,
+            uint revRegDelta2ObjectHandle,
+            ref uint revRegDeltaNewObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_or_update_revocation_state(
+            uint revRegDefObjectHandle,
+            uint revRegDeltaObjectHandle,
+            long revRegIndex,
+            long timestamp,
+            FfiStr tailsPath,
+            uint revStateObjectHandle,
+            ref uint revStateNewObjectHandle);
         #endregion
 
         #region Schema
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int credx_create_schema(FfiStr origin_did, FfiStr schema_name, FfiStr schema_version, FfiStrList attr_names, uint seq_no, ref uint schema_p);
+        internal static extern int credx_create_schema(FfiStr originDid, FfiStr schemaName, FfiStr schemaVersion, FfiStrList attrNames, uint seqNo, ref uint schemaObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_schema_get_attribute(uint handle, FfiStr name, ref string result_p);
+        internal static extern int credx_schema_get_attribute(uint schemaObjectHandle, FfiStr attributeName, ref string result);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_schema_from_json(ByteBuffer schemaJson, ref uint schemaHandle);
+        internal static extern int credx_schema_from_json(ByteBuffer schemaJson, ref uint schemaObjectHandle);
 
         #endregion
 
         #region ObjectHandle
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_object_get_type_name(uint handle, ref string result);
+        internal static extern int credx_object_get_type_name(uint objectHandle, ref string result);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_object_get_json(uint handle, ref ByteBuffer result);
+        internal static extern int credx_object_get_json(uint objectHandle, ref ByteBuffer result);
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_object_free(uint handle);
+        internal static extern int credx_object_free(uint objectHandle);
         #endregion
     }
 }

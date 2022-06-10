@@ -5,13 +5,12 @@ namespace indy_shared_rs_dotnet.indy_credx
 {
     public static class ModApi
     {
-        public static void SetDefaultLogger()
+        public static async Task SetDefaultLogger()
         {
             int errorCode = NativeMethods.credx_set_default_logger();
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
         }

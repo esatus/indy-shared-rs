@@ -11,13 +11,13 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint result = 0;
             int errorCode = NativeMethods.credx_create_master_secret(ref result);
-            
+
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
+
             string masterSecretJson = await ObjectApi.ToJson(result);
             MasterSecret msObject = JsonConvert.DeserializeObject<MasterSecret>(masterSecretJson, Settings.jsonSettings);
             msObject.Handle = result;

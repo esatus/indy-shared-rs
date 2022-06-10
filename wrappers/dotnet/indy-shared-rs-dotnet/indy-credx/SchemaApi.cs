@@ -13,12 +13,13 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint schemaObjectHandle = 0;
             int errorCode = NativeMethods.credx_create_schema(FfiStr.Create(originDid), FfiStr.Create(schemaName), FfiStr.Create(schemaVersion), FfiStrList.Create(attrNames), seqNo, ref schemaObjectHandle);
+            
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
+
             Schema schemaObject = await CreateSchemaObject(schemaObjectHandle);
             return await Task.FromResult(schemaObject);
         }
@@ -27,13 +28,13 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint schemaObjectHandle = 0;
             int errorCode = NativeMethods.credx_schema_from_json(ByteBuffer.Create(schemaJson), ref schemaObjectHandle);
-            
+
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
+
             Schema schemaObject = await CreateSchemaObject(schemaObjectHandle);
             return await Task.FromResult(schemaObject);
         }
@@ -43,12 +44,13 @@ namespace indy_shared_rs_dotnet.indy_credx
             string result = "";
             //note: only "id" as attributeName supported so far.
             int errorCode = NativeMethods.credx_schema_get_attribute(schema.Handle, FfiStr.Create(attributeName), ref result);
+
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
+
             return await Task.FromResult(result);
         }
 

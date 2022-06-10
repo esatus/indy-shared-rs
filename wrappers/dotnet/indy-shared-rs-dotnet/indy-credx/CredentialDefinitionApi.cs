@@ -34,8 +34,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
 
@@ -50,11 +49,10 @@ namespace indy_shared_rs_dotnet.indy_credx
             //note: only "id" and "schema_id" as attributeName supported so far.
             string result = "";
             int errorCode = NativeMethods.credx_credential_definition_get_attribute(credDefObject.Handle, FfiStr.Create(attributeName), ref result);
-            
+
             if (errorCode != 0)
             {
-                string error = "";
-                NativeMethods.credx_get_current_error(ref error);
+                string error = await ErrorApi.GetCurrentErrorAsync();
                 Debug.WriteLine(error);
             }
             return await Task.FromResult(result);

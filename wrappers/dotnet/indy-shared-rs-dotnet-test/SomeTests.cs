@@ -22,6 +22,8 @@ namespace indy_shared_rs_dotnet_test
             string schemaName = "gvt";
             string schemaVersion = "1.0";
 
+            FfiStr d = FfiStr.Create(null);
+
             //Todo discuss error with team -> mix of [Marshal.Unmanaged...] string and FfiStrList
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
