@@ -64,16 +64,33 @@ namespace indy_shared_rs_dotnet.indy_credx
                 PredicateInfo info;
                 try
                 {
-                    //TODO: If Restrictions, create new AttributeFilter on $or and property on $and.
-                    info = JsonConvert.DeserializeObject<PredicateInfo>(element.First.ToString());
+                   
                 }
-                catch(System.Exception ex)
+                catch (System.Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                     continue;
                 }
-                string key = element.Path.Split('.')[1];
-                presentationRequestObject.RequestedPredicates.Add(key.ToString(), info);
+
+                //PredicateInfo info;
+                //try
+                //{
+                //    //TODO: If Restrictions, create new AttributeFilter on $or and property on $and.
+                //    var restrictions = element.Values();
+                //    foreach (JProperty restriction in restrictions)
+                //    {
+                //        var x = restriction;
+                //    }
+
+                //    info = JsonConvert.DeserializeObject<PredicateInfo>(element.First.ToString());
+                //}
+                //catch(System.Exception ex)
+                //{
+                //    Debug.WriteLine(ex.Message);
+                //    continue;
+                //}
+                //string key = element.Path.Split('.')[1];
+                //presentationRequestObject.RequestedPredicates.Add(key.ToString(), info);
             }
 
             presentationRequestObject.Handle = objectHandle;
