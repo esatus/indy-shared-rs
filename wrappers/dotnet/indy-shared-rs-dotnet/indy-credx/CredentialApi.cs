@@ -29,9 +29,9 @@ namespace indy_shared_rs_dotnet.indy_credx
                 credDefPvtObject.Handle, 
                 credOfferObject.Handle, 
                 credReqObject.Handle,
-                FfiStrList2.Create(attributeNames),
-                FfiStrList2.Create(attributeRawValues),
-                FfiStrList2.Create(attributeEncodedValues), 
+                FfiStrList.Create(attributeNames),
+                FfiStrList.Create(attributeRawValues),
+                FfiStrList.Create(attributeEncodedValues), 
                 FfiCredRevInfo.Create(credRevInfo),
                 ref credObjectHandle,
                 ref revRegObjectHandle,
@@ -61,19 +61,26 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         public static async Task<Credential> ProcessCredentialAsync(
             Credential credential,
-            CredentialRequest credentialRequest,
+            CredentialRequestMetadata credentialRequestMetadata,
             MasterSecret masterSecret,
             CredentialDefinition credentialDefinition,
             RevocationRegistryDefinition revocationRegistryDefinition)
         {
             uint credentialObjectHandle = 0;
-            NativeMethods.credx_process_credential(
+            int errorCode = NativeMethods.credx_process_credential(
                 credential.Handle,
-                credentialRequest.Handle,
+                credentialRequestMetadata.Handle,
                 masterSecret.Handle,
                 credentialDefinition.Handle,
                 revocationRegistryDefinition.Handle,
                 ref credentialObjectHandle);
+
+            if (errorCode != 0)
+            {
+                string error = "";
+                NativeMethods.credx_get_current_error(ref error);
+                Debug.WriteLine(error);
+            }
 
             Credential credentialObject = await CreateCredentialObjectAsync(credentialObjectHandle);
 

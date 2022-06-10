@@ -71,7 +71,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         public async Task ProcessCredentialAsync()
         {
             //Arrange
-            List<string> attrNames = new() { "gender", "age", "sex" };
+            List<string> attrNames = new() { "name", "age", "sex" };
             string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
             string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
             string schemaName = "gvt";
@@ -90,29 +90,31 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
 
             //Todo fix class CredentialRevocationInfo
-            CredentialRevocationInfo credRevInfo = new();
+            CredentialRevocationInfo credRevInfo = null;
 
             (Credential credObject, RevocationRegistry revRegObject, RevocationDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
                 attrNames, attrNames, attrNames, credRevInfo);
 
-            //Todo get real revRegDefObject by calling corresponding Create function
+            //TODO get real revRegDefObject by calling corresponding Create function
             RevocationRegistryDefinition revRegDefObject = new();
+            revRegDefObject.Handle = 0;
+
             //Act
             Credential credObjectProcessed =
-                await CredentialApi.ProcessCredentialAsync(credObject, credRequestObject, masterSecretObject, credDefObject, revRegDefObject);
+                await CredentialApi.ProcessCredentialAsync(credObject, metaDataObject, masterSecretObject, credDefObject, revRegDefObject);
 
             //Assert
-            credObject.Should().BeOfType(typeof(Credential));
+            credObjectProcessed.Should().BeOfType(typeof(Credential));
         }
         #endregion
 
         #region Tests for GetCredentialAttributeAsync
-        [Test, TestCase(TestName = "GetCredentialAttributeAsync works for attributes: schema_id, cred_def_id, rev_reg_id, rev_reg_index.")]
+        [Test, TestCase(TestName = "GetCredentialAttributeAsync works for attributes: schema_id, cred_def_id, rev_reg_id.")]
         public async Task GetCredentialAttributeAsync()
         {
             //Arrange
-            List<string> attrNames =new() { "gender", "age", "sex" };
+            List<string> attrNames = new() { "name", "age", "sex" };
             string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
             string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
             string schemaName = "gvt";
@@ -130,8 +132,8 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             (CredentialRequest credRequestObject, CredentialRequestMetadata metaDataObject) =
                 await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
 
-            //Todo fix class CredentialRevocationInfo
-            CredentialRevocationInfo credRevInfo = new();
+            //TODO fix class CredentialRevocationInfo
+            CredentialRevocationInfo credRevInfo = null;
 
             (Credential credObject, RevocationRegistry revRegObject, RevocationDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
