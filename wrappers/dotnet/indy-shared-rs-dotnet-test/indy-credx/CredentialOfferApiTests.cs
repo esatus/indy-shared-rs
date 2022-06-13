@@ -25,7 +25,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
 
             //Act
-            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttribute(credDef,"schema_id");
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDef,"schema_id");
             CredentialOffer testObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDef, keyProof);
 
             //Assert
