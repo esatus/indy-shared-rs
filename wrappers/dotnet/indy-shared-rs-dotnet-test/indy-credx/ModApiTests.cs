@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
-    public class ModTests
+    public class ModApiTests
     {
         [Test]
         [TestCase(TestName = "SetDefaultLogger does not throw an exception.")]

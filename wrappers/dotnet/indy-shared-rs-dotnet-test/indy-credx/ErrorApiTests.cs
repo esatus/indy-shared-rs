@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
-    public class ErrorTests
+    public class ErrorApiTests
     {
         [Test]
         [TestCase(TestName = "GetCurrentErrorAsync returns the json of an empty error.")]

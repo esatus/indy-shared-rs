@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
-    public class PresReqTests
+    public class PresentationRequestApiTests
     {
         [Test]
         [TestCase(TestName = "GenerateNonceAsync returns a string that is not empty.")]

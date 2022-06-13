@@ -44,7 +44,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult((credDefObject, credDefPvtObject, keyProofObject));
          }
 
-        public static async Task<string> GetCredentialDefinitionAttribute(CredentialDefinition credDefObject, string attributeName)
+        public static async Task<string> GetCredentialDefinitionAttributeAsync(CredentialDefinition credDefObject, string attributeName)
         {
             //note: only "id" and "schema_id" as attributeName supported so far.
             string result = "";

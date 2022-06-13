@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -25,7 +22,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             }
         }
 
-        public static async unsafe Task<string> ToJson(uint objectHandle)
+        public static unsafe async Task<string> ToJson(uint objectHandle)
         {
             ByteBuffer byteBuffer = ObjectGetJson(objectHandle).GetAwaiter().GetResult();
             string decoded = DecodeToString(byteBuffer).GetAwaiter().GetResult();
@@ -44,7 +41,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(result);
 
         }
-        private static async unsafe Task<ByteBuffer> ObjectGetJson(uint handle)
+        private static unsafe async Task<ByteBuffer> ObjectGetJson(uint handle)
         {
             ByteBuffer result = new()
             {
@@ -61,7 +58,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return Task.FromResult(result).GetAwaiter().GetResult();
         }
 
-        private static async unsafe Task<string> DecodeToString(ByteBuffer byteBuffer)
+        private static unsafe async Task<string> DecodeToString(ByteBuffer byteBuffer)
         {
             char[] charArray = new char[byteBuffer.len];
             UTF8Encoding utf8Decoder = new UTF8Encoding(true, true);

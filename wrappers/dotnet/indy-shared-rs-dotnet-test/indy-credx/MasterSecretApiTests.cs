@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
-    public class MasterSecretTests
+    public class MasterSecretApiTests
     {
         [Test]
         [TestCase(TestName = "CreateMasterSecret does not throw an exception.")]

@@ -10,6 +10,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 {
     public class CredentialDefinitionApiTests
     {
+        #region Tests for CreateCredentialDefinitionAsync
         [Test]
         [TestCase(TestName = "CreateCredentialDefinition works.")]
         public async Task CreateCredentialDefinitionWorks()
@@ -30,5 +31,9 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             credDefPvt.Should().BeOfType(typeof(CredentialDefinitionPrivate));
             keyProof.Should().BeOfType(typeof(CredentialKeyCorrectnessProof));
         }
+        #endregion
+
+        #region Tests for GetCredentialDefinitionAttributeAsync
+        #endregion
     }
 }
