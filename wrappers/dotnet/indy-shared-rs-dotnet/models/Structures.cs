@@ -310,6 +310,24 @@ namespace indy_shared_rs_dotnet.Models
         }
 
         [StructLayout(LayoutKind.Sequential)]
+        public struct FfiRevocationEntry
+        {
+            public long DefEntryIdx;
+            public uint Entry;
+            public long Timestamp;
+
+            public static FfiRevocationEntry Create(RevocationRegistryEntry entry)
+            {
+                FfiRevocationEntry result = new();
+                result.DefEntryIdx = entry.DefEntryIdx;
+                result.Entry = entry.Entry;
+                result.Timestamp = entry.Timestamp;
+                
+                return result;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiCredentialEntryList
         {
             public uint count;
@@ -380,6 +398,33 @@ namespace indy_shared_rs_dotnet.Models
             }
 
             public static FfiUIntList Create(List<uint> args)
+            {
+                return Create(args.ToArray());
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct FfiRevocationEntryList
+        {
+            public uint count;
+            public FfiRevocationEntry* data;
+            public static FfiRevocationEntryList Create(RevocationRegistryEntry[] args)
+            {
+                FfiRevocationEntryList list = new();
+                list.count = (uint)args.Length;
+                FfiRevocationEntry[] ffiRevocationEntries = new FfiRevocationEntry[list.count];
+                for (int i = 0; i < args.Length; i++)
+                {
+                    ffiRevocationEntries[i] = FfiRevocationEntry.Create(args[i]);
+                }
+                fixed (FfiRevocationEntry* ffiEntryP = &ffiRevocationEntries[0])
+                {
+                    list.data = ffiEntryP;
+                }
+                return list;
+            }
+
+            public static FfiRevocationEntryList Create(List<RevocationRegistryEntry> args)
             {
                 return Create(args.ToArray());
             }

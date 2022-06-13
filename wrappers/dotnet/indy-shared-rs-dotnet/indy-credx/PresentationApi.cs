@@ -49,6 +49,40 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(presentationObject);
         }
 
+        public static async Task<byte> VerifyPresentationAsync(
+            Presentation presentation,
+            PresentationRequest presentationRequest,
+            List<Schema> schemas,
+            List<CredentialDefinition> credentialDefinitions,
+            List<RevocationRegistryDefinition> revocationRegistryDefinitions,
+            List<RevocationRegistryEntry> revocationRegistryEntries)
+        {
+            byte verify = 0;
+            List<uint> schemaHandles = 
+                (from schema in schemas select schema.Handle).ToList();
+            List<uint> credDefHandles = 
+                (from credDef in credentialDefinitions select credDef.Handle).ToList();
+            List<uint> revRegDefHandles = 
+                (from revRegDef in revocationRegistryDefinitions select revRegDef.Handle).ToList();
+
+            int errorCode = NativeMethods.credx_verify_presentation(
+                presentation.Handle,
+                presentationRequest.Handle,
+                FfiUIntList.Create(schemaHandles),
+                FfiUIntList.Create(credDefHandles),
+                FfiUIntList.Create(revRegDefHandles),
+                FfiRevocationEntryList.Create(revocationRegistryEntries),
+                ref verify);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                Debug.WriteLine(error);
+            }
+
+            return await Task.FromResult(verify);
+        }
+
         private static async Task<Presentation> CreatePresentationObject(uint objectHandle)
         {
             string presentationJson = await ObjectApi.ToJson(objectHandle);

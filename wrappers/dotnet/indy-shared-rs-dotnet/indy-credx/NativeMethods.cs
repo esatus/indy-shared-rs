@@ -90,6 +90,16 @@ namespace indy_shared_rs_dotnet.indy_credx
             FfiUIntList schemas,
             FfiUIntList credDefs,
             ref uint presentationObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_verify_presentation(
+            uint presObjectHandle,
+            uint presReqObjectHandle,
+            FfiUIntList schemaObjectHandles,
+            FfiUIntList credDefObjectHandles,
+            FfiUIntList revRegDefObjectHandles,
+            FfiRevocationEntryList revRegEntries, 
+            ref byte verifyResult);
         #endregion
 
         #region Revocation
