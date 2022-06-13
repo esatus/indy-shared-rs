@@ -1,5 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -29,7 +30,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0) 
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Debug.WriteLine(error);
+                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
             CredentialRequest requestObject = await CreateCredentialRequestObject(requestHandle);
             CredentialRequestMetadata metadataObject = await CreateCredentialRequestMetadataObject(metadataHandle);

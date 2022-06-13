@@ -57,6 +57,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         {
             //Arrange
             List<string> rawAttributes = new List<string>(){ "test", "test2", "test3" };
+
             //Act
             string result = await CredentialApi.EncodeCredentialAttributesAsync(rawAttributes);
 
