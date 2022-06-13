@@ -24,12 +24,12 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             List<CredentialEntry> credentialEntries = new()
             {
-                new CredentialEntry
-                {
-                    CredentialObjectHandle = credential.Handle,
-                    Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds(),
-                    RevStateObjectHandle = revocation.Handle
-                }
+                new CredentialEntry(credential, revocation)
+                //{
+                //    CredentialObjectHandle = credential.Handle,
+                //    Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds(),
+                //    RevStateObjectHandle = revocation.Handle
+                //}
             };
 
             List<CredentialProve> credentialProves = new()

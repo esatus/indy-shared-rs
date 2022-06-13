@@ -91,7 +91,7 @@ namespace indy_shared_rs_dotnet_test
             PresentationRequest presentationRequest = await PresentationRequestApi.CreatePresReqFromJsonAsync(presReqJson);
 
             // CredentialDefinition
-            List<string> attrNames = new() { "gender", "age", "sex" };
+            List<string> attrNames = new() { "name", "age", "sex" };
             string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
             string schemaName = "gvt";
             string schemaVersion = "1.0";
@@ -102,12 +102,12 @@ namespace indy_shared_rs_dotnet_test
                 await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
 
             // Schema
-            List<string> schemattrNames = new() { "gender", "age", "sex" };
+            List<string> schemattrNames = new() { "name", "age", "sex" };
             string schemaIssuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
             string schemaSchemaName = "gvt";
-            string schemaSchemaVersion = "1.0A";
+            string schemaSchemaVersion = "1.0";
 
-            Schema schema = await SchemaApi.CreateSchemaAsync(schemaIssuerDid, schemaSchemaName, schemaSchemaVersion, schemattrNames, 0);
+            Schema schema = schemaObject;//await SchemaApi.CreateSchemaAsync(schemaIssuerDid, schemaSchemaName, schemaSchemaVersion, schemattrNames, 0);
 
             // CredentialObject, RevObject
             List<string> credentialObjectAttrNames = new() { "name", "age", "sex" };
