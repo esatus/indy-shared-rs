@@ -35,7 +35,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Debug.WriteLine(error);
+                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
 
             CredentialDefinition credDefObject = await CreateCredentialDefinitonObject(credDefHandle);
