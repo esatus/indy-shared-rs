@@ -1,7 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -18,7 +17,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint requestHandle = 0;
             uint metadataHandle = 0;
-            int errorCode =  NativeMethods.credx_create_credential_request(
+            int errorCode = NativeMethods.credx_create_credential_request(
                 FfiStr.Create(proverDid),
                 credentialDefinition.Handle,
                 masterSecret.Handle,
@@ -27,7 +26,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                 ref requestHandle,
                 ref metadataHandle);
 
-            if (errorCode != 0) 
+            if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
                 throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);

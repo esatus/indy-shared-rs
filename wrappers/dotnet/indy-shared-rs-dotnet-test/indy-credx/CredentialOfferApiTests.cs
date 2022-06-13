@@ -10,7 +10,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 {
     public class CredentialOfferApiTests
     {
-        [Test, TestCase(TestName = "CreateCredentialOffer() returns CredentialOffer object.")]
+        [Test, TestCase(TestName = "CreateCredentialOfferAsync() returns CredentialOffer object.")]
         public async Task CreateCredentialOfferWorks()
         {
             //Arrange
@@ -34,13 +34,13 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         private static IEnumerable<TestCaseData> CreateCredentialOfferCases()
         {
             yield return new TestCaseData(false, false, false)
-                .SetName("CreateCredentialOffer() throws Exception if all arguments are null.");
+                .SetName("CreateCredentialOfferAsync() throws Exception if all arguments are null.");
             yield return new TestCaseData(false, true, true)
-                .SetName("CreateCredentialOffer() throws SharedRsException if SchemaId is null.");
+                .SetName("CreateCredentialOfferAsync() throws SharedRsException if SchemaId is null.");
             yield return new TestCaseData(true, false, true)
-                .SetName("CreateCredentialOffer() throws SharedRsException if CredentialDefinition is null.");
+                .SetName("CreateCredentialOfferAsync() throws SharedRsException if CredentialDefinition is null.");
             yield return new TestCaseData(true, true, false)
-                .SetName("CreateCredentialOffer() throws SharedRsException if CredentialKeyCorrectnessProof is null.");
+                .SetName("CreateCredentialOfferAsync() throws SharedRsException if CredentialKeyCorrectnessProof is null.");
         }
 
         [Test, TestCaseSource(nameof(CreateCredentialOfferCases))]
