@@ -2,16 +2,15 @@
 using indy_shared_rs_dotnet.indy_credx;
 using indy_shared_rs_dotnet.Models;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet_test.indy_credx
 {
     public class CredentialOfferApiTests
     {
-        [Test]
-        [TestCase(TestName = "CreateCredentialOffer works.")]
+        [Test, TestCase(TestName = "CreateCredentialOffer() returns CredentialOffer object.")]
         public async Task CreateCredentialOfferWorks()
         {
             //Arrange
@@ -21,15 +20,64 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             string schemaVersion = "1.0";
 
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
-            (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
+            (CredentialDefinition credDef, _, CredentialKeyCorrectnessProof keyProof) =
                 await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
 
             //Act
-            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDef,"schema_id");
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDef, "schema_id");
             CredentialOffer testObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDef, keyProof);
 
             //Assert
             testObject.Should().BeOfType(typeof(CredentialOffer));
+        }
+
+        private static IEnumerable<TestCaseData> CreateCredentialOfferCases()
+        {
+            yield return new TestCaseData(false, false, false)
+                .SetName("CreateCredentialOffer() throws Exception if all arguments are null.");
+            yield return new TestCaseData(false, true, true)
+                .SetName("CreateCredentialOffer() throws SharedRsException if SchemaId is null.");
+            yield return new TestCaseData(true, false, true)
+                .SetName("CreateCredentialOffer() throws SharedRsException if CredentialDefinition is null.");
+            yield return new TestCaseData(true, true, false)
+                .SetName("CreateCredentialOffer() throws SharedRsException if CredentialKeyCorrectnessProof is null.");
+        }
+
+        [Test, TestCaseSource(nameof(CreateCredentialOfferCases))]
+        public async Task CreateCredentialOfferThrowsException(bool hasSchemaId, bool hasCredDef, bool hasKeyProof)
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            string schemaId = null;
+            CredentialDefinition credDef = null;
+            CredentialKeyCorrectnessProof keyProof = null;
+
+            if (hasSchemaId)
+            {
+                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
+                schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(tmpCredDef, "schema_id");
+            }
+            if (hasCredDef)
+            {
+                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
+                credDef = tmpCredDef;
+            }
+            if (hasKeyProof)
+            {
+                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
+                keyProof = tmpKeyProof;
+            }
+
+            //Act
+            Func<Task> act = async () => await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDef, keyProof);
+
+            //Assert
+            await act.Should().ThrowAsync<Exception>();
         }
     }
 }
