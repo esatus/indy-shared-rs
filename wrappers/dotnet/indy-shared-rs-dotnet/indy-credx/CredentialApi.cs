@@ -1,9 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -26,12 +23,12 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint revDeltaObjectHandle = 0;
             int errorCode = NativeMethods.credx_create_credential(
                 credDefObject.Handle,
-                credDefPvtObject.Handle, 
-                credOfferObject.Handle, 
+                credDefPvtObject.Handle,
+                credOfferObject.Handle,
                 credReqObject.Handle,
                 FfiStrList.Create(attributeNames),
                 FfiStrList.Create(attributeRawValues),
-                FfiStrList.Create(attributeEncodedValues), 
+                FfiStrList.Create(attributeEncodedValues),
                 FfiCredRevInfo.Create(credRevInfo),
                 ref credObjectHandle,
                 ref revRegObjectHandle,
@@ -40,18 +37,20 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Debug.WriteLine(error);
+                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
 
             Credential credObject = await CreateCredentialObjectAsync(credObjectHandle);
-            
+
             RevocationRegistry revRegObject = null;
-            if (revRegObjectHandle != 0) {
+            if (revRegObjectHandle != 0)
+            {
                 revRegObject = await CreateRevocationRegistryObjectAsync(revRegObjectHandle);
             }
 
             RevocationDelta revDeltaObject = null;
-            if (revDeltaObjectHandle != 0) {
+            if (revDeltaObjectHandle != 0)
+            {
                 revDeltaObject = await CreateRevocationDeltaObjectAsync(revDeltaObjectHandle);
             }
 
@@ -77,7 +76,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Debug.WriteLine(error);
+                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
 
             Credential credentialObject = await CreateCredentialObjectAsync(credentialObjectHandle);
@@ -89,11 +88,11 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             string result = "";
             int errorCode = NativeMethods.credx_encode_credential_attributes(FfiStrList.Create(rawAttributes), ref result);
-            
+
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Debug.WriteLine(error);
+                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
 
             return await Task.FromResult(result);
@@ -108,7 +107,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Debug.WriteLine(error);
+                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
 
             return await Task.FromResult(result);
