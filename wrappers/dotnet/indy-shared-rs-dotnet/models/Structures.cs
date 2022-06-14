@@ -1,6 +1,7 @@
 ﻿using indy_shared_rs_dotnet.indy_credx;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -41,21 +42,21 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiStrList
         {
-            public uint count;
+            //public uint count;
+            public IntPtr count;
             public IntPtr data;
             public static FfiStrList Create(string[] args)
             {
                 FfiStrList list = new();
-                list.count = (uint)args.Length;
+                list.count = (IntPtr)args.Length;
                 list.data = new IntPtr();
                 list.data = Marshal.AllocHGlobal(args.Length * sizeof(IntPtr));
-                IntPtr[] ffiStrings = new IntPtr[list.count];
+                IntPtr[] ffiStrings = new IntPtr[(uint)args.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
                     ffiStrings[i] = Marshal.StringToCoTaskMemUTF8(args[i]);
                 }
                 Marshal.Copy(ffiStrings, 0, list.data, args.Length);
-
                 //Debug for 3 entries in args
                 UTF8Encoding decoder = new UTF8Encoding(true, true);
                 IntPtr debugPtr0 = Marshal.ReadIntPtr(list.data, 0* sizeof(IntPtr));
@@ -92,25 +93,27 @@ namespace indy_shared_rs_dotnet.Models
                 return Create(args.ToArray());
             }
         }**/
-
         
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiStrList
         {
-            public uint count;
+            public IntPtr count;
             public FfiStr* data;
             public static FfiStrList Create(string[] args)
             {
                 FfiStrList list = new();
-                list.count = (uint)args.Length;
-                FfiStr[] ffiStrings = new FfiStr[list.count];
-                for (int i = 0; i < args.Length; i++)
+                list.count = (IntPtr)args.Length;
+                if (args.First() != null) 
                 {
-                    ffiStrings[i] = FfiStr.Create(args[i]);
-                }
-                fixed (FfiStr* ffiStr_p = &ffiStrings[0])
-                {
-                    list.data = ffiStr_p;
+                    FfiStr[] ffiStrings = new FfiStr[(uint)args.Length];
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        ffiStrings[i] = FfiStr.Create(args[i]);
+                    }
+                    fixed (FfiStr* ffiStr_p = &ffiStrings[0])
+                    {
+                        list.data = ffiStr_p;
+                    }
                 }
                 return list;
             }
@@ -224,42 +227,38 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public struct FfiCredRevInfo
         {
-            public uint regDefObjectHandle;
-            public uint regDefPvtObjectHandle;
-            public uint registryObjectHandle;
-            public long regIdx;
+            public IntPtr regDefObjectHandle;
+            public IntPtr regDefPvtObjectHandle;
+            public IntPtr registryObjectHandle;
+            public IntPtr regIdx; //long
             public FfiLongList regUsed;
             public FfiStr tailsPath;
 
-            public static FfiCredRevInfo Create(CredentialRevocationInfo entry)
+            public static FfiCredRevInfo Create(CredentialRevocationConfig entry)
             {
-                if(entry != null)
+                FfiCredRevInfo result = new();
+                if (entry != null)
                 {
-                    FfiCredRevInfo result = new();
-                    result.regDefObjectHandle = entry.regDefObjectHandle;
-                    result.regDefPvtObjectHandle = entry.regDefPvtObjectHandle;
-                    result.registryObjectHandle = entry.registryObjectHandle;
-                    result.regIdx = entry.regIdx;
+                    result.regDefObjectHandle = (IntPtr)entry.revRegDefObjectHandle;
+                    result.regDefPvtObjectHandle = (IntPtr)entry.revRegDefPvtObjectHandle;
+                    result.registryObjectHandle = (IntPtr)entry.revRegObjectHandle;
+                    result.regIdx = (IntPtr)entry.regIdx;
                     result.regUsed = FfiLongList.Create(entry.regUsed);
                     result.tailsPath = FfiStr.Create(entry.tailsPath);
-                    return result;
                 }
-                else
-                {
-                    return new();
-                }
+                return result;
             }
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiLongList
         {
-            public uint count;
+            public IntPtr count;
             public long* data;
             public static FfiLongList Create(long[] args)
             {
                 FfiLongList list = new();
-                list.count = (uint)args.Length;
+                list.count = (IntPtr)args.Length;
                 fixed (long* uintP = &args[0])
                 {
                     list.data = uintP;
@@ -283,9 +282,12 @@ namespace indy_shared_rs_dotnet.Models
             public static FfiCredentialEntry Create(CredentialEntry entry)
             {
                 FfiCredentialEntry result = new();
+                if (entry != null) 
+                {
                 result.CredentialObjectHandle = entry.CredentialObjectHandle;
                 result.Timestamp = entry.Timestamp;
                 result.RevStateObjectHandle = entry.RevStateObjectHandle;
+                }
                 return result;
             }
         }

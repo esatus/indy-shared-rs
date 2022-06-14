@@ -16,8 +16,8 @@ namespace indy_shared_rs_dotnet.indy_credx
             string originDid,
             CredentialDefinition credDefObject,
             string tag,
-            string revRegType,
-            string issuanceType,
+            RegistryType revRegType,
+            IssuerType issuanceType,
             long maxCredNumber,
             string tailsDirPath)
         {
@@ -30,8 +30,8 @@ namespace indy_shared_rs_dotnet.indy_credx
                 FfiStr.Create(originDid),
                 credDefObject.Handle,
                 FfiStr.Create(tag),
-                FfiStr.Create(revRegType),
-                FfiStr.Create(issuanceType),
+                FfiStr.Create(revRegType.ToString()),
+                FfiStr.Create(issuanceType.ToString()),
                 maxCredNumber,
                 FfiStr.Create(tailsDirPath),
                 ref regDefObjectHandle,
@@ -42,12 +42,13 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Debug.WriteLine(error);
+                Console.WriteLine(error);
+                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
             RevocationRegistryDefinition regDefObject = await CreateRevocationRegistryDefinitionObject(regDefObjectHandle);
-            RevocationRegistryDefinitionPrivate regDefPvtObject = await CreateRevocationRegistryDefinitionPrivateObject(regDefObjectHandle);
-            RevocationRegistry revRegObject = await CreateRevocationRegistryObject(regDefObjectHandle);
-            RevocationRegistryDelta regInitDeltaObject = await CreateRevocationRegistryDeltaObject(regDefObjectHandle);
+            RevocationRegistryDefinitionPrivate regDefPvtObject = await CreateRevocationRegistryDefinitionPrivateObject(regDefPvtObjectHandle);
+            RevocationRegistry revRegObject = await CreateRevocationRegistryObject(regEntryObjectHandle);
+            RevocationRegistryDelta regInitDeltaObject = await CreateRevocationRegistryDeltaObject(regInitDeltaObjectHandle);
 
             return await Task.FromResult((regDefObject, regDefPvtObject, revRegObject, regInitDeltaObject));
         }

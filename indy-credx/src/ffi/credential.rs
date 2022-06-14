@@ -69,13 +69,10 @@ pub extern "C" fn credx_create_credential(
         if attr_names.is_empty() {
             return Err(err_msg!("Cannot create credential with no attribute"));
         }
-        let size_attr_names = attr_names.as_slice().len();
-        let size_attr_raw_values = attr_raw_values.as_slice().len();
-        //let b = attr_raw_values.to_string_vec()?.len();
-        //if attr_names.len() != attr_raw_values.len() {
-        if 1 != 1 {
+        
+        if attr_names.len() != attr_raw_values.len() {
             return Err(err_msg!(
-                "Mismatch between length of attribute names {} and raw values {}.", size_attr_names, size_attr_raw_values
+                "Mismatch between length of attribute names and raw values."
             ));
         }
         let enc_values = attr_enc_values.as_slice();
@@ -106,15 +103,7 @@ pub extern "C" fn credx_create_credential(
             }
             attr_idx += 1;
         }
-        // Start aus Demo
-        //cred_values
-        //.add_raw("sex", "male")
-        //.expect("Error encoding attribute");
-        //cred_values
-        //.add_raw("name", "Alex")
-        //.expect("Error encoding attribute");
-        // Ende aus Demo
-        /* let revocation_config = if !revocation.is_null() {
+        let revocation_config = if !revocation.is_null() {
             let revocation = unsafe { &*revocation };
             let tails_path = revocation
                 .tails_path
@@ -142,18 +131,18 @@ pub extern "C" fn credx_create_credential(
             })
         } else {
             None
-        }; */
+        }; 
         let (cred, rev_reg, rev_delta) = create_credential(
             cred_def.load()?.cast_ref()?,
             cred_def_private.load()?.cast_ref()?,
             cred_offer.load()?.cast_ref()?,
             cred_request.load()?.cast_ref()?,
             cred_values.into(),
-            /*revocation_config
+            revocation_config
                 .as_ref()
                 .map(RevocationConfig::as_ref_config)
-                .transpose()?,*/
-            None,
+                .transpose()?,
+            //None,
         )?;
         let cred = ObjectHandle::create(cred)?;
         let rev_reg = rev_reg

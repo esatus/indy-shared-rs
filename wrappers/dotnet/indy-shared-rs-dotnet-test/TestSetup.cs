@@ -1,4 +1,5 @@
-﻿using indy_shared_rs_dotnet.indy_credx;
+﻿using indy_shared_rs_dotnet;
+using indy_shared_rs_dotnet.indy_credx;
 using indy_shared_rs_dotnet.Models;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace indy_shared_rs_dotnet_test
             Schema testSchema = await CreateTestSchema();
 
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, testSchema, "tag", "CL", 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, testSchema, "tag", Consts.SIGNATURE_TYPE, 1);
         }
 
         public static async Task<CredentialDefinition> PrepareObjectsForCredOfferApiTests()
@@ -34,7 +35,7 @@ namespace indy_shared_rs_dotnet_test
             Schema testSchema = await CreateTestSchema();
 
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, testSchema, "tag", "CL", 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, testSchema, "tag", Consts.SIGNATURE_TYPE, 1);
         }
 
         public static async Task<CredentialDefinition> PrepareObjectsForCredReqApiTests()
@@ -43,7 +44,7 @@ namespace indy_shared_rs_dotnet_test
             Schema testSchema = await CreateTestSchema();
 
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, testSchema, "tag", "CL", 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, testSchema, "tag", Consts.SIGNATURE_TYPE, 1);
         }**/
 
         public static async Task<(PresentationRequest, Credential, RevocationRegistry, Schema, CredentialDefinition)> PrepareObjectsForPresentationTests()
@@ -99,7 +100,7 @@ namespace indy_shared_rs_dotnet_test
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
 
             // Schema
             List<string> schemattrNames = new() { "name", "age", "sex" };
@@ -122,7 +123,7 @@ namespace indy_shared_rs_dotnet_test
 
             Schema credentialObjectSchemaNameSchemaObject = await SchemaApi.CreateSchemaAsync(credentialObjectIssuerDid, credentialObjectSchemaName, credentialObjectSchemaVersion, credentialObjectAttrNames, 0);
             (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", "CL", 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
 
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
             CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
@@ -131,9 +132,9 @@ namespace indy_shared_rs_dotnet_test
                 await CredentialRequestApi.CreateCredentialRequestAsync(credentialObjectProverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
 
             //Todo fix class CredentialRevocationInfo
-            CredentialRevocationInfo credRevInfo = null;
+            CredentialRevocationConfig credRevInfo = null;
 
-            (Credential credObject, RevocationRegistry revRegObject, RevocationDelta revDeltaObject) =
+            (Credential credObject, RevocationRegistry revRegObject, RevocationRegistryDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
                 attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
 

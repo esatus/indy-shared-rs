@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.Models
 {
-    public class RevocationDelta
+    public enum IssuerType
     {
-        public uint Handle { get; set; }
+         ISSUANCE_BY_DEFAULT,
+         ISSUANCE_ON_DEMAND,
     }
 }
