@@ -1,12 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace indy_shared_rs_dotnet.Models
 {
     public class Presentation
     {
-        public Proof Proof { get; set; }
+        [JsonProperty("proof")]
+        public PresentationProof Proof { get; set; }
+
+        [JsonProperty("requested_proof")]
         public RequestedProof RequestedProof { get; set; }
+
+        [JsonProperty("identifiers")]
         public List<Identifier> Identifiers { get; set; }
+
         public uint Handle { get; set; }
     }
 }

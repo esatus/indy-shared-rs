@@ -157,6 +157,9 @@ namespace indy_shared_rs_dotnet.indy_credx
             FfiStr tailsPath,
             uint revStateObjectHandle,
             ref uint revStateNewObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_revocation_state_from_json(ByteBuffer credentialRevocationStateJson, ref uint credentialRevocationStateObjectHandle);
         #endregion
 
         #region Schema

@@ -119,6 +119,7 @@ namespace indy_shared_rs_dotnet_test
             string credentialObjectProverDid = "VsKV7grR1BUE29mG2Fm2kX";
             string credentialObjectSchemaName = "gvt";
             string credentialObjectSchemaVersion = "1.0";
+            string testTailsPath = null;
 
             MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
 
@@ -132,12 +133,9 @@ namespace indy_shared_rs_dotnet_test
             (CredentialRequest credRequestObject, CredentialRequestMetadata metaDataObject) =
                 await CredentialRequestApi.CreateCredentialRequestAsync(credentialObjectProverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
 
-            string testTailsPathForRevocation = null;
             (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
-                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
-
-            //Todo fix class CredentialRevocationInfo
             CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
             {
                 revRegDefObjectHandle = revRegDefObject.Handle,
@@ -148,7 +146,7 @@ namespace indy_shared_rs_dotnet_test
                 regUsed = new List<long> { 1 }
             };
 
-            (Credential credObject, _, RevocationRegistryDelta revDeltaObject) =
+            (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
                 attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
 

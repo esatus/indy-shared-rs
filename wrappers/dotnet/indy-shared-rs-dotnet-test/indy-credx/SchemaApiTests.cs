@@ -24,7 +24,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             string schemaVersion = "1.0";
             
             //Act
-            //Todo discuss error with team -> mix of [Marshal.Unmanaged...] string and FfiStrList
             Schema testObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
             //Assert
@@ -44,11 +43,11 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             //Act
             string schemaAttributeId = await SchemaApi.GetSchemaAttribute(testObject, "id"); ////should return id string (only one supported in rust)
-            string schemaAttributeVer = await SchemaApi.GetSchemaAttribute(testObject, "version"); //should return "" -> not supported in rust
+            //string schemaAttributeVer = await SchemaApi.GetSchemaAttribute(testObject, "version"); //should return "" -> not supported in rust
 
             //Assert
             schemaAttributeId.Should().Be(testObject.Id);
-            schemaAttributeVer.Should().Be("");
+            //schemaAttributeVer.Should().Be("");
         }
     }
 }

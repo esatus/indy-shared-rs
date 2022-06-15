@@ -200,7 +200,7 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct ByteBuffer
         {
-            public uint len;
+            public long len;
             public byte* value;
             
             public static ByteBuffer Create(string json)
@@ -209,7 +209,7 @@ namespace indy_shared_rs_dotnet.Models
                 byte[] bytes = new byte[json.Length];
                 decoder.GetBytes(json, 0, json.Length, bytes, 0);
                 ByteBuffer buffer = new();
-                buffer.len = (uint)json.Length;
+                buffer.len = json.Length;
                 fixed (byte* bytebuffer_p = &bytes[0])
                 {
                     buffer.value = bytebuffer_p;
@@ -275,18 +275,18 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public struct FfiCredentialEntry
         {
-            public uint CredentialObjectHandle;
+            public IntPtr CredentialObjectHandle;
             public long Timestamp;
-            public uint RevStateObjectHandle;
+            public IntPtr RevStateObjectHandle;
 
             public static FfiCredentialEntry Create(CredentialEntry entry)
             {
                 FfiCredentialEntry result = new();
                 if (entry != null) 
                 {
-                result.CredentialObjectHandle = entry.CredentialObjectHandle;
+                result.CredentialObjectHandle = (IntPtr)entry.CredentialObjectHandle;
                 result.Timestamp = entry.Timestamp;
-                result.RevStateObjectHandle = entry.RevStateObjectHandle;
+                result.RevStateObjectHandle = (IntPtr)entry.RevStateObjectHandle;
                 }
                 return result;
             }
@@ -332,13 +332,13 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiCredentialEntryList
         {
-            public uint count;
+            public IntPtr count;
             public FfiCredentialEntry* data;
             public static FfiCredentialEntryList Create(CredentialEntry[] args)
             {
                 FfiCredentialEntryList list = new();
-                list.count = (uint)args.Length;
-                FfiCredentialEntry[] ffiCredentialEntries = new FfiCredentialEntry[list.count];
+                list.count = (IntPtr)args.Length;
+                FfiCredentialEntry[] ffiCredentialEntries = new FfiCredentialEntry[args.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
                     ffiCredentialEntries[i] = FfiCredentialEntry.Create(args[i]);
@@ -359,13 +359,13 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiCredentialProveList
         {
-            public uint count;
+            public IntPtr count;
             public FfiCredentialProve* data;
             public static FfiCredentialProveList Create(CredentialProve[] args)
             {
                 FfiCredentialProveList list = new();
-                list.count = (uint)args.Length;
-                FfiCredentialProve[] ffiCredentialProves = new FfiCredentialProve[list.count];
+                list.count = (IntPtr)args.Length;
+                FfiCredentialProve[] ffiCredentialProves = new FfiCredentialProve[args.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
                     ffiCredentialProves[i] = FfiCredentialProve.Create(args[i]);
@@ -386,12 +386,12 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiUIntList
         {
-            public uint count;
+            public IntPtr count;
             public uint* data;
             public static FfiUIntList Create(uint[] args)
             {
                 FfiUIntList list = new();
-                list.count = (uint)args.Length;
+                list.count = (IntPtr)args.Length;
                 fixed (uint* uintP = &args[0])
                 {
                     list.data = uintP;
@@ -408,13 +408,13 @@ namespace indy_shared_rs_dotnet.Models
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiRevocationEntryList
         {
-            public uint count;
+            public IntPtr count;
             public FfiRevocationEntry* data;
             public static FfiRevocationEntryList Create(RevocationRegistryEntry[] args)
             {
                 FfiRevocationEntryList list = new();
-                list.count = (uint)args.Length;
-                FfiRevocationEntry[] ffiRevocationEntries = new FfiRevocationEntry[list.count];
+                list.count = (IntPtr)args.Length;
+                FfiRevocationEntry[] ffiRevocationEntries = new FfiRevocationEntry[args.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
                     ffiRevocationEntries[i] = FfiRevocationEntry.Create(args[i]);

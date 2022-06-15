@@ -1,4 +1,5 @@
 ﻿using indy_shared_rs_dotnet.indy_credx;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
