@@ -12,7 +12,8 @@ namespace indy_shared_rs_dotnet_test.indy_credx
     internal class ObjectApiTests
     {
         #region Tests for GetTypeName
-        [Test, TestCase(TestName = "")]
+        /*
+        [Test, TestCase(TestName = "GetTypeName() works.")]
         public async Task GetTypeNameWorks()
         {
             //Arrange
@@ -20,11 +21,12 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Act
 
             //Assert
-        }
+        }*/
         #endregion
 
         #region Tests for FreeObject
-        [Test, TestCase(TestName = "")]
+        /*
+        [Test, TestCase(TestName = "FreeObject() works.")]
         public async Task FreeObjectWorks()
         {
             //Arrange
@@ -42,10 +44,11 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Act
 
             //Assert
-        }
+        }*/
         #endregion
 
         #region Tests for ToJson
+        /*
         [Test, TestCase(TestName = "ToJson() converts an object handle to a correct json.")]
         public async Task ToJsonWorks()
         {
@@ -96,7 +99,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             //Assert
             actual.Should().BeEquivalentTo(expected);
-        }
+        }*/
         #endregion
     }
 }
