@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -64,7 +63,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Console.WriteLine(ex.Message);
                         continue;
                     }
                 }
@@ -88,7 +87,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        Console.WriteLine(ex.Message);
                         continue;
                     }
                 }
@@ -101,7 +100,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         private static List<AttributeFilter> CreateAttributeFilterList(JToken restrictionsElement)
         {
             List<AttributeFilter> filterList = new();
-            if(restrictionsElement.HasValues)
+            if (restrictionsElement.HasValues)
             {
                 foreach (JObject restriction in restrictionsElement["$or"].Children<JObject>())
                 {
@@ -130,7 +129,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                         filterList.Add(filter);
                     }
                 }
-            }            
+            }
             return filterList;
         }
 

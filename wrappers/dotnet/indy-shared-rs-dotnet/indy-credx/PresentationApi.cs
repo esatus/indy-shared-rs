@@ -1,10 +1,7 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -16,7 +13,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             PresentationRequest presentationRequest,
             List<CredentialEntry> credentialEntries,
             List<CredentialProve> credentialProves,
-            List<string> selfAttestNames, 
+            List<string> selfAttestNames,
             List<string> selfAttestValues,
             MasterSecret masterSecret,
             List<Schema> schemas,
@@ -24,7 +21,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint presentationObjectHandle = 0;
             List<uint> schemaHandles = (from schema in schemas
-                                       select schema.Handle).ToList();
+                                        select schema.Handle).ToList();
             List<uint> credDefHandles = (from schema in credDefs
                                          select schema.Handle).ToList();
 
@@ -58,11 +55,11 @@ namespace indy_shared_rs_dotnet.indy_credx
             List<RevocationRegistryEntry> revocationRegistryEntries)
         {
             byte verify = 0;
-            List<uint> schemaHandles = 
+            List<uint> schemaHandles =
                 (from schema in schemas select schema.Handle).ToList();
-            List<uint> credDefHandles = 
+            List<uint> credDefHandles =
                 (from credDef in credentialDefinitions select credDef.Handle).ToList();
-            List<uint> revRegDefHandles = 
+            List<uint> revRegDefHandles =
                 (from revRegDef in revocationRegistryDefinitions select revRegDef.Handle).ToList();
 
             int errorCode = NativeMethods.credx_verify_presentation(

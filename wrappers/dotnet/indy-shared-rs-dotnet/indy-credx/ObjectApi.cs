@@ -40,8 +40,8 @@ namespace indy_shared_rs_dotnet.indy_credx
                 throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
             return await Task.FromResult(result);
-
         }
+
         private static unsafe async Task<ByteBuffer> ObjectGetJson(uint handle)
         {
             ByteBuffer result = new()
