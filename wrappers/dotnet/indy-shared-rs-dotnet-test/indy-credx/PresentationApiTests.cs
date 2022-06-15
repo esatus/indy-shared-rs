@@ -89,13 +89,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         public async Task CreatePresentationWorks()
         {
             //Arrange
-            /**
-            (PresentationRequest presentationRequest,
-                Credential credential,
-                RevocationRegistry revocation,
-                Schema schema,
-                CredentialDefinition credentialDefinition) = await TestSetup.PrepareObjectsForPresentationTests();**/
-
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             string presReqJson = "{" +
@@ -181,7 +174,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 regUsed = new List<long> { 1 }
             };
 
-            //Act
             (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
                 attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
@@ -248,7 +240,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 );
 
             //Assert
-
             actual.Should().BeOfType(typeof(Presentation));
         }
 
