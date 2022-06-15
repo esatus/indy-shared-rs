@@ -113,11 +113,12 @@ namespace indy_shared_rs_dotnet_test
             // CredentialObject, RevObject
             List<string> credentialObjectAttrNames = new() { "name", "age", "sex" };
             List<string> attrNamesRaw = new() { "Alex", "20", "male" };
-            List<string> attrNamesEnc = new() { "Alex", "20", "male" };
+            List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
             string credentialObjectIssuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
             string credentialObjectProverDid = "VsKV7grR1BUE29mG2Fm2kX";
             string credentialObjectSchemaName = "gvt";
             string credentialObjectSchemaVersion = "1.0";
+            string testTailsPath = null;
 
             MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
 
@@ -131,10 +132,20 @@ namespace indy_shared_rs_dotnet_test
             (CredentialRequest credRequestObject, CredentialRequestMetadata metaDataObject) =
                 await CredentialRequestApi.CreateCredentialRequestAsync(credentialObjectProverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
 
-            //Todo fix class CredentialRevocationInfo
-            CredentialRevocationConfig credRevInfo = null;
+            (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
-            (Credential credObject, RevocationRegistry revRegObject, RevocationRegistryDelta revDeltaObject) =
+            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
+            {
+                revRegDefObjectHandle = revRegDefObject.Handle,
+                revRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
+                revRegObjectHandle = revRegObject.Handle,
+                tailsPath = revRegDefObject.Value.TailsLocation,
+                regIdx = 1,
+                regUsed = new List<long> { 1 }
+            };
+
+            (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
                 attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
 
