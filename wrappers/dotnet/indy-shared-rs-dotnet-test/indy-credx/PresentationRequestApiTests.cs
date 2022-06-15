@@ -82,7 +82,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             actual.RequestedPredicates.Count.Should().Be(1);
         }
 
-        [Test, TestCase(TestName = "")]
+        [Test, TestCase(TestName = "PredicateTest() works.")]
         public async Task PredicateTest()
         {
             string presReqJson = "{" +

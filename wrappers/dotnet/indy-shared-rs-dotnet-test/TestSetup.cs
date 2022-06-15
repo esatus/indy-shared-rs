@@ -61,6 +61,7 @@ namespace indy_shared_rs_dotnet_test
                 "\"reft\": " +
                 "{" +
                 "\"name\":\"attr\"," +
+                "\"names\": []," +
                 "\"non_revoked\":" +
                 "{ " +
                 $"\"from\": {timestamp}, " +

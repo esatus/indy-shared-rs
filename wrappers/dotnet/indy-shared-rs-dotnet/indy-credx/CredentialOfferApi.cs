@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -34,12 +33,12 @@ namespace indy_shared_rs_dotnet.indy_credx
             string credOfferJson = await ObjectApi.ToJson(objectHandle);
             CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.jsonSettings);
             credOfferObject.Handle = objectHandle;
-            
+
             try
             {
                 JObject jObj = JObject.Parse(credOfferJson);
                 credOfferObject.KeyCorrectnessProof.xrcap = new List<KeyProofAttributeValue>();
-                foreach (var ele in jObj["key_correctness_proof"]["xr_cap"])
+                foreach (JToken ele in jObj["key_correctness_proof"]["xr_cap"])
                 {
                     KeyProofAttributeValue attribute = new(ele.First.ToString(), ele.Last.ToString());
                     credOfferObject.KeyCorrectnessProof.xrcap.Add(attribute);
@@ -47,8 +46,8 @@ namespace indy_shared_rs_dotnet.indy_credx
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Could not find field xr_cap.");
-                Debug.WriteLine(e);
+                Console.WriteLine("Could not find field xr_cap.");
+                Console.WriteLine(e);
             }
 
             return await Task.FromResult(credOfferObject);

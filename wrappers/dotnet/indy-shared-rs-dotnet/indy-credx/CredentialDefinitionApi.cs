@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -12,10 +11,10 @@ namespace indy_shared_rs_dotnet.indy_credx
     public static class CredentialDefinitionApi
     {
         public static async Task<(CredentialDefinition, CredentialDefinitionPrivate, CredentialKeyCorrectnessProof)> CreateCredentialDefinitionAsync(
-            string originDid, 
+            string originDid,
             Schema schemaObject,
             string tag,
-            string signatureType, 
+            string signatureType,
             byte supportRevocation)
         {
             uint credDefHandle = 0;
@@ -23,13 +22,13 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint keyProofHandle = 0;
             //note: only signatureType "CL" supported so far.
             int errorCode = NativeMethods.credx_create_credential_definition(
-                FfiStr.Create(originDid), 
+                FfiStr.Create(originDid),
                 schemaObject.Handle,
                 FfiStr.Create(tag),
-                FfiStr.Create(signatureType), 
-                supportRevocation, 
-                ref credDefHandle, 
-                ref credDefPvtHandle, 
+                FfiStr.Create(signatureType),
+                supportRevocation,
+                ref credDefHandle,
+                ref credDefPvtHandle,
                 ref keyProofHandle);
 
             if (errorCode != 0)
@@ -42,7 +41,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             CredentialDefinitionPrivate credDefPvtObject = await CreateCredentialDefinitonPrivateObject(credDefPvtHandle);
             CredentialKeyCorrectnessProof keyProofObject = await CreateCredentialKeyProofObject(keyProofHandle);
             return await Task.FromResult((credDefObject, credDefPvtObject, keyProofObject));
-         }
+        }
 
         public static async Task<string> GetCredentialDefinitionAttributeAsync(CredentialDefinition credDefObject, string attributeName)
         {
@@ -63,12 +62,12 @@ namespace indy_shared_rs_dotnet.indy_credx
             string credDefJson = await ObjectApi.ToJson(objectHandle);
             CredentialDefinition credDefObject = JsonConvert.DeserializeObject<CredentialDefinition>(credDefJson, Settings.jsonSettings);
             credDefObject.Handle = objectHandle;
-            
+
             try
             {
                 JObject jObj = JObject.Parse(credDefJson);
                 credDefObject.Value.Primary.r = new List<KeyProofAttributeValue>();
-                foreach (var ele in jObj["value"]["primary"]["r"])
+                foreach (JToken ele in jObj["value"]["primary"]["r"])
                 {
                     string[] attrFields = ele.ToString().Split(':');
                     KeyProofAttributeValue attribute = new(JsonConvert.DeserializeObject<string>(attrFields[0]), JsonConvert.DeserializeObject<string>(attrFields[1]));
@@ -77,8 +76,8 @@ namespace indy_shared_rs_dotnet.indy_credx
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Could not find field r.");
-                Debug.WriteLine(e);
+                Console.WriteLine("Could not find field r.");
+                Console.WriteLine(e);
             }
             return await Task.FromResult(credDefObject);
         }
@@ -96,21 +95,21 @@ namespace indy_shared_rs_dotnet.indy_credx
             string keyProofJson = await ObjectApi.ToJson(objectHandle);
             CredentialKeyCorrectnessProof keyProofObject = JsonConvert.DeserializeObject<CredentialKeyCorrectnessProof>(keyProofJson, Settings.jsonSettings);
             keyProofObject.Handle = objectHandle;
-            
+
             try
             {
                 JObject jObj = JObject.Parse(keyProofJson);
                 keyProofObject.xrcap = new List<KeyProofAttributeValue>();
-                foreach (var ele in jObj["xr_cap"])
+                foreach (JToken ele in jObj["xr_cap"])
                 {
                     KeyProofAttributeValue attribute = new(ele.First.ToString(), ele.Last.ToString());
                     keyProofObject.xrcap.Add(attribute);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Debug.WriteLine("Could not find field xr_cap.");
-                Debug.WriteLine(e);
+                Console.WriteLine("Could not find field xr_cap.");
+                Console.WriteLine(e);
             }
             return await Task.FromResult(keyProofObject);
         }
