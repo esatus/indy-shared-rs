@@ -12,8 +12,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
     public class PresentationApiTests
     {
         #region Tests for CreatePresentationAsync
-        [Test]
-        [TestCase(TestName = "CreatePresentationAsync() works.")]
+        [Test, TestCase(TestName = "CreatePresentationAsync() works.")]
         public async Task CreatePresentationWorks()
         {
             //Arrange
@@ -107,7 +106,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
 
             CredentialRevocationState emptyRevocationState = new() { Handle = 0 };
-            CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationState(
+            CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationStateAsync(
                 revRegDefObject, 
                 revRegDeltaObject, 
                 credObject.Signature.RCredential.I, 
@@ -173,7 +172,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         #endregion
 
         #region Tests for VerifyPresentationAsync
-        /*
         [Test, TestCase(TestName = "VerifyPresentationAsync() works.")]
         public async Task VerifyPresentationWorks()
         {
@@ -270,7 +268,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
 
             CredentialRevocationState emptyRevocationState = new() { Handle = 0 };
-            CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationState(
+            CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationStateAsync(
                 revRegDefObject,
                 revRegDeltaObject,
                 credObject.Signature.RCredential.I,
@@ -344,7 +342,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             //Assert
             actual.Should().Be(expected);
-        }*/
+        }
         #endregion
     }
 }

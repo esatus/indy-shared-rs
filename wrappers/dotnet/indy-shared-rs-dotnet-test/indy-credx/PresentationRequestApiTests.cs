@@ -9,8 +9,8 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 {
     public class PresentationRequestApiTests
     {
-        [Test]
-        [TestCase(TestName = "GenerateNonceAsync returns a string that is not empty.")]
+        #region Tests for GenerateNonce
+        [Test, TestCase(TestName = "GenerateNonceAsync() returns a string that is not empty.")]
         public async Task GenerateNonce()
         {
             //Arrange
@@ -21,9 +21,10 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Assert
             actual.Should().NotBeEmpty();
         }
+        #endregion
 
-        [Test]
-        [TestCase(TestName = "Create PresentationRequest from Json.")]
+        #region Tests for CreatePresReq
+        [Test, TestCase(TestName = "CreatePresReqFromJsonAsync() creates PresentationRequest from Json.")]
         public async Task CreatePresReq()
         {
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
@@ -81,46 +82,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             actual.RequestedAttributes.Count.Should().Be(1);
             actual.RequestedPredicates.Count.Should().Be(1);
         }
-
-        [Test, TestCase(TestName = "PredicateTest() works.")]
-        public async Task PredicateTest()
-        {
-            string presReqJson = "{" +
-                "\"nonce\": nonce," +
-                "\"name\":\"pres_req_1\"," +
-                "\"version\":\"0.1\"," +
-                "\"requested_attributes\":{" +
-                    "\"attr1_referent\":{" +
-                        "\"name\":\"name\"" +
-                    "}," +
-                    "\"attr2_referent\":{" +
-                        "\"name\":\"sex\"" +
-                    "}," +
-                    "\"attr3_referent\":{ " +
-                        "\"name\":\"phone\"" +
-                    "}," +
-                    "\"attr4_referent\":{" +
-                        "\"names\": [\"name\", \"height\"]" +
-                    "}" +
-                "}," +
-                "\"requested_predicates\":{" +
-                    "\"predicate1_referent\":{ " +
-                        "\"name\":\"age\"," +
-                        "\"p_type\":\">=\"," +
-                        "\"p_value\":18" +
-                    "}" +
-                "}" +
-            "}";
-
-            string singlePredicateJson =
-                "\"predicate1_referent\":{ " +
-                        "\"name\":\"age\"," +
-                        "\"p_type\":\">=\"," +
-                        "\"p_value\":18" +
-                    "}";
-
-
-        }
-
+        #endregion
     }
 }

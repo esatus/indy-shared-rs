@@ -2,9 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -127,13 +124,13 @@ namespace indy_shared_rs_dotnet.indy_credx
                 string error = await ErrorApi.GetCurrentErrorAsync();
                 throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
             }
-            
+
             RevocationRegistryDelta revRegDeltaObjectNew = await CreateRevocationRegistryDeltaObject(revRegDeltaObjectHandleNew);
 
             return await Task.FromResult(revRegDeltaObjectNew);
         }
 
-        public static async Task<CredentialRevocationState> CreateOrUpdateRevocationState(
+        public static async Task<CredentialRevocationState> CreateOrUpdateRevocationStateAsync(
             RevocationRegistryDefinition revRegDefObject,
             RevocationRegistryDelta revRegDeltaObject,
             long revRegIndex,
@@ -163,7 +160,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(credRevStateObject);
         }
 
-        public static async Task<string> GetRevocationRegistryDefinitionAttribute(RevocationRegistryDefinition revRegDefObject, string attributeName) 
+        public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(RevocationRegistryDefinition revRegDefObject, string attributeName)
         {
             string result = "";
             int errorCode = NativeMethods.credx_revocation_registry_definition_get_attribute(revRegDefObject.Handle, FfiStr.Create(attributeName), ref result);
