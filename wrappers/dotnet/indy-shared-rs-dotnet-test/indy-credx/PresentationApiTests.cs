@@ -177,27 +177,46 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         {
             //Arrange
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
+            var timestamp1 = DateTimeOffset.Now.AddDays(-1).ToUnixTimeSeconds();
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var timestamp2 = DateTimeOffset.Now.AddDays(1).ToUnixTimeSeconds();
             string presReqJson = "{" +
                 "\"name\": \"proof\"," +
                 "\"version\": \"1.0\", " +
                 $"\"nonce\": \"{nonce}\"," +
                 "\"requested_attributes\": " +
                 "{" +
+                /**
                     "\"reft\": " +
                     "{" +
                         "\"name\":\"attr\"," +
-                        "\"value\":\"myValue\"," +
+                        //"\"value\":\"myValue\"," +
                         "\"names\": [], " +
                         "\"non_revoked\":" +
                         "{ " +
                             $"\"from\": {timestamp}, " +
                             $"\"to\": {timestamp}" +
                         "}" +
+                    "}," +**/
+                    "\"reft2\": " +
+                    "{" +
+                        "\"name\":\"attr2\"," +
+                        //"\"value\":\"myValue2\"," +
+                        "\"names\": [], " +
+                        //"\"non_revoked\":" +
+                        //"{ " +
+                        //    $"\"from\": {timestamp}, " +
+                        //    $"\"to\": {timestamp}" +
+                        //"}," +
+                        "\"restrictions\":" +
+                        "[" +
+                            "{\"schema_version\": \"1.0\"}" +
+                        "]" +
                     "}" +
                 "}," +
                 "\"requested_predicates\": " +
                 "{" +
+                /**
                     "\"light\": " +
                     "{" +
                         "\"name\":\"pred\"," +
@@ -217,18 +236,19 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                             "{\"not_an_attribute\": \"should Fail\"}" +
                         "]" +
                     "}" +
+                **/
                 "}," +
                 "\"non_revoked\": " +
                 "{ " +
-                    $"\"from\": {timestamp}," +
-                    $"\"to\": {timestamp}" +
+                    $"\"from\": {timestamp1}," +
+                    $"\"to\": {timestamp2}" +
                 "}," +
                 "\"ver\": \"1.0\"" +
                 "}";
             PresentationRequest presReqObject = await PresentationRequestApi.CreatePresReqFromJsonAsync(presReqJson);
 
-            List<string> attrNames = new() { "name", "age", "sex" };
-            List<string> attrNamesRaw = new() { "Alex", "20", "male" };
+            List<string> attrNames = new() { "name", "age", "sex", "attr2"};
+            List<string> attrNamesRaw = new() { "Alex", "20", "male", "myValue2"};
             List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
             string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
             string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
@@ -240,10 +260,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
             (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
-
-            //temp
-            (CredentialDefinition credDefObject2, CredentialDefinitionPrivate credDefPvtObject2, CredentialKeyCorrectnessProof keyProofObject2) =
                 await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
 
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
@@ -289,21 +305,33 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             {
                 new CredentialProve
                 {
-                    EntryIndex = 1,
+                    EntryIndex = 0,
                     IsPredicate = Convert.ToByte(false),
-                    Referent = "testReferent",
+                    Referent = "reft2",
                     Reveal = Convert.ToByte(true)
                 }
             };
 
             List<string> selfAttestNames = new()
             {
-                "reft"
+                null
+                //"reft",
+                //"reft2"
             };
 
             List<string> selfAttestValues = new()
             {
-                "light"
+                null
+                /**
+                "{name:attr,value:testValue,names: [],non_revoked:{" +
+                            $"from: {timestamp}, " +
+                            $"to: {timestamp},"+
+                            "}}",
+                "{name:attr2,value:testValue2,names: [],non_revoked:{" +
+                            $"from: {timestamp}, " +
+                            $"to: {timestamp}," +
+                            "}}"
+                **/
             };
 
             MasterSecret masterSecret = await MasterSecretApi.CreateMasterSecretAsync();
@@ -348,10 +376,11 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 );
 
             //Act
-            await PresentationApi.VerifyPresentationAsync(presentationObject, presReqObject, schemas, credentialDefinitions, revRegDefinitions, revRegistries);
+            byte actual = await PresentationApi.VerifyPresentationAsync(presentationObject, presReqObject, schemas, credentialDefinitions, revRegDefinitions, revRegistries);
 
             //Assert
             presentationObject.Should().BeOfType(typeof(Presentation));
+            actual.Should().Be(1);
         }
         #endregion
     }

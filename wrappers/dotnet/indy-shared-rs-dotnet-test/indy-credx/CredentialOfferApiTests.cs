@@ -11,6 +11,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 {
     public class CredentialOfferApiTests
     {
+        #region Tests for CreateCredentialOfferAsync
         [Test, TestCase(TestName = "CreateCredentialOfferAsync() returns CredentialOffer object.")]
         public async Task CreateCredentialOfferWorks()
         {
@@ -80,5 +81,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Assert
             await act.Should().ThrowAsync<Exception>();
         }
+        #endregion
     }
 }

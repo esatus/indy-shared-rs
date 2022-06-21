@@ -11,6 +11,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 {
     public class CredentialRequestApiTests
     {
+        #region Tests for CreateCredentialRequestAsync
         [Test, TestCase(TestName = "CreateCredentialRequestAsync() with all Arguments set returns a request and metadata.")]
         public async Task CreateCredentialRequestAsyncWorks()
         {
@@ -112,5 +113,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Assert
             await act.Should().ThrowAsync<Exception>();
         }
+        #endregion
     }
 }
