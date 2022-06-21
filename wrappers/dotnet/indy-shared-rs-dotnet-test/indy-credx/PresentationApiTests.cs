@@ -176,7 +176,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         public async Task VerifyPresentationWorks()
         {
             //Arrange
-            byte expected = 0;
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
             var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             string presReqJson = "{" +
@@ -243,6 +242,10 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
                 await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
 
+            //temp
+            (CredentialDefinition credDefObject2, CredentialDefinitionPrivate credDefPvtObject2, CredentialKeyCorrectnessProof keyProofObject2) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
             CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
 
@@ -262,7 +265,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 regUsed = new List<long> { 1 }
             };
 
-            //Act
             (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
                 attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
@@ -296,12 +298,12 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             List<string> selfAttestNames = new()
             {
-                "testSelfAttestName1"
+                "reft"
             };
 
             List<string> selfAttestValues = new()
             {
-                "testSelfAttestName1"
+                "light"
             };
 
             MasterSecret masterSecret = await MasterSecretApi.CreateMasterSecretAsync();
@@ -316,8 +318,23 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 credDefObject
             };
 
-            List<RevocationRegistryDefinition> revocationRegistryDefinitions = new();
-            List<RevocationRegistryEntry> revocationRegistryEntries = new();
+            List<RevocationRegistryDefinition> revRegDefinitions = new()
+            {
+                revRegDefObject
+            };
+
+            RevocationRegistryEntry revRegEntry = new()
+            {  
+                DefEntryIdx = 0,
+                //DefEntryIdx = credentialDefinitions.Count,
+                Entry = revRegObject.Handle,
+                Timestamp = timestamp
+            };
+
+            List<RevocationRegistryEntry> revRegistries = new()
+            {
+                revRegEntry
+            };
 
             Presentation presentationObject = await PresentationApi.CreatePresentationAsync(
                 presReqObject,
@@ -331,17 +348,10 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 );
 
             //Act
-            byte actual = await PresentationApi.VerifyPresentationAsync(
-                presentationObject,
-                presReqObject,
-                schemas,
-                credentialDefinitions,
-                revocationRegistryDefinitions,
-                revocationRegistryEntries
-                );
+            await PresentationApi.VerifyPresentationAsync(presentationObject, presReqObject, schemas, credentialDefinitions, revRegDefinitions, revRegistries);
 
             //Assert
-            actual.Should().Be(expected);
+            presentationObject.Should().BeOfType(typeof(Presentation));
         }
         #endregion
     }

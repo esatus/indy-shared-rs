@@ -23,6 +23,5 @@ namespace indy_shared_rs_dotnet.Models
 
         [JsonProperty("value")]
         public RevocationRegistryDefinitionValue Value { get; set; }
-
     }
 }

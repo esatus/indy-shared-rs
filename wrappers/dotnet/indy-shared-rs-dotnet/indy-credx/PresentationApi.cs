@@ -22,8 +22,8 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint presentationObjectHandle = 0;
             List<uint> schemaHandles = (from schema in schemas
                                         select schema.Handle).ToList();
-            List<uint> credDefHandles = (from schema in credDefs
-                                         select schema.Handle).ToList();
+            List<uint> credDefHandles = (from credDef in credDefs
+                                         select credDef.Handle).ToList();
 
             int errorCode = NativeMethods.credx_create_presentation(
                 presentationRequest.Handle,
