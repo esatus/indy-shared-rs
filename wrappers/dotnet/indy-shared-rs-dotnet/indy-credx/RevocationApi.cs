@@ -160,6 +160,9 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(credRevStateObject);
         }
 
+        /**
+         * Possible attributenames: id, max_cred_num, tails_hash or tails_location
+         */
         public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(RevocationRegistryDefinition revRegDefObject, string attributeName)
         {
             string result = "";
