@@ -14,7 +14,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             string originDid,
             Schema schemaObject,
             string tag,
-            string signatureType,
+            SignatureType signatureType,
             byte supportRevocation)
         {
             uint credDefHandle = 0;
@@ -25,7 +25,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                 FfiStr.Create(originDid),
                 schemaObject.Handle,
                 FfiStr.Create(tag),
-                FfiStr.Create(signatureType),
+                FfiStr.Create(signatureType.ToString()),
                 supportRevocation,
                 ref credDefHandle,
                 ref credDefPvtHandle,

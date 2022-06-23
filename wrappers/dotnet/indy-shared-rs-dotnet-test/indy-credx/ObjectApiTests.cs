@@ -92,7 +92,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             string schemaVersion = "1.0";
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
             (CredentialDefinition credDefObject, _, _) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             //Act
             string actual = await ObjectApi.ToJson(credDefObject.Handle);
