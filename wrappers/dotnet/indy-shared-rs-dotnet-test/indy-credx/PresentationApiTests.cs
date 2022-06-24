@@ -121,9 +121,9 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 //new CredentialEntry(credObject,0, null)
             };
 
-            List<CredentialProve> credentialProves = new()
+            List<CredentialProof> credentialProves = new()
             {
-                new CredentialProve
+                new CredentialProof
                 {
                     EntryIndex = 1,
                     IsPredicate = Convert.ToByte(false),
@@ -186,28 +186,11 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 $"\"nonce\": \"{nonce}\"," +
                 "\"requested_attributes\": " +
                 "{" +
-                /**
-                    "\"reft\": " +
-                    "{" +
-                        "\"name\":\"attr\"," +
-                        //"\"value\":\"myValue\"," +
-                        "\"names\": [], " +
-                        "\"non_revoked\":" +
-                        "{ " +
-                            $"\"from\": {timestamp}, " +
-                            $"\"to\": {timestamp}" +
-                        "}" +
-                    "}," +**/
                     "\"reft2\": " +
                     "{" +
                         "\"name\":\"attr2\"," +
                         //"\"value\":\"myValue2\"," +
                         "\"names\": [], " +
-                        //"\"non_revoked\":" +
-                        //"{ " +
-                        //    $"\"from\": {timestamp}, " +
-                        //    $"\"to\": {timestamp}" +
-                        //"}," +
                         "\"restrictions\":" +
                         "[" +
                             "{\"schema_version\": \"1.0\"}" +
@@ -216,32 +199,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 "}," +
                 "\"requested_predicates\": " +
                 "{" +
-                /**
-                    "\"light\": " +
-                    "{" +
-                        "\"name\":\"pred\"," +
-                        "\"p_type\":\">=\"," +
-                        "\"p_value\":18," +
-                        "\"non_revoked\":" +
-                        "{ " +
-                            $"\"from\": {timestamp}, " +
-                            $"\"to\": {timestamp}" +
-                        "}," +
-                        "\"restrictions\":" +
-                        "[" +
-                            "{\"schema_name\": \"blubb\"," +
-                            "\"schema_version\": \"1.0\"}," +
-                            "{\"cred_def_id\": \"blubb2\"," +
-                            "\"schema_version\": \"2.0\"}," +
-                            "{\"not_an_attribute\": \"should Fail\"}" +
-                        "]" +
-                    "}" +
-                **/
-                "}," +
-                "\"non_revoked\": " +
-                "{ " +
-                    $"\"from\": {timestamp1}," +
-                    $"\"to\": {timestamp2}" +
                 "}," +
                 "\"ver\": \"1.0\"" +
                 "}";
@@ -258,18 +215,50 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
 
-            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
-            (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(
+                issuerDid, 
+                schemaName, 
+                schemaVersion, 
+                attrNames, 
+                0);
+            (CredentialDefinition credDefObject, 
+                CredentialDefinitionPrivate credDefPvtObject, 
+                CredentialKeyCorrectnessProof keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(
+                    issuerDid, 
+                    schemaObject, 
+                    "tag", 
+                    Consts.SIGNATURE_TYPE, 1);
 
-            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
-            CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(
+                credDefObject, 
+                "schema_id");
+            CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(
+                schemaId, 
+                credDefObject, 
+                keyProofObject);
 
-            (CredentialRequest credRequestObject, CredentialRequestMetadata metaDataObject) =
-                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+            (CredentialRequest credRequestObject, 
+                CredentialRequestMetadata metaDataObject) =
+                await CredentialRequestApi.CreateCredentialRequestAsync(
+                    proverDid, 
+                    credDefObject, 
+                    masterSecretObject, 
+                    "testMasterSecretName", 
+                    credOfferObject);
 
-            (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
-                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
+            (RevocationRegistryDefinition revRegDefObject, 
+                RevocationRegistryDefinitionPrivate revRegDefPvtObject, 
+                RevocationRegistry revRegObject, 
+                RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(
+                    issuerDid, 
+                    credDefObject, 
+                    "test_tag", 
+                    RegistryType.CL_ACCUM, 
+                    IssuerType.ISSUANCE_BY_DEFAULT, 
+                    99, 
+                    testTailsPathForRevocation);
 
             CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
             {
@@ -281,9 +270,19 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 regUsed = new List<long> { 1 }
             };
 
-            (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
-                await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
-                attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
+            (Credential credObject, 
+                RevocationRegistry 
+                revRegObjectNew, 
+                RevocationRegistryDelta revDeltaObject) =
+                await CredentialApi.CreateCredentialAsync(
+                    credDefObject, 
+                    credDefPvtObject, 
+                    credOfferObject, 
+                    credRequestObject,
+                    attrNames, 
+                    attrNamesRaw, 
+                    attrNamesEnc, 
+                    credRevInfo);
 
             CredentialRevocationState emptyRevocationState = new() { Handle = 0 };
             CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationStateAsync(
@@ -301,9 +300,9 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 //new CredentialEntry(credObject,0, null)
             };
 
-            List<CredentialProve> credentialProves = new()
+            List<CredentialProof> credentialProves = new()
             {
-                new CredentialProve
+                new CredentialProof
                 {
                     EntryIndex = 0,
                     IsPredicate = Convert.ToByte(false),
@@ -314,24 +313,22 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             List<string> selfAttestNames = new()
             {
-                null
+                //null
                 //"reft",
-                //"reft2"
+                "reft2"
             };
 
             List<string> selfAttestValues = new()
             {
-                null
-                /**
-                "{name:attr,value:testValue,names: [],non_revoked:{" +
-                            $"from: {timestamp}, " +
-                            $"to: {timestamp},"+
-                            "}}",
+                //null                
+                //"{name:attr,value:testValue,names: [],non_revoked:{" +
+                //            $"from: {timestamp}, " +
+                //            $"to: {timestamp},"+
+                //            "}}",
                 "{name:attr2,value:testValue2,names: [],non_revoked:{" +
-                            $"from: {timestamp}, " +
-                            $"to: {timestamp}," +
-                            "}}"
-                **/
+                            $"from: {timestamp1}, " +
+                            $"to: {timestamp2}," +
+                            "}}"                
             };
 
             MasterSecret masterSecret = await MasterSecretApi.CreateMasterSecretAsync();
@@ -376,7 +373,13 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 );
 
             //Act
-            byte actual = await PresentationApi.VerifyPresentationAsync(presentationObject, presReqObject, schemas, credentialDefinitions, revRegDefinitions, revRegistries);
+            byte actual = await PresentationApi.VerifyPresentationAsync(
+                presentationObject, 
+                presReqObject, 
+                schemas, 
+                credentialDefinitions, 
+                revRegDefinitions, 
+                revRegistries);
 
             //Assert
             presentationObject.Should().BeOfType(typeof(Presentation));

@@ -12,7 +12,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         public static async Task<Presentation> CreatePresentationAsync(
             PresentationRequest presentationRequest,
             List<CredentialEntry> credentialEntries,
-            List<CredentialProve> credentialProves,
+            List<CredentialProof> credentialProves,
             List<string> selfAttestNames,
             List<string> selfAttestValues,
             MasterSecret masterSecret,

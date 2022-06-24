@@ -1,6 +1,6 @@
 ﻿namespace indy_shared_rs_dotnet.Models
 {
-    public class CredentialProve
+    public class CredentialProof
     {
         public long EntryIndex;
         public string Referent;

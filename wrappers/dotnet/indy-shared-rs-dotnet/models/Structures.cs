@@ -152,7 +152,7 @@ namespace indy_shared_rs_dotnet.Models
             public byte IsPredicate;
             public byte Reveal;
 
-            public static FfiCredentialProve Create(CredentialProve prove)
+            public static FfiCredentialProve Create(CredentialProof prove)
             {
                 FfiCredentialProve result = new();
                 result.EntryIndex = prove.EntryIndex;
@@ -213,7 +213,7 @@ namespace indy_shared_rs_dotnet.Models
         {
             public IntPtr count;
             public FfiCredentialProve* data;
-            public static FfiCredentialProveList Create(CredentialProve[] args)
+            public static FfiCredentialProveList Create(CredentialProof[] args)
             {
                 FfiCredentialProveList list = new();
                 list.count = (IntPtr)args.Length;
@@ -229,7 +229,7 @@ namespace indy_shared_rs_dotnet.Models
                 return list;
             }
 
-            public static FfiCredentialProveList Create(List<CredentialProve> args)
+            public static FfiCredentialProveList Create(List<CredentialProof> args)
             {
                 return Create(args.ToArray());
             }
