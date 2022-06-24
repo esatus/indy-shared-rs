@@ -23,7 +23,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             //Act
             (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
@@ -51,7 +51,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
             (CredentialDefinition credDef, _, _) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             (RevocationRegistryDefinition revRegDefObject, _, RevocationRegistry tmpRevRegObject, _) =
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
@@ -89,7 +89,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
             (CredentialDefinition credDef, 
                 _, 
-                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
             
             (RevocationRegistryDefinition revRegDefObject, 
                 _, 
@@ -125,7 +125,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
             (CredentialDefinition credDef, _, _) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             (RevocationRegistryDefinition revRegDefObject, _, RevocationRegistry revRegObject, _) =
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
@@ -174,7 +174,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             (CredentialDefinition credDef,
                 _,
-                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
 
             (RevocationRegistryDefinition revRegDefObject, _, RevocationRegistry tmpRevRegObject, RevocationRegistryDelta revRegDeltaObject) =
@@ -212,7 +212,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             (CredentialDefinition credDef,
                 _,
-                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             (RevocationRegistryDefinition revRegDefObject, 
                 _, 

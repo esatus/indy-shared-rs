@@ -40,7 +40,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
                 Console.WriteLine(error);
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
             RevocationRegistryDefinition regDefObject = await CreateRevocationRegistryDefinitionObject(regDefObjectHandle);
             RevocationRegistryDefinitionPrivate regDefPvtObject = await CreateRevocationRegistryDefinitionPrivateObject(regDefPvtObjectHandle);
@@ -72,7 +72,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
             RevocationRegistry revRegObjectUpdated = await CreateRevocationRegistryObject(revRegObjectHandle);
             RevocationRegistryDelta revRegDeltaObject = await CreateRevocationRegistryDeltaObject(revRegDeltaObjectHandle);
@@ -100,7 +100,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
             RevocationRegistry revRegObjectUpdated = await CreateRevocationRegistryObject(revRegObjectHandle);
             RevocationRegistryDelta revRegDeltaObject = await CreateRevocationRegistryDeltaObject(revRegDeltaObjectHandle);
@@ -122,7 +122,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             RevocationRegistryDelta revRegDeltaObjectNew = await CreateRevocationRegistryDeltaObject(revRegDeltaObjectHandleNew);
@@ -152,7 +152,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             CredentialRevocationState credRevStateObject = await CreateCredentialRevocationStateObject(credRevStateObjectHandle);
@@ -171,7 +171,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             return await Task.FromResult(result);

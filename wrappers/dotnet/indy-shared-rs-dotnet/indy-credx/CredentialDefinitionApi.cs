@@ -14,7 +14,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             string originDid,
             Schema schemaObject,
             string tag,
-            string signatureType,
+            SignatureType signatureType,
             byte supportRevocation)
         {
             uint credDefHandle = 0;
@@ -25,7 +25,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                 FfiStr.Create(originDid),
                 schemaObject.Handle,
                 FfiStr.Create(tag),
-                FfiStr.Create(signatureType),
+                FfiStr.Create(signatureType.ToString()),
                 supportRevocation,
                 ref credDefHandle,
                 ref credDefPvtHandle,
@@ -34,7 +34,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             CredentialDefinition credDefObject = await CreateCredentialDefinitonObject(credDefHandle);
@@ -52,7 +52,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
             return await Task.FromResult(result);
         }

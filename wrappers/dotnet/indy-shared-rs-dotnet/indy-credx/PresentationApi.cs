@@ -39,7 +39,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             Presentation presentationObject = await CreatePresentationObject(presentationObjectHandle);
@@ -74,7 +74,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             return await Task.FromResult(verify);

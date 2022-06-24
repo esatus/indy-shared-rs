@@ -38,7 +38,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             Credential credObject = await CreateCredentialObjectAsync(credObjectHandle);
@@ -77,7 +77,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             Credential credentialObject = await CreateCredentialObjectAsync(credentialObjectHandle);
@@ -93,7 +93,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
             string[] abc = result.Split(",");
             return await Task.FromResult(abc.ToList());
@@ -108,7 +108,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                throw new SharedRsException(JsonConvert.DeserializeObject<Dictionary<string, string>>(error)["message"]);
+                throw SharedRsException.FromSdkError(error);
             }
 
             return await Task.FromResult(result);

@@ -80,7 +80,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
             (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", Consts.SIGNATURE_TYPE, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
             CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
@@ -215,20 +215,9 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
             MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
 
-            Schema schemaObject = await SchemaApi.CreateSchemaAsync(
-                issuerDid, 
-                schemaName, 
-                schemaVersion, 
-                attrNames, 
-                0);
-            (CredentialDefinition credDefObject, 
-                CredentialDefinitionPrivate credDefPvtObject, 
-                CredentialKeyCorrectnessProof keyProofObject) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(
-                    issuerDid, 
-                    schemaObject, 
-                    "tag", 
-                    Consts.SIGNATURE_TYPE, 1);
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(
                 credDefObject, 
