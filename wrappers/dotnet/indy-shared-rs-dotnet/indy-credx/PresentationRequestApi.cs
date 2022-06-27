@@ -56,7 +56,10 @@ namespace indy_shared_rs_dotnet.indy_credx
                     {
                         AttributeInfo info = new();
                         info.Name = element["name"].Value<string>();
-                        info.Names = element["names"].ToObject<List<string>>();
+                        if(element["names"] != null)
+                        {
+                            info.Names = element["names"].ToObject<List<string>>();
+                        }
                         info.Restrictions = CreateAttributeFilterList(element["restrictions"]);
                         info.NonRevoked = element["non_revoked"].ToObject<NonRevokedInterval>(); ;
                         presentationRequestObject.RequestedAttributes.Add(key, info);
@@ -81,7 +84,10 @@ namespace indy_shared_rs_dotnet.indy_credx
                         info.Name = element["name"].Value<string>();
                         info.PredicateType = ParsePredicateType(element["p_type"].Value<string>());
                         info.PredicateValue = element["p_value"].Value<int>();
-                        info.NonRevoked = element["non_revoked"].ToObject<NonRevokedInterval>();
+                        if(element["non_revoked"] != null)
+                        {
+                            info.NonRevoked = element["non_revoked"].ToObject<NonRevokedInterval>();
+                        }
                         info.Restrictions = CreateAttributeFilterList(element["restrictions"]);
                         presentationRequestObject.RequestedPredicates.Add(key, info);
                     }

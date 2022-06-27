@@ -1,5 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,7 +47,20 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(presentationObject);
         }
 
-        public static async Task<byte> VerifyPresentationAsync(
+        public static async Task<Presentation> CreatePresentationFromJsonAsync(string presentationJson)
+        {
+            uint presentationObjectHandle = 0;
+            int errorCode = NativeMethods.credx_presentation_from_json(ByteBuffer.Create(presentationJson), ref presentationObjectHandle);
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+            Presentation presentationObject = await CreatePresentationObject(presentationObjectHandle);
+            return await Task.FromResult(presentationObject);
+        }
+
+        public static async Task<bool> VerifyPresentationAsync(
             Presentation presentation,
             PresentationRequest presentationRequest,
             List<Schema> schemas,
@@ -77,7 +91,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            return await Task.FromResult(verify);
+            return await Task.FromResult(Convert.ToBoolean(verify));
         }
 
         private static async Task<Presentation> CreatePresentationObject(uint objectHandle)

@@ -39,7 +39,6 @@ namespace indy_shared_rs_dotnet.indy_credx
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
-                Console.WriteLine(error);
                 throw SharedRsException.FromSdkError(error);
             }
             RevocationRegistryDefinition regDefObject = await CreateRevocationRegistryDefinitionObject(regDefObjectHandle);
@@ -48,6 +47,35 @@ namespace indy_shared_rs_dotnet.indy_credx
             RevocationRegistryDelta regInitDeltaObject = await CreateRevocationRegistryDeltaObject(regInitDeltaObjectHandle);
 
             return await Task.FromResult((regDefObject, regDefPvtObject, revRegObject, regInitDeltaObject));
+        }
+
+
+        public static async Task<RevocationRegistry> CreateRevocationRegistryFromJsonAsync(string revRegJson)
+        {
+            uint regEntryObjectHandle = 0;
+            int errorCode = NativeMethods.credx_revocation_registry_from_json(ByteBuffer.Create(revRegJson), ref regEntryObjectHandle);
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            RevocationRegistry revRegObject = await CreateRevocationRegistryObject(regEntryObjectHandle);
+            return await Task.FromResult(revRegObject);
+        }
+
+        public static async Task<RevocationRegistryDefinition> CreateRevocationRegistryDefinitionFromJsonAsync(string revRegDefJson)
+        {
+            uint revRegDefObjectHandle = 0;
+            int errorCode = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revRegDefObjectHandle);
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            RevocationRegistryDefinition revRegDefObject = await CreateRevocationRegistryDefinitionObject(revRegDefObjectHandle);
+            return await Task.FromResult(revRegDefObject);
         }
 
         public static async Task<(RevocationRegistry, RevocationRegistryDelta)> UpdateRevocationRegistryAsync(

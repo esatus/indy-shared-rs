@@ -57,6 +57,21 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(result);
         }
 
+        public static async Task<CredentialDefinition> CreateCredentialDefinitionFromJsonAsync(string credDefJson)
+        {
+            uint credDefHandle = 0;
+            int errorCode = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefJson), ref credDefHandle);
+
+            if(errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            CredentialDefinition result = await CreateCredentialDefinitonObject(credDefHandle);
+            return await Task.FromResult(result);
+        }
+
         private static async Task<CredentialDefinition> CreateCredentialDefinitonObject(uint objectHandle)
         {
             string credDefJson = await ObjectApi.ToJson(objectHandle);
