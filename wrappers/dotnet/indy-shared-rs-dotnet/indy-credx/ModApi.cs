@@ -1,13 +1,10 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.indy_credx
 {
     public static class ModApi
     {
-        public static async Task SetDefaultLogger()
+        public static async Task SetDefaultLoggerAsync()
         {
             int errorCode = NativeMethods.credx_set_default_logger();
             if (errorCode != 0)

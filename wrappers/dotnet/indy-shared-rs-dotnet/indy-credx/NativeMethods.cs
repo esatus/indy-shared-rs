@@ -1,7 +1,4 @@
-﻿using indy_shared_rs_dotnet.Models;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet.indy_credx
@@ -33,7 +30,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_create_credential_definition(FfiStr originDid, uint schemaObjectHandle, FfiStr tag, FfiStr signatureType, byte supportRevocation,
                                                                          ref uint credDefObjectHandle, ref uint credDefPvtObjectHandle, ref uint keyProofObjectHandle);
-        
+
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_credential_definition_get_attribute(uint credDefObjectHandle, FfiStr attributeName, ref string result);
 
@@ -104,23 +101,23 @@ namespace indy_shared_rs_dotnet.indy_credx
             FfiUIntList schemaObjectHandles,
             FfiUIntList credDefObjectHandles,
             FfiUIntList revRegDefObjectHandles,
-            FfiRevocationEntryList revRegEntries, 
+            FfiRevocationEntryList revRegEntries,
             ref byte verifyResult);
         #endregion
 
         #region Revocation
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_create_revocation_registry(
-            FfiStr originDid, 
-            uint credDefObjectHandle, 
-            FfiStr tag, 
-            FfiStr revRegType, 
-            FfiStr issuanceType, 
-            long maxCredNumber, 
+            FfiStr originDid,
+            uint credDefObjectHandle,
+            FfiStr tag,
+            FfiStr revRegType,
+            FfiStr issuanceType,
+            long maxCredNumber,
             FfiStr tailsDirPath,
             ref uint regDefObjectHandle,
-            ref uint regDefPvtObjectHandle, 
-            ref uint regEntryObjectHandle, 
+            ref uint regDefPvtObjectHandle,
+            ref uint regEntryObjectHandle,
             ref uint regInitDeltaObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]

@@ -1,7 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -13,14 +12,14 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             uint schemaObjectHandle = 0;
             int errorCode = NativeMethods.credx_create_schema(FfiStr.Create(originDid), FfiStr.Create(schemaName), FfiStr.Create(schemaVersion), FfiStrList.Create(attrNames), seqNo, ref schemaObjectHandle);
-            
+
             if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
                 throw SharedRsException.FromSdkError(error);
             }
 
-            Schema schemaObject = await CreateSchemaObject(schemaObjectHandle);
+            Schema schemaObject = await CreateSchemaObjectAsync(schemaObjectHandle);
             return await Task.FromResult(schemaObject);
         }
 
@@ -35,11 +34,11 @@ namespace indy_shared_rs_dotnet.indy_credx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            Schema schemaObject = await CreateSchemaObject(schemaObjectHandle);
+            Schema schemaObject = await CreateSchemaObjectAsync(schemaObjectHandle);
             return await Task.FromResult(schemaObject);
         }
 
-        public static async Task<string> GetSchemaAttribute(Schema schema, string attributeName)
+        public static async Task<string> GetSchemaAttributeAsync(Schema schema, string attributeName)
         {
             string result = "";
             //note: only "id" as attributeName supported so far.
@@ -54,9 +53,9 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(result);
         }
 
-        private static async Task<Schema> CreateSchemaObject(uint objectHandle)
+        private static async Task<Schema> CreateSchemaObjectAsync(uint objectHandle)
         {
-            string schemaJson = await ObjectApi.ToJson(objectHandle);
+            string schemaJson = await ObjectApi.ToJsonAsync(objectHandle);
             Schema schemaObject = JsonConvert.DeserializeObject<Schema>(schemaJson, Settings.jsonSettings);
             schemaObject.Handle = objectHandle;
             return await Task.FromResult(schemaObject);

@@ -1,8 +1,9 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet;
 using indy_shared_rs_dotnet.indy_credx;
 using indy_shared_rs_dotnet.Models;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -60,7 +61,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             List<long> revokedList = new List<long> { 0 };
 
             //Act
-            (RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) = 
+            (RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
                 await RevocationApi.UpdateRevocationRegistryAsync(
                     revRegDefObject,
                     tmpRevRegObject,
@@ -87,17 +88,17 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             string testTailsPath = null;
 
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
-            (CredentialDefinition credDef, 
-                _, 
+            (CredentialDefinition credDef,
+                _,
                 _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
-            
-            (RevocationRegistryDefinition revRegDefObject, 
-                _, 
-                RevocationRegistry tmpRevRegObject, 
+
+            (RevocationRegistryDefinition revRegDefObject,
+                _,
+                RevocationRegistry tmpRevRegObject,
                 _) = await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
             //Act
-            (_, RevocationRegistryDelta actual) = 
+            (_, RevocationRegistryDelta actual) =
                 await RevocationApi.RevokeCredentialAsync(
                     revRegDefObject,
                     tmpRevRegObject,
@@ -130,10 +131,10 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             (RevocationRegistryDefinition revRegDefObject, _, RevocationRegistry revRegObject, _) =
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
-            List<long> issuedList1 = new List<long> { 0,2 };
-            List<long> issuedList2 = new List<long> { 0,3 };
-            List<long> revokedList1 = new List<long> { 0,2 };
-            List<long> revokedList2 = new List<long> { 0,3 };
+            List<long> issuedList1 = new List<long> { 0, 2 };
+            List<long> issuedList2 = new List<long> { 0, 3 };
+            List<long> revokedList1 = new List<long> { 0, 2 };
+            List<long> revokedList2 = new List<long> { 0, 3 };
 
             (RevocationRegistry tmpRevReg, RevocationRegistryDelta delta1) = await RevocationApi.UpdateRevocationRegistryAsync(
                 revRegDefObject,
@@ -197,6 +198,35 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         }
         #endregion
 
+        #region Tests for CreateRevocationStateFromJson
+        [Test, TestCase(TestName = "CreateRevocationStateFromJsonAsync() returns a CredentialRevocationState object if provided with a valid json string.")]
+        public async Task CreateRevocationStateFromJsonAsyncWorks()
+        {
+            //Arrange
+            string revStateJson = "{\"Handle\":9,\"witness\":{\"omega\":\"21 12CD27F6902B0C605053D21C277B62B2625802AECB16B41C45113CD3DA8A03A0D 21 13AEF810B5457092EC814EB84ECE38DD159A36D224551B051312410497A55A134 6 77FD09EE7F36E02EE33F475F95A06D2F13B8C1B3FDB5AD135CFD92E67CCB5EB2 4 37976F8859E86691D601415504DD4473F969C27FDB655787BCCA778FEC2F9C13 6 6D551EC893C94FB1347556ECA88226446184C48D97EE99B9437238E4687C0C2A 4 16917F5C8DE3FB1855737C204E57B1ED23AC27E238751BF182F5D47A78841884\"},\"rev_reg\":{\"accum\":\"21 12CD27F6902B0C605053D21C277B62B2625802AECB16B41C45113CD3DA8A03A0D 21 13AEF810B5457092EC814EB84ECE38DD159A36D224551B051312410497A55A134 6 77FD09EE7F36E02EE33F475F95A06D2F13B8C1B3FDB5AD135CFD92E67CCB5EB2 4 37976F8859E86691D601415504DD4473F969C27FDB655787BCCA778FEC2F9C13 6 6D551EC893C94FB1347556ECA88226446184C48D97EE99B9437238E4687C0C2A 4 16917F5C8DE3FB1855737C204E57B1ED23AC27E238751BF182F5D47A78841884\"},\"timestamp\":0}";
+
+
+            //Act
+            var actual = await RevocationApi.CreateRevocationStateFromJsonAsync(revStateJson);
+
+            //Assert
+            actual.Should().BeOfType<CredentialRevocationState>();
+        }
+
+        [Test, TestCase(TestName = "CreateRevocationStateFromJsonAsync() throws IndexOutOfRangeException if provided with an empty json string.")]
+        public async Task CreateRevocationStateFromJsonAsyncThrowsExceptions()
+        {
+            //Arrange
+            string revStateJson = "";
+            
+            //Act
+            Func<Task> act = async () => await RevocationApi.CreateRevocationStateFromJsonAsync(revStateJson);
+
+            //Assert
+            await act.Should().ThrowAsync<IndexOutOfRangeException>();
+        }
+        #endregion
+
         #region Tests for GetRevocationRegistryDefinitionAttribute
         [Test, TestCase(TestName = "GetRevocationRegistryDefinitionAttribute() works.")]
         public async Task GetRevocationRegistryDefinitionAttributeWorks()
@@ -214,9 +244,9 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 _,
                 _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
-            (RevocationRegistryDefinition revRegDefObject, 
-                _, 
-                _, 
+            (RevocationRegistryDefinition revRegDefObject,
+                _,
+                _,
                 _) = await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
             //Act

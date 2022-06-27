@@ -96,7 +96,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<Presentation> CreatePresentationObject(uint objectHandle)
         {
-            string presentationJson = await ObjectApi.ToJson(objectHandle);
+            string presentationJson = await ObjectApi.ToJsonAsync(objectHandle);
             Presentation presentationObject = JsonConvert.DeserializeObject<Presentation>(presentationJson, Settings.jsonSettings);
 
             presentationObject.Handle = objectHandle;

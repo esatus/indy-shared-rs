@@ -30,7 +30,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<CredentialOffer> CreateCredentialOfferObject(uint objectHandle)
         {
-            string credOfferJson = await ObjectApi.ToJson(objectHandle);
+            string credOfferJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.jsonSettings);
             credOfferObject.Handle = objectHandle;
 

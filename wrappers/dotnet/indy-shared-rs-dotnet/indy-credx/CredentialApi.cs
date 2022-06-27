@@ -116,7 +116,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<Credential> CreateCredentialObjectAsync(uint objectHandle)
         {
-            string credJson = await ObjectApi.ToJson(objectHandle);
+            string credJson = await ObjectApi.ToJsonAsync(objectHandle);
             Credential credObject = JsonConvert.DeserializeObject<Credential>(credJson, Settings.jsonSettings);
             credObject.Handle = objectHandle;
             return await Task.FromResult(credObject);
@@ -124,7 +124,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<RevocationRegistry> CreateRevocationRegistryObjectAsync(uint objectHandle)
         {
-            string revRegJson = await ObjectApi.ToJson(objectHandle);
+            string revRegJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistry revRegObject = JsonConvert.DeserializeObject<RevocationRegistry>(revRegJson, Settings.jsonSettings);
             revRegObject.Handle = objectHandle;
             return await Task.FromResult(revRegObject);
@@ -132,7 +132,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<RevocationRegistryDelta> CreateRevocationRegistryDeltaObjectAsync(uint objectHandle)
         {
-            string revDeltaJson = await ObjectApi.ToJson(objectHandle);
+            string revDeltaJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDelta revDeltaObject = JsonConvert.DeserializeObject<RevocationRegistryDelta>(revDeltaJson, Settings.jsonSettings);
             revDeltaObject.Handle = objectHandle;
             return await Task.FromResult(revDeltaObject);

@@ -8,21 +8,22 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 {
     public class ModApiTests
     {
-        [Test]
-        [TestCase(TestName = "SetDefaultLogger does not throw an exception.")]
-        public async Task SetDefaultLogger()
+        #region Tests for SetDefaultLoggerAsync
+        [Test, TestCase(TestName = "SetDefaultLoggerAsync() does not throw an exception.")]
+        public async Task SetDefaultLoggerAsyncWorks()
         {
             //Arrange
 
             //Act
-            Action act = () => { ModApi.SetDefaultLogger(); };
+            Action act = () => { ModApi.SetDefaultLoggerAsync(); };
 
             //Assert
             act.Should().NotThrow();
         }
+        #endregion
 
-        [Test]
-        [TestCase(TestName = "GetVersionAsync returns a string that is not empty.")]
+        #region Tests for GetVersionAsync
+        [Test, TestCase(TestName = "GetVersionAsync() returns a string that is not empty.")]
         public async Task GetVersion()
         {
             //Arrange
@@ -33,5 +34,6 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Assert
             actual.Should().NotBeEmpty();
         }
+        #endregion
     }
 }

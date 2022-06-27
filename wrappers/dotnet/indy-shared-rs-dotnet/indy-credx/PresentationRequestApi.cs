@@ -38,7 +38,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         }
         private static async Task<PresentationRequest> CreatePresentationRequestObject(uint objectHandle)
         {
-            string presReqJson = await ObjectApi.ToJson(objectHandle);
+            string presReqJson = await ObjectApi.ToJsonAsync(objectHandle);
             PresentationRequest presentationRequestObject = JsonConvert.DeserializeObject<PresentationRequest>(presReqJson, Settings.jsonSettings);
 
             presentationRequestObject.RequestedAttributes = new Dictionary<string, AttributeInfo>();

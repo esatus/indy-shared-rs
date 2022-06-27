@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -9,12 +6,12 @@ namespace indy_shared_rs_dotnet.indy_credx
 {
     public static class ObjectApi
     {
-        public static async Task<string> GetTypeName(uint objectHandle)
+        public static async Task<string> GetTypeNameAsync(uint objectHandle)
         {
-            return await ObjectGetTypeName(objectHandle);
+            return await ObjectGetTypeNameAsync(objectHandle);
         }
 
-        public static async Task FreeObject(uint objectHandle)
+        public static async Task FreeObjectAsync(uint objectHandle)
         {
             int errorCode = NativeMethods.credx_object_free(objectHandle);
             if (errorCode != 0)
@@ -24,14 +21,14 @@ namespace indy_shared_rs_dotnet.indy_credx
             }
         }
 
-        public static unsafe async Task<string> ToJson(uint objectHandle)
+        public static unsafe async Task<string> ToJsonAsync(uint objectHandle)
         {
-            ByteBuffer byteBuffer = ObjectGetJson(objectHandle).GetAwaiter().GetResult();
-            string decoded = DecodeToString(byteBuffer).GetAwaiter().GetResult();
+            ByteBuffer byteBuffer = ObjectGetJsonAsync(objectHandle).GetAwaiter().GetResult();
+            string decoded = DecodeToStringAsync(byteBuffer).GetAwaiter().GetResult();
             return Task.FromResult(decoded).GetAwaiter().GetResult();
         }
 
-        private static async Task<string> ObjectGetTypeName(uint handle)
+        private static async Task<string> ObjectGetTypeNameAsync(uint handle)
         {
             string result = "";
             int errorCode = NativeMethods.credx_object_get_type_name(handle, ref result);
@@ -43,7 +40,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(result);
         }
 
-        private static unsafe async Task<ByteBuffer> ObjectGetJson(uint handle)
+        private static unsafe async Task<ByteBuffer> ObjectGetJsonAsync(uint handle)
         {
             ByteBuffer result = new()
             {
@@ -60,7 +57,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             return Task.FromResult(result).GetAwaiter().GetResult();
         }
 
-        private static unsafe async Task<string> DecodeToString(ByteBuffer byteBuffer)
+        private static unsafe async Task<string> DecodeToStringAsync(ByteBuffer byteBuffer)
         {
             char[] charArray = new char[byteBuffer.len];
             UTF8Encoding utf8Decoder = new UTF8Encoding(true, true);

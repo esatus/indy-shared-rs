@@ -1,6 +1,5 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -188,6 +187,19 @@ namespace indy_shared_rs_dotnet.indy_credx
             return await Task.FromResult(credRevStateObject);
         }
 
+        public static async Task<CredentialRevocationState> CreateRevocationStateFromJsonAsync(string revStateJson)
+        {
+            uint revStateObjectHandle = 0;
+            int errorCode = NativeMethods.credx_revocation_state_from_json(ByteBuffer.Create(revStateJson), ref revStateObjectHandle);
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+            CredentialRevocationState revStateObject = await CreateCredentialRevocationStateObject(revStateObjectHandle);
+            return await Task.FromResult(revStateObject);
+        }
+
         /**
          * Possible attributenames: id, max_cred_num, tails_hash or tails_location
          */
@@ -207,7 +219,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<RevocationRegistryDefinition> CreateRevocationRegistryDefinitionObject(uint objectHandle)
         {
-            string regDefJson = await ObjectApi.ToJson(objectHandle);
+            string regDefJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDefinition regDefObject = JsonConvert.DeserializeObject<RevocationRegistryDefinition>(regDefJson, Settings.jsonSettings);
             regDefObject.Handle = objectHandle;
             return await Task.FromResult(regDefObject);
@@ -215,7 +227,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<RevocationRegistryDefinitionPrivate> CreateRevocationRegistryDefinitionPrivateObject(uint objectHandle)
         {
-            string regDefPvtJson = await ObjectApi.ToJson(objectHandle);
+            string regDefPvtJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDefinitionPrivate regDefPvtObject = JsonConvert.DeserializeObject<RevocationRegistryDefinitionPrivate>(regDefPvtJson, Settings.jsonSettings);
             regDefPvtObject.Handle = objectHandle;
             return await Task.FromResult(regDefPvtObject);
@@ -223,7 +235,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<RevocationRegistry> CreateRevocationRegistryObject(uint objectHandle)
         {
-            string revRegJson = await ObjectApi.ToJson(objectHandle);
+            string revRegJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistry revRegObject = JsonConvert.DeserializeObject<RevocationRegistry>(revRegJson, Settings.jsonSettings);
             revRegObject.Handle = objectHandle;
             return await Task.FromResult(revRegObject);
@@ -231,7 +243,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<RevocationRegistryDelta> CreateRevocationRegistryDeltaObject(uint objectHandle)
         {
-            string revRegDeltaJson = await ObjectApi.ToJson(objectHandle);
+            string revRegDeltaJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDelta revRegDeltaObject = JsonConvert.DeserializeObject<RevocationRegistryDelta>(revRegDeltaJson, Settings.jsonSettings);
             revRegDeltaObject.Handle = objectHandle;
             return await Task.FromResult(revRegDeltaObject);
@@ -239,7 +251,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         private static async Task<CredentialRevocationState> CreateCredentialRevocationStateObject(uint objectHandle)
         {
-            string credRevStateJson = await ObjectApi.ToJson(objectHandle);
+            string credRevStateJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialRevocationState credRevStateObject = JsonConvert.DeserializeObject<CredentialRevocationState>(credRevStateJson, Settings.jsonSettings);
             credRevStateObject.Handle = objectHandle;
             return await Task.FromResult(credRevStateObject);

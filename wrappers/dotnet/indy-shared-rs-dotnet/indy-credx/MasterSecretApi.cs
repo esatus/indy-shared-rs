@@ -1,7 +1,5 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.indy_credx
@@ -19,11 +17,11 @@ namespace indy_shared_rs_dotnet.indy_credx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            string masterSecretJson = await ObjectApi.ToJson(result);
+            string masterSecretJson = await ObjectApi.ToJsonAsync(result);
             MasterSecret msObject = JsonConvert.DeserializeObject<MasterSecret>(masterSecretJson, Settings.jsonSettings);
             msObject.Handle = result;
             return await Task.FromResult(msObject);
         }
-        
+
     }
 }
