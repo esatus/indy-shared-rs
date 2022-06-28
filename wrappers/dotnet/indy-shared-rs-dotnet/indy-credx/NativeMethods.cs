@@ -190,7 +190,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_object_get_json(uint objectHandle, ref ByteBuffer result);
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
-        internal static extern int credx_object_free(uint objectHandle);
+        internal static extern void credx_object_free(uint objectHandle);
         #endregion
     }
 }

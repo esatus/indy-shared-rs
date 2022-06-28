@@ -13,12 +13,7 @@ namespace indy_shared_rs_dotnet.indy_credx
 
         public static async Task FreeObjectAsync(uint objectHandle)
         {
-            int errorCode = NativeMethods.credx_object_free(objectHandle);
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
+            NativeMethods.credx_object_free(objectHandle);
         }
 
         public static unsafe async Task<string> ToJsonAsync(uint objectHandle)

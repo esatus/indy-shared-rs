@@ -38,7 +38,20 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         #endregion
 
         #region Tests for FreeObjectAsync
+        [Test, TestCase(TestName = "FreeObjectAsync() works with toJsonAsync() throwing when trying to access json from an invalid handle.")]
+        public async Task FreeObjectAsyncWorks()
+        {
+            //Arrange
+            MasterSecret secretObject = await MasterSecretApi.CreateMasterSecretAsync();
+            string testJson = await ObjectApi.ToJsonAsync(secretObject.Handle);
+            //Act
+            await ObjectApi.FreeObjectAsync(secretObject.Handle);
+            Func<Task> actual = async () => await ObjectApi.ToJsonAsync(secretObject.Handle);
+            //Assert
+            testJson.Should().NotBe("");
+            await actual.Should().ThrowAsync<Exception>();
 
+        }
         #endregion
 
         #region Tests for ToJsonAsync
