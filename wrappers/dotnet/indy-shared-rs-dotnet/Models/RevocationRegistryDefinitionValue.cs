@@ -1,5 +1,4 @@
-﻿using indy_shared_rs_dotnet.models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace indy_shared_rs_dotnet.Models
 {

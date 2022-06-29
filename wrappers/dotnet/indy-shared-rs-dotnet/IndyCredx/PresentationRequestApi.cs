@@ -1,5 +1,4 @@
-﻿using indy_shared_rs_dotnet.models;
-using indy_shared_rs_dotnet.Models;
+﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
-namespace indy_shared_rs_dotnet.indy_credx
+namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class PresentationRequestApi
     {

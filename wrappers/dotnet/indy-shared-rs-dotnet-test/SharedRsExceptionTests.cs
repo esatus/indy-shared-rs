@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet.indy_credx;
+using indy_shared_rs_dotnet.IndyCredx;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -45,9 +45,13 @@ namespace indy_shared_rs_dotnet_test
             SharedRsException testException = SharedRsException.FromSdkError(testErrorMessage);
             string actual;
             if (errorCode != "xyz")
+            {
                 actual = testException.Message.Substring(1, expected.Length);
+            }
             else
+            {
                 actual = testException.Message;
+            }
 
             //Assert
             actual.Should().Be(expected);

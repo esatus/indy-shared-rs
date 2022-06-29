@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet.indy_credx;
+using indy_shared_rs_dotnet.IndyCredx;
 using indy_shared_rs_dotnet.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace indy_shared_rs_dotnet_test.indy_credx
+namespace indy_shared_rs_dotnet_test.IndyCredx
 {
     public class CredentialRequestApiTests
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace indy_shared_rs_dotnet.indy_credx
+namespace indy_shared_rs_dotnet.IndyCredx
 {
     public class SharedRsException : Exception
     {

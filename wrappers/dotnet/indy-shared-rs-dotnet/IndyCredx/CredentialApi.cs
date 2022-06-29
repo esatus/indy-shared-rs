@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
-namespace indy_shared_rs_dotnet.indy_credx
+namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class CredentialApi
     {

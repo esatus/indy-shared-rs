@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
-namespace indy_shared_rs_dotnet.indy_credx
+namespace indy_shared_rs_dotnet.IndyCredx
 {
     public class SchemaApi
     {

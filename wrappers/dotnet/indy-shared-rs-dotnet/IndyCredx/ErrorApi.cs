@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace indy_shared_rs_dotnet.indy_credx
+namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class ErrorApi
     {

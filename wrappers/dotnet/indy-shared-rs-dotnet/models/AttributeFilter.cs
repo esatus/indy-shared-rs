@@ -1,8 +1,7 @@
-﻿using indy_shared_rs_dotnet.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
-namespace indy_shared_rs_dotnet.models
+namespace indy_shared_rs_dotnet.Models
 {
     public class AttributeFilter
     {
