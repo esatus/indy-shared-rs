@@ -81,12 +81,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
             try
             {
                 JObject jObj = JObject.Parse(credDefJson);
-                credDefObject.Value.Primary.r = new List<KeyProofAttributeValue>();
+                credDefObject.Value.Primary.R = new List<KeyProofAttributeValue>();
                 foreach (JToken ele in jObj["value"]["primary"]["r"])
                 {
                     string[] attrFields = ele.ToString().Split(':');
                     KeyProofAttributeValue attribute = new(JsonConvert.DeserializeObject<string>(attrFields[0]), JsonConvert.DeserializeObject<string>(attrFields[1]));
-                    credDefObject.Value.Primary.r.Add(attribute);
+                    credDefObject.Value.Primary.R.Add(attribute);
                 }
             }
             catch (Exception e)
@@ -114,11 +114,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
             try
             {
                 JObject jObj = JObject.Parse(keyProofJson);
-                keyProofObject.xrcap = new List<KeyProofAttributeValue>();
+                keyProofObject.XrCap = new List<KeyProofAttributeValue>();
                 foreach (JToken ele in jObj["xr_cap"])
                 {
                     KeyProofAttributeValue attribute = new(ele.First.ToString(), ele.Last.ToString());
-                    keyProofObject.xrcap.Add(attribute);
+                    keyProofObject.XrCap.Add(attribute);
                 }
             }
             catch (Exception e)

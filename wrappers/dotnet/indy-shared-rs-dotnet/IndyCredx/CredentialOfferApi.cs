@@ -37,11 +37,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
             try
             {
                 JObject jObj = JObject.Parse(credOfferJson);
-                credOfferObject.KeyCorrectnessProof.xrcap = new List<KeyProofAttributeValue>();
+                credOfferObject.KeyCorrectnessProof.XrCap = new List<KeyProofAttributeValue>();
                 foreach (JToken ele in jObj["key_correctness_proof"]["xr_cap"])
                 {
                     KeyProofAttributeValue attribute = new(ele.First.ToString(), ele.Last.ToString());
-                    credOfferObject.KeyCorrectnessProof.xrcap.Add(attribute);
+                    credOfferObject.KeyCorrectnessProof.XrCap.Add(attribute);
                 }
             }
             catch (Exception e)

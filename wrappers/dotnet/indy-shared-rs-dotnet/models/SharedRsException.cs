@@ -6,7 +6,6 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public class SharedRsException : Exception
     {
-
         public SharedRsException(string message) : base(message)
         {
 

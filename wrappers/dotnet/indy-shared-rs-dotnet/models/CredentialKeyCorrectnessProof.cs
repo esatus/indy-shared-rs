@@ -7,24 +7,12 @@ namespace indy_shared_rs_dotnet.Models
     {
         [JsonIgnore]
         public uint Handle { get; set; }
-        public string c { get; set; }
+        public string C { get; set; }
 
         [JsonProperty("xz_cap")]
-        public string xzcap { get; set; }
+        public string XzCap { get; set; }
 
         [JsonIgnore]
-        public List<KeyProofAttributeValue> xrcap { get; set; }
-    }
-
-    public class KeyProofAttributeValue
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-
-        public KeyProofAttributeValue(string name, string value)
-        {
-            Name = name;
-            Value = value;
-        }
+        public List<KeyProofAttributeValue> XrCap { get; set; }
     }
 }

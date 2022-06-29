@@ -41,12 +41,12 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
             {
-                revRegDefObjectHandle = revRegDefObject.Handle,
-                revRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
-                revRegObjectHandle = revRegObject.Handle,
-                tailsPath = revRegDefObject.Value.TailsLocation,
-                regIdx = 1,
-                regUsed = new List<long> { 1 }
+                RevRegDefObjectHandle = revRegDefObject.Handle,
+                RevRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
+                RevRegObjectHandle = revRegObject.Handle,
+                TailsPath = revRegDefObject.Value.TailsLocation,
+                RegIdx = 1,
+                RegUsed = new List<long> { 1 }
             };
 
             //Act
@@ -108,12 +108,12 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
             {
-                revRegDefObjectHandle = revRegDefObject.Handle,
-                revRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
-                revRegObjectHandle = revRegObject.Handle,
-                tailsPath = revRegDefObject.Value.TailsLocation,
-                regIdx = 1,
-                regUsed = new List<long> { 1 }
+                RevRegDefObjectHandle = revRegDefObject.Handle,
+                RevRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
+                RevRegObjectHandle = revRegObject.Handle,
+                TailsPath = revRegDefObject.Value.TailsLocation,
+                RegIdx = 1,
+                RegUsed = new List<long> { 1 }
             };
 
             (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
@@ -159,12 +159,12 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
             {
-                revRegDefObjectHandle = revRegDefObject.Handle,
-                revRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
-                revRegObjectHandle = revRegObject.Handle,
-                tailsPath = revRegDefObject.Value.TailsLocation,
-                regIdx = 1,
-                regUsed = new List<long> { 1 }
+                RevRegDefObjectHandle = revRegDefObject.Handle,
+                RevRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
+                RevRegObjectHandle = revRegObject.Handle,
+                TailsPath = revRegDefObject.Value.TailsLocation,
+                RegIdx = 1,
+                RegUsed = new List<long> { 1 }
             };
 
             (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =

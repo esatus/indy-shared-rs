@@ -21,6 +21,6 @@ namespace indy_shared_rs_dotnet.Models
         public Dictionary<string, string> T { get; set; }
 
         [JsonProperty("predicate")]
-        public Predicate predicate { get; set; }
+        public Predicate Predicate { get; set; }
     }
 }

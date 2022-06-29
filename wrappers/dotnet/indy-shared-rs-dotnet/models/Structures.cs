@@ -91,12 +91,12 @@ namespace indy_shared_rs_dotnet.Models
                 FfiCredRevInfo result = new();
                 if (entry != null)
                 {
-                    result.regDefObjectHandle = (IntPtr)entry.revRegDefObjectHandle;
-                    result.regDefPvtObjectHandle = (IntPtr)entry.revRegDefPvtObjectHandle;
-                    result.registryObjectHandle = (IntPtr)entry.revRegObjectHandle;
-                    result.regIdx = (IntPtr)entry.regIdx;
-                    result.regUsed = FfiLongList.Create(entry.regUsed);
-                    result.tailsPath = FfiStr.Create(entry.tailsPath);
+                    result.regDefObjectHandle = (IntPtr)entry.RevRegDefObjectHandle;
+                    result.regDefPvtObjectHandle = (IntPtr)entry.RevRegDefPvtObjectHandle;
+                    result.registryObjectHandle = (IntPtr)entry.RevRegObjectHandle;
+                    result.regIdx = (IntPtr)entry.RegIdx;
+                    result.regUsed = FfiLongList.Create(entry.RegUsed);
+                    result.tailsPath = FfiStr.Create(entry.TailsPath);
                 }
                 return result;
             }
