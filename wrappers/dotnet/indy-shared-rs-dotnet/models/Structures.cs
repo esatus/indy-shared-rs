@@ -1,5 +1,4 @@
-﻿using indy_shared_rs_dotnet.indy_credx;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,7 +17,7 @@ namespace indy_shared_rs_dotnet.Models
             {
                 FfiStrList list = new();
                 list.count = (IntPtr)args.Length;
-                if (args.First() != null) 
+                if (args.First() != null)
                 {
                     FfiStr[] ffiStrings = new FfiStr[(uint)args.Length];
                     for (int i = 0; i < args.Length; i++)
@@ -48,8 +47,9 @@ namespace indy_shared_rs_dotnet.Models
             {
                 FfiStr FfiString = new();
                 FfiString.data = new IntPtr();
-                if (arg != null) {
-                    FfiString.data = Marshal.StringToCoTaskMemUTF8(arg); 
+                if (arg != null)
+                {
+                    FfiString.data = Marshal.StringToCoTaskMemUTF8(arg);
                 }
                 return FfiString;
             }
@@ -60,7 +60,7 @@ namespace indy_shared_rs_dotnet.Models
         {
             public long len;
             public byte* value;
-            
+
             public static ByteBuffer Create(string json)
             {
                 UTF8Encoding decoder = new UTF8Encoding(true, true);
@@ -134,27 +134,27 @@ namespace indy_shared_rs_dotnet.Models
             public static FfiCredentialEntry Create(CredentialEntry entry)
             {
                 FfiCredentialEntry result = new();
-                if (entry != null) 
+                if (entry != null)
                 {
-                result.CredentialObjectHandle = (IntPtr)entry.CredentialObjectHandle;
-                result.Timestamp = entry.Timestamp;
-                result.RevStateObjectHandle = (IntPtr)entry.RevStateObjectHandle;
+                    result.CredentialObjectHandle = (IntPtr)entry.CredentialObjectHandle;
+                    result.Timestamp = entry.Timestamp;
+                    result.RevStateObjectHandle = (IntPtr)entry.RevStateObjectHandle;
                 }
                 return result;
             }
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct FfiCredentialProve
+        public struct FfiCredentialProoof
         {
             public long EntryIndex;
             public FfiStr Referent;
             public byte IsPredicate;
             public byte Reveal;
 
-            public static FfiCredentialProve Create(CredentialProof prove)
+            public static FfiCredentialProoof Create(CredentialProof prove)
             {
-                FfiCredentialProve result = new();
+                FfiCredentialProoof result = new();
                 result.EntryIndex = prove.EntryIndex;
                 result.Referent = FfiStr.Create(prove.Referent);
                 result.IsPredicate = prove.IsPredicate;
@@ -176,7 +176,7 @@ namespace indy_shared_rs_dotnet.Models
                 result.DefEntryIdx = entry.DefEntryIdx;
                 result.Entry = entry.Entry;
                 result.Timestamp = entry.Timestamp;
-                
+
                 return result;
             }
         }
@@ -212,17 +212,17 @@ namespace indy_shared_rs_dotnet.Models
         public unsafe struct FfiCredentialProveList
         {
             public IntPtr count;
-            public FfiCredentialProve* data;
+            public FfiCredentialProoof* data;
             public static FfiCredentialProveList Create(CredentialProof[] args)
             {
                 FfiCredentialProveList list = new();
                 list.count = (IntPtr)args.Length;
-                FfiCredentialProve[] ffiCredentialProves = new FfiCredentialProve[args.Length];
+                FfiCredentialProoof[] ffiCredentialProves = new FfiCredentialProoof[args.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
-                    ffiCredentialProves[i] = FfiCredentialProve.Create(args[i]);
+                    ffiCredentialProves[i] = FfiCredentialProoof.Create(args[i]);
                 }
-                fixed (FfiCredentialProve* ffiProveP = &ffiCredentialProves[0])
+                fixed (FfiCredentialProoof* ffiProveP = &ffiCredentialProves[0])
                 {
                     list.data = ffiProveP;
                 }

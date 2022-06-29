@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet;
 using indy_shared_rs_dotnet.indy_credx;
 using indy_shared_rs_dotnet.Models;
 using NUnit.Framework;
@@ -47,7 +46,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                 revRegObjectHandle = revRegObject.Handle,
                 tailsPath = revRegDefObject.Value.TailsLocation,
                 regIdx = 1,
-                regUsed = new List<long> { 1}
+                regUsed = new List<long> { 1 }
             };
 
             //Act
@@ -67,7 +66,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         public async Task EncodeCredentialAttributesAsyncWorks()
         {
             //Arrange
-            List<string> rawAttributes = new List<string>(){ "test", "test2", "test3" };
+            List<string> rawAttributes = new List<string>() { "test", "test2", "test3" };
 
             //Act
             List<string> result = await CredentialApi.EncodeCredentialAttributesAsync(rawAttributes);

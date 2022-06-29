@@ -2,6 +2,6 @@
 {
     public enum RegistryType
     {
-         CL_ACCUM
+        CL_ACCUM
     }
 }

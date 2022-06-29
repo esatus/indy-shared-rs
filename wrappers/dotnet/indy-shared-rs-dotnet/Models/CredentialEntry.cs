@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace indy_shared_rs_dotnet.Models
+﻿namespace indy_shared_rs_dotnet.Models
 {
     public class CredentialEntry
     {
@@ -13,10 +11,10 @@ namespace indy_shared_rs_dotnet.Models
          *  param name="timestamp" : Value of -1 corresponds to None value
          *  param name="revocationStateObject" : CredentialRevocationState object
          **/
-        public CredentialEntry (Credential credentialObject, long timestamp = -1, CredentialRevocationState revocationStateObject = null)
+        public CredentialEntry(Credential credentialObject, long timestamp = -1, CredentialRevocationState revocationStateObject = null)
         {
             CredentialObjectHandle = credentialObject.Handle;
-            if(timestamp == 0 || revocationStateObject == null)
+            if (timestamp == 0 || revocationStateObject == null)
             {
                 Timestamp = -1;
                 RevStateObjectHandle = 0;

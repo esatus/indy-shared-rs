@@ -59,7 +59,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                "}";
 
             //Act
-            var actual = await SchemaApi.CreateSchemaFromJsonAsync(schemaJson);
+            Schema actual = await SchemaApi.CreateSchemaFromJsonAsync(schemaJson);
 
             //Assert
             actual.Should().BeOfType<Schema>();

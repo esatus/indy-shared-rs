@@ -23,7 +23,7 @@ namespace indy_shared_rs_dotnet.Models
 
         [JsonProperty("rev_reg")]
         public RevocationRegistryValue RevocationRegistry { get; set; } = null;
-        
+
         [JsonProperty("witness")]
         public Witness Witness { get; set; } = null;
         public uint Handle { get; set; }

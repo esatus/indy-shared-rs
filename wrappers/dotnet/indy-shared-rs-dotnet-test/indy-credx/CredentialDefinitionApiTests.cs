@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet;
 using indy_shared_rs_dotnet.indy_credx;
 using indy_shared_rs_dotnet.Models;
 using NUnit.Framework;

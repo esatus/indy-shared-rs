@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace indy_shared_rs_dotnet
+﻿namespace indy_shared_rs_dotnet
 {
     public class Consts
     {

@@ -1,22 +1,18 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.Models
 {
     public class PrimaryEqualProof
     {
         [JsonProperty("revealed_attrs")]
-        public Dictionary<string, string> RevealedAttrs { get;set;}
+        public Dictionary<string, string> RevealedAttrs { get; set; }
 
         [JsonProperty("a_prime")]
-        public string APrime { get;set;}
+        public string APrime { get; set; }
 
         [JsonProperty("e")]
-        public string E {get;set;}
+        public string E { get; set; }
 
         [JsonProperty("v")]
         public string V { get; set; }

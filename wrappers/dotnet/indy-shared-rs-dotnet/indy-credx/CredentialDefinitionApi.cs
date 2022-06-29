@@ -62,7 +62,7 @@ namespace indy_shared_rs_dotnet.indy_credx
             uint credDefHandle = 0;
             int errorCode = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefJson), ref credDefHandle);
 
-            if(errorCode != 0)
+            if (errorCode != 0)
             {
                 string error = await ErrorApi.GetCurrentErrorAsync();
                 throw SharedRsException.FromSdkError(error);

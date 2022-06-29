@@ -16,8 +16,7 @@ namespace indy_shared_rs_dotnet.indy_credx
         {
             string msg = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)["message"];
             string errCode = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)["code"];
-            int errCodeInt;
-            if (int.TryParse(errCode, out errCodeInt))
+            if (int.TryParse(errCode, out int errCodeInt))
             {
                 return new SharedRsException(
                     $"'{((ErrorCode)errCodeInt).ToErrorCodeString()}' error occured with ErrorCode '{errCode}' : {msg}.");

@@ -16,7 +16,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
             //Arrange
 
             //Act
-            Func<Task> act = async () => {await MasterSecretApi.CreateMasterSecretAsync(); };
+            Func<Task> act = async () => { await MasterSecretApi.CreateMasterSecretAsync(); };
 
             //Assert
             await act.Should().NotThrowAsync();

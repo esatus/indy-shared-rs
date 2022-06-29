@@ -28,7 +28,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         public async Task CreatePresReq()
         {
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
-            var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            long timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             string presReqJson = "{" +
                 "\"name\": \"proof\"," +
                 "\"version\": \"1.0\", " +
@@ -38,7 +38,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
                     "\"reft\": " +
                     "{" +
                         "\"name\":\"attr\"," +
-                        "\"value\":\"myValue\","+
+                        "\"value\":\"myValue\"," +
                         "\"names\": [], " +
                         "\"non_revoked\":" +
                         "{ " +

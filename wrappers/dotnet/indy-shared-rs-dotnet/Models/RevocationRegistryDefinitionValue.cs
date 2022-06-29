@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using indy_shared_rs_dotnet.models;
+using Newtonsoft.Json;
 
 namespace indy_shared_rs_dotnet.Models
 {
@@ -14,18 +15,5 @@ namespace indy_shared_rs_dotnet.Models
         public string TailsHash { get; set; }
         [JsonProperty("tailsLocation")]
         public string TailsLocation { get; set; }
-    }
-
-    public class RevocationRegistryDefinitionValuePublicKeys
-    {
-        [JsonProperty("accumKey")]
-        //public Dictionary<string,string> AccumKey { get; set; }
-        public AccumKey AccumKey { get; set; }
-    }
-
-    public class AccumKey
-    {
-        [JsonProperty("z")]
-        public string Z { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using indy_shared_rs_dotnet.indy_credx;
 using indy_shared_rs_dotnet.Models;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -207,7 +206,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
 
 
             //Act
-            var actual = await RevocationApi.CreateRevocationStateFromJsonAsync(revStateJson);
+            CredentialRevocationState actual = await RevocationApi.CreateRevocationStateFromJsonAsync(revStateJson);
 
             //Assert
             actual.Should().BeOfType<CredentialRevocationState>();
@@ -218,7 +217,7 @@ namespace indy_shared_rs_dotnet_test.indy_credx
         {
             //Arrange
             string revStateJson = "";
-            
+
             //Act
             Func<Task> act = async () => await RevocationApi.CreateRevocationStateFromJsonAsync(revStateJson);
 

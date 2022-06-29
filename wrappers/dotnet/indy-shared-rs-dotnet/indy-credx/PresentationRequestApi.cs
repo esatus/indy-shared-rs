@@ -56,7 +56,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                     {
                         AttributeInfo info = new();
                         info.Name = element["name"].Value<string>();
-                        if(element["names"] != null)
+                        if (element["names"] != null)
                         {
                             info.Names = element["names"].ToObject<List<string>>();
                         }
@@ -84,7 +84,7 @@ namespace indy_shared_rs_dotnet.indy_credx
                         info.Name = element["name"].Value<string>();
                         info.PredicateType = ParsePredicateType(element["p_type"].Value<string>());
                         info.PredicateValue = element["p_value"].Value<int>();
-                        if(element["non_revoked"] != null)
+                        if (element["non_revoked"] != null)
                         {
                             info.NonRevoked = element["non_revoked"].ToObject<NonRevokedInterval>();
                         }

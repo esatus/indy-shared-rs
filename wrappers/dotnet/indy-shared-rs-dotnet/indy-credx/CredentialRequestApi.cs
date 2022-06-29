@@ -1,6 +1,5 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
