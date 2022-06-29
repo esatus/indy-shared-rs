@@ -18,7 +18,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             }
 
             string masterSecretJson = await ObjectApi.ToJsonAsync(result);
-            MasterSecret msObject = JsonConvert.DeserializeObject<MasterSecret>(masterSecretJson, Settings.jsonSettings);
+            MasterSecret msObject = JsonConvert.DeserializeObject<MasterSecret>(masterSecretJson, Settings.JsonSettings);
             msObject.Handle = result;
             return await Task.FromResult(msObject);
         }

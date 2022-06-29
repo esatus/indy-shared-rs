@@ -62,7 +62,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         #endregion
 
         #region Tests for EncodeCredentialAttributesAsync
-        [Test, TestCase(TestName = "EncodeCredentialAttributesAsync with all arguments set returns encoded attribute.")]
+        [Test, TestCase(TestName = "EncodeCredentialAttributesAsync() with all arguments set returns encoded attribute.")]
         public async Task EncodeCredentialAttributesAsyncWorks()
         {
             //Arrange
@@ -75,10 +75,23 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             result.Should().NotBeNull();
             Console.WriteLine(result);
         }
+
+        [Test, TestCase(TestName = "EncodeCredentialAttributesAsync() throws SharedRsException when given an empty list.")]
+        public async Task EncodeCredentialAttributesAsyncThrowsException()
+        {
+            //Arrange
+            List<string> rawAttributes = new List<string>();
+
+            //Act
+            Func<Task> act = async () => await CredentialApi.EncodeCredentialAttributesAsync(rawAttributes);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
+        }
         #endregion
 
         #region Tests for ProcessCredentialAsync
-        [Test, TestCase(TestName = "ProcessCredentialAsync creates a credential object.")]
+        [Test, TestCase(TestName = "ProcessCredentialAsync() creates a credential object.")]
         public async Task ProcessCredentialAsync()
         {
             //Arrange
@@ -130,7 +143,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         #endregion
 
         #region Tests for GetCredentialAttributeAsync
-        [Test, TestCase(TestName = "GetCredentialAttributeAsync works for attributes: schema_id, cred_def_id, rev_reg_id.")]
+        [Test, TestCase(TestName = "GetCredentialAttributeAsync() works for attribute names: schema_id, cred_def_id, rev_reg_id.")]
         public async Task GetCredentialAttributeAsync()
         {
             //Arrange
@@ -185,6 +198,54 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             attrRevRegId.Should().Be(credObject.RevocationRegistryId);
             attrRevRegIndex.Should().Be(credObject.Signature.RCredential.I.ToString());
             //attrDefault.Should().Be("");
+        }
+
+        [Test, TestCase(TestName = "GetCredentialAttributeAsync() throws SharedRsException when given empty attribute name.")]
+        public async Task GetCredentialAttributeAsyncThrowsException()
+        {
+            //Arrange
+            string attributeName = "";
+            List<string> attrNames = new() { "name", "age", "sex" };
+            List<string> attrNamesRaw = new() { "Alex", "20", "male" };
+            List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPathForRevocation = null;
+            MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
+            CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
+
+            (CredentialRequest credRequestObject, CredentialRequestMetadata metaDataObject) =
+                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+
+            (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
+
+            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
+            {
+                RevRegDefObjectHandle = revRegDefObject.Handle,
+                RevRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
+                RevRegObjectHandle = revRegObject.Handle,
+                TailsPath = revRegDefObject.Value.TailsLocation,
+                RegIdx = 1,
+                RegUsed = new List<long> { 1 }
+            };
+            (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
+                await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
+                attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
+
+            //Act
+            Func<Task> act = async () => await CredentialApi.GetCredentialAttributeAsync(credObject, attributeName);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
         }
         #endregion
     }

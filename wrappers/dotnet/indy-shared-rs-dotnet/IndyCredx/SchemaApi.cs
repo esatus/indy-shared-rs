@@ -56,7 +56,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         private static async Task<Schema> CreateSchemaObjectAsync(uint objectHandle)
         {
             string schemaJson = await ObjectApi.ToJsonAsync(objectHandle);
-            Schema schemaObject = JsonConvert.DeserializeObject<Schema>(schemaJson, Settings.jsonSettings);
+            Schema schemaObject = JsonConvert.DeserializeObject<Schema>(schemaJson, Settings.JsonSettings);
             schemaObject.Handle = objectHandle;
             return await Task.FromResult(schemaObject);
         }

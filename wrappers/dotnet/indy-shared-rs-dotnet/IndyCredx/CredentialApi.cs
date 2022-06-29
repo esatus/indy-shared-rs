@@ -9,6 +9,19 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class CredentialApi
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="credDefObject"></param>
+        /// <param name="credDefPvtObject"></param>
+        /// <param name="credOfferObject"></param>
+        /// <param name="credReqObject"></param>
+        /// <param name="attributeNames"></param>
+        /// <param name="attributeRawValues"></param>
+        /// <param name="attributeEncodedValues"></param>
+        /// <param name="credRevInfo"></param>
+        /// <exception cref="SharedRsException"></exception>
+        /// <returns></returns>
         public static async Task<(Credential, RevocationRegistry, RevocationRegistryDelta)> CreateCredentialAsync(
             CredentialDefinition credDefObject,
             CredentialDefinitionPrivate credDefPvtObject,
@@ -58,6 +71,16 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult((credObject, revRegObject, revDeltaObject));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="credential"></param>
+        /// <param name="credentialRequestMetadata"></param>
+        /// <param name="masterSecret"></param>
+        /// <param name="credentialDefinition"></param>
+        /// <param name="revocationRegistryDefinition"></param>
+        /// <exception cref="SharedRsException"></exception>
+        /// <returns></returns>
         public static async Task<Credential> ProcessCredentialAsync(
             Credential credential,
             CredentialRequestMetadata credentialRequestMetadata,
@@ -85,6 +108,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(credentialObject);
         }
 
+        /// <summary>
+        /// Encodes raw attributes to be used in a credential.
+        /// </summary>
+        /// <param name="rawAttributes"></param>
+        /// <exception cref="SharedRsException">Throws when <paramref name="rawAttributes"></paramref> are empty or invalid.</exception>
+        /// <returns>Returns the given <paramref name="rawAttributes"></paramref> as encoded attributes.</returns>
         public static async Task<List<string>> EncodeCredentialAttributesAsync(List<string> rawAttributes)
         {
             string result = "";
@@ -99,10 +128,16 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(abc.ToList());
         }
 
+        /// <summary>
+        /// Returns the value of a requested credential attribute (Currently supported attribute names: "schema_id", "cred_def_id", "rev_reg_id", "rev_reg_index").
+        /// </summary>
+        /// <param name="credential">The credential object from which the attribute value is requested.</param>
+        /// <param name="attributeName">The name of the attribute that is requested.</param>
+        /// <exception cref="SharedRsException">Throws when attribute name is invalid.</exception>
+        /// <returns>The value of requested credential attribute.</returns>
         public static async Task<string> GetCredentialAttributeAsync(Credential credential, string attributeName)
         {
             string result = "";
-            //note: only attributeName "schema_id", "cred_def_id", "rev_reg_id", "rev_reg_index" supported so far.
             int errorCode = NativeMethods.credx_credential_get_attribute(credential.Handle, FfiStr.Create(attributeName), ref result);
 
             if (errorCode != 0)
@@ -117,7 +152,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         private static async Task<Credential> CreateCredentialObjectAsync(uint objectHandle)
         {
             string credJson = await ObjectApi.ToJsonAsync(objectHandle);
-            Credential credObject = JsonConvert.DeserializeObject<Credential>(credJson, Settings.jsonSettings);
+            Credential credObject = JsonConvert.DeserializeObject<Credential>(credJson, Settings.JsonSettings);
             credObject.Handle = objectHandle;
             return await Task.FromResult(credObject);
         }
@@ -125,7 +160,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         private static async Task<RevocationRegistry> CreateRevocationRegistryObjectAsync(uint objectHandle)
         {
             string revRegJson = await ObjectApi.ToJsonAsync(objectHandle);
-            RevocationRegistry revRegObject = JsonConvert.DeserializeObject<RevocationRegistry>(revRegJson, Settings.jsonSettings);
+            RevocationRegistry revRegObject = JsonConvert.DeserializeObject<RevocationRegistry>(revRegJson, Settings.JsonSettings);
             revRegObject.Handle = objectHandle;
             return await Task.FromResult(revRegObject);
         }
@@ -133,7 +168,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         private static async Task<RevocationRegistryDelta> CreateRevocationRegistryDeltaObjectAsync(uint objectHandle)
         {
             string revDeltaJson = await ObjectApi.ToJsonAsync(objectHandle);
-            RevocationRegistryDelta revDeltaObject = JsonConvert.DeserializeObject<RevocationRegistryDelta>(revDeltaJson, Settings.jsonSettings);
+            RevocationRegistryDelta revDeltaObject = JsonConvert.DeserializeObject<RevocationRegistryDelta>(revDeltaJson, Settings.JsonSettings);
             revDeltaObject.Handle = objectHandle;
             return await Task.FromResult(revDeltaObject);
         }
