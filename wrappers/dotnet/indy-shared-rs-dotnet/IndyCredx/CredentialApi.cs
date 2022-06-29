@@ -112,7 +112,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// Encodes raw attributes to be used in a credential.
         /// </summary>
         /// <param name="rawAttributes"></param>
-        /// <exception cref="SharedRsException">Throws when <paramref name="rawAttributes"></paramref> are empty or invalid.</exception>
+        /// <exception cref="SharedRsException">Throws when <paramref name="rawAttributes"></paramref> are invalid.</exception>
+        /// <exception cref="InvalidOperationException">Throws when <paramref name="rawAttributes"></paramref> are empty.</exception>
         /// <returns>Returns the given <paramref name="rawAttributes"></paramref> as encoded attributes.</returns>
         public static async Task<List<string>> EncodeCredentialAttributesAsync(List<string> rawAttributes)
         {

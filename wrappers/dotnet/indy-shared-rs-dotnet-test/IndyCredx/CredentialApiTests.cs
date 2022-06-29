@@ -76,7 +76,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Console.WriteLine(result);
         }
 
-        [Test, TestCase(TestName = "EncodeCredentialAttributesAsync() throws SharedRsException when given an empty list.")]
+        [Test, TestCase(TestName = "EncodeCredentialAttributesAsync() throws InvalidOperationException when given an empty list.")]
         public async Task EncodeCredentialAttributesAsyncThrowsException()
         {
             //Arrange
@@ -86,7 +86,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Func<Task> act = async () => await CredentialApi.EncodeCredentialAttributesAsync(rawAttributes);
 
             //Assert
-            await act.Should().ThrowAsync<SharedRsException>();
+            await act.Should().ThrowAsync<InvalidOperationException>();
         }
         #endregion
 
