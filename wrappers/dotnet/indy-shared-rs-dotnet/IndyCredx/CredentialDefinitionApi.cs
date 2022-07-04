@@ -10,6 +10,16 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class CredentialDefinitionApi
     {
+        /// <summary>
+        /// Creates a new credential definition from schema and other parameters (only signatureType "CL" supported so far).
+        /// </summary>
+        /// <param name="originDid">Issuer DID.</param>
+        /// <param name="schemaObject">Corresponding schema.</param>
+        /// <param name="tag">Tag name.</param>
+        /// <param name="signatureType">Type of the sginature.</param>
+        /// <param name="supportRevocation">Flag if revocation is supported or not.</param>
+        /// <exception cref="SharedRsException">Throws when any provided parameters are invalid.</exception>
+        /// <returns>The new credential definition, private values and key correctness proof.</returns>
         public static async Task<(CredentialDefinition, CredentialDefinitionPrivate, CredentialKeyCorrectnessProof)> CreateCredentialDefinitionAsync(
             string originDid,
             Schema schemaObject,
@@ -20,7 +30,6 @@ namespace indy_shared_rs_dotnet.IndyCredx
             uint credDefHandle = 0;
             uint credDefPvtHandle = 0;
             uint keyProofHandle = 0;
-            //note: only signatureType "CL" supported so far.
             int errorCode = NativeMethods.credx_create_credential_definition(
                 FfiStr.Create(originDid),
                 schemaObject.Handle,
@@ -43,9 +52,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult((credDefObject, credDefPvtObject, keyProofObject));
         }
 
+        /// <summary>
+        /// Returns the value of a credential definition attribute (only the attribute names "id" and "schema_id" are supported so far).
+        /// </summary>
+        /// <param name="credDefObject">Definition to get the value from.</param>
+        /// <param name="attributeName">Name of the attribute.</param>
+        /// <exception cref="SharedRsException">Throws when attribute name or the credential definition is invalid.</exception>
+        /// <returns>The value of the attribute.</returns>
         public static async Task<string> GetCredentialDefinitionAttributeAsync(CredentialDefinition credDefObject, string attributeName)
         {
-            //note: only "id" and "schema_id" as attributeName supported so far.
             string result = "";
             int errorCode = NativeMethods.credx_credential_definition_get_attribute(credDefObject.Handle, FfiStr.Create(attributeName), ref result);
 
@@ -57,6 +72,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
+        /// <summary>
+        /// Creates a credential definition object from json string.
+        /// </summary>
+        /// <param name="credDefJson">Json string encoding a credential definition object.</param>
+        /// <exception cref="SharedRsException">Throws when json string is invalid.</exception>
+        /// <returns>The credential definition object.</returns>
         public static async Task<CredentialDefinition> CreateCredentialDefinitionFromJsonAsync(string credDefJson)
         {
             uint credDefHandle = 0;
@@ -89,10 +110,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
                     credDefObject.Value.Primary.R.Add(attribute);
                 }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-                Console.WriteLine("Could not find field r.");
-                Console.WriteLine(e);
+                throw new ArgumentException("Could not find field r.", e);
             }
             return await Task.FromResult(credDefObject);
         }
@@ -121,10 +141,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
                     keyProofObject.XrCap.Add(attribute);
                 }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-                Console.WriteLine("Could not find field xr_cap.");
-                Console.WriteLine(e);
+                throw new ArgumentException("Could not find field xr_cap.", e);
             }
             return await Task.FromResult(keyProofObject);
         }

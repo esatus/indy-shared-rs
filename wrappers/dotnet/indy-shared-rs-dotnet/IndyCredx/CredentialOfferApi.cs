@@ -10,6 +10,14 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class CredentialOfferApi
     {
+        /// <summary>
+        /// Create a new credential offer from credential definition.
+        /// </summary>
+        /// <param name="schemaId">Id of the corresponding schema.</param>
+        /// <param name="credDefObject">Credential definition.</param>
+        /// <param name="keyProofObject">Key correctness proof.</param>
+        /// <exception cref="SharedRsException">Throws when any parameter is invalid.</exception>
+        /// <returns>A new credential offer.</returns>
         public static async Task<CredentialOffer> CreateCredentialOfferAsync(
             string schemaId,
             CredentialDefinition credDefObject,
@@ -44,10 +52,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
                     credOfferObject.KeyCorrectnessProof.XrCap.Add(attribute);
                 }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-                Console.WriteLine("Could not find field xr_cap.");
-                Console.WriteLine(e);
+                throw new ArgumentException("Could not find field xr_cap.", e);
             }
 
             return await Task.FromResult(credOfferObject);

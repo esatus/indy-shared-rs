@@ -10,18 +10,18 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class CredentialApi
     {
         /// <summary>
-        /// 
+        /// Creates a new credential, revocation registry and registry delta object.
         /// </summary>
-        /// <param name="credDefObject"></param>
-        /// <param name="credDefPvtObject"></param>
-        /// <param name="credOfferObject"></param>
-        /// <param name="credReqObject"></param>
-        /// <param name="attributeNames"></param>
-        /// <param name="attributeRawValues"></param>
-        /// <param name="attributeEncodedValues"></param>
-        /// <param name="credRevInfo"></param>
-        /// <exception cref="SharedRsException"></exception>
-        /// <returns></returns>
+        /// <param name="credDefObject">Definition of the credential.</param>
+        /// <param name="credDefPvtObject">Private key params of the credential.</param>
+        /// <param name="credOfferObject">Credential offer.</param>
+        /// <param name="credReqObject">Credential request.</param>
+        /// <param name="attributeNames">Attribute names.</param>
+        /// <param name="attributeRawValues">Raw values of the attributes.</param>
+        /// <param name="attributeEncodedValues">Encoded values of the attributes.</param>
+        /// <param name="credRevInfo">Revocation configuration.</param>
+        /// <exception cref="SharedRsException">Throws when values if the parameters are invalid.</exception>
+        /// <returns>A new credential, revocation registry and registry delta object.</returns>
         public static async Task<(Credential, RevocationRegistry, RevocationRegistryDelta)> CreateCredentialAsync(
             CredentialDefinition credDefObject,
             CredentialDefinitionPrivate credDefPvtObject,
@@ -72,15 +72,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Processes a given credential.
         /// </summary>
-        /// <param name="credential"></param>
-        /// <param name="credentialRequestMetadata"></param>
-        /// <param name="masterSecret"></param>
-        /// <param name="credentialDefinition"></param>
-        /// <param name="revocationRegistryDefinition"></param>
+        /// <param name="credential">Credential to be processed.</param>
+        /// <param name="credentialRequestMetadata">Metadata of the credential request.</param>
+        /// <param name="masterSecret">Used master secret.</param>
+        /// <param name="credentialDefinition">Credential definition of the processed credential.</param>
+        /// <param name="revocationRegistryDefinition">Revocation registry definition for the processed credential.</param>
         /// <exception cref="SharedRsException"></exception>
-        /// <returns></returns>
+        /// <returns>A copy of the processed credential.</returns>
         public static async Task<Credential> ProcessCredentialAsync(
             Credential credential,
             CredentialRequestMetadata credentialRequestMetadata,
@@ -111,7 +111,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <summary>
         /// Encodes raw attributes to be used in a credential.
         /// </summary>
-        /// <param name="rawAttributes"></param>
+        /// <param name="rawAttributes">Attributes to be encoded.</param>
         /// <exception cref="SharedRsException">Throws when <paramref name="rawAttributes"></paramref> are invalid.</exception>
         /// <exception cref="InvalidOperationException">Throws when <paramref name="rawAttributes"></paramref> are empty.</exception>
         /// <returns>Returns the given <paramref name="rawAttributes"></paramref> as encoded attributes.</returns>

@@ -10,6 +10,19 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class PresentationApi
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="presentationRequest"></param>
+        /// <param name="credentialEntries"></param>
+        /// <param name="credentialProves"></param>
+        /// <param name="selfAttestNames"></param>
+        /// <param name="selfAttestValues"></param>
+        /// <param name="masterSecret"></param>
+        /// <param name="schemas"></param>
+        /// <param name="credDefs"></param>
+        /// <exception cref="SharedRsException"></exception>
+        /// <returns>New presentation object.</returns>
         public static async Task<Presentation> CreatePresentationAsync(
             PresentationRequest presentationRequest,
             List<CredentialEntry> credentialEntries,
@@ -47,6 +60,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(presentationObject);
         }
 
+        /// <summary>
+        /// Creates a presentation object from json string.
+        /// </summary>
+        /// <param name="presentationJson">Json string of presentation object.</param>
+        /// <exception cref="IndexOutOfRangeException">Throws when json string is empty.</exception>
+        /// <exception cref="SharedRsException">Throws when json string is invalid.</exception>
+        /// <returns>New presentation object.</returns>
         public static async Task<Presentation> CreatePresentationFromJsonAsync(string presentationJson)
         {
             uint presentationObjectHandle = 0;
@@ -60,6 +80,17 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(presentationObject);
         }
 
+        /// <summary>
+        /// Verifies that a presentation matches its request.
+        /// </summary>
+        /// <param name="presentation"></param>
+        /// <param name="presentationRequest"></param>
+        /// <param name="schemas"></param>
+        /// <param name="credentialDefinitions"></param>
+        /// <param name="revocationRegistryDefinitions"></param>
+        /// <param name="revocationRegistryEntries"></param>
+        /// <exception cref="SharedRsException"></exception>
+        /// <returns></returns>
         public static async Task<bool> VerifyPresentationAsync(
             Presentation presentation,
             PresentationRequest presentationRequest,

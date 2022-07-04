@@ -6,16 +6,31 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class ObjectApi
     {
+        /// <summary>
+        /// Returns the typename of an object from its handle.
+        /// </summary>
+        /// <param name="objectHandle">The handle of the specific object.</param>
+        /// <exception cref="SharedRsException">Throws when obbject handle is invalid.</exception>
+        /// <returns>The typename of the object.</returns>
         public static async Task<string> GetTypeNameAsync(uint objectHandle)
         {
             return await ObjectGetTypeNameAsync(objectHandle);
         }
 
+        /// <summary>
+        /// Removes handle from object.
+        /// </summary>
+        /// <param name="objectHandle">Object of which the handle is to be removed.</param>
         public static async Task FreeObjectAsync(uint objectHandle)
         {
             NativeMethods.credx_object_free(objectHandle);
         }
 
+        /// <summary>
+        /// Returns the json of an object from its handle.
+        /// </summary>
+        /// <param name="objectHandle">The handle of the specific object.</param>
+        /// <returns>The json serialization of the object.</returns>
         public static unsafe async Task<string> ToJsonAsync(uint objectHandle)
         {
             ByteBuffer byteBuffer = ObjectGetJsonAsync(objectHandle).GetAwaiter().GetResult();

@@ -8,6 +8,17 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class RevocationApi
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="originDid"></param>
+        /// <param name="credDefObject"></param>
+        /// <param name="tag"></param>
+        /// <param name="revRegType"></param>
+        /// <param name="issuanceType"></param>
+        /// <param name="maxCredNumber"></param>
+        /// <param name="tailsDirPath"></param>
+        /// <returns></returns>
         public static async Task<(RevocationRegistryDefinition, RevocationRegistryDefinitionPrivate, RevocationRegistry, RevocationRegistryDelta)> CreateRevocationRegistryAsync(
             string originDid,
             CredentialDefinition credDefObject,
@@ -48,7 +59,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult((regDefObject, regDefPvtObject, revRegObject, regInitDeltaObject));
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revRegJson"></param>
+        /// <returns></returns>
         public static async Task<RevocationRegistry> CreateRevocationRegistryFromJsonAsync(string revRegJson)
         {
             uint regEntryObjectHandle = 0;
@@ -63,6 +78,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(revRegObject);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revRegDefJson"></param>
+        /// <returns></returns>
         public static async Task<RevocationRegistryDefinition> CreateRevocationRegistryDefinitionFromJsonAsync(string revRegDefJson)
         {
             uint revRegDefObjectHandle = 0;
@@ -77,6 +97,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(revRegDefObject);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revRegDefObject"></param>
+        /// <param name="revRegObject"></param>
+        /// <param name="issued"></param>
+        /// <param name="revoked"></param>
+        /// <param name="tailsPath"></param>
+        /// <returns></returns>
         public static async Task<(RevocationRegistry, RevocationRegistryDelta)> UpdateRevocationRegistryAsync(
             RevocationRegistryDefinition revRegDefObject,
             RevocationRegistry revRegObject,
@@ -107,6 +136,14 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult((revRegObjectUpdated, revRegDeltaObject));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revRegDefObject"></param>
+        /// <param name="revRegObject"></param>
+        /// <param name="credRevIdx"></param>
+        /// <param name="tailsPath"></param>
+        /// <returns></returns>
         public static async Task<(RevocationRegistry, RevocationRegistryDelta)> RevokeCredentialAsync(
             RevocationRegistryDefinition revRegDefObject,
             RevocationRegistry revRegObject,
@@ -135,6 +172,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult((revRegObjectUpdated, revRegDeltaObject));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revRegDeltaObject1"></param>
+        /// <param name="revRegDeltaObject2"></param>
+        /// <returns></returns>
         public static async Task<RevocationRegistryDelta> MergeRevocationRegistryDeltasAsync(
             RevocationRegistryDelta revRegDeltaObject1,
             RevocationRegistryDelta revRegDeltaObject2)
@@ -157,6 +200,16 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(revRegDeltaObjectNew);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revRegDefObject"></param>
+        /// <param name="revRegDeltaObject"></param>
+        /// <param name="revRegIndex"></param>
+        /// <param name="timestamp"></param>
+        /// <param name="tailsPath"></param>
+        /// <param name="revState"></param>
+        /// <returns></returns>
         public static async Task<CredentialRevocationState> CreateOrUpdateRevocationStateAsync(
             RevocationRegistryDefinition revRegDefObject,
             RevocationRegistryDelta revRegDeltaObject,
@@ -187,6 +240,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(credRevStateObject);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revStateJson"></param>
+        /// <returns></returns>
         public static async Task<CredentialRevocationState> CreateRevocationStateFromJsonAsync(string revStateJson)
         {
             uint revStateObjectHandle = 0;
@@ -200,11 +258,17 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(revStateObject);
         }
 
-        /**
-         * Possible attributenames: id, max_cred_num, tails_hash or tails_location
-         */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revRegDefObject"></param>
+        /// <param name="attributeName"></param>
+        /// <returns></returns>
         public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(RevocationRegistryDefinition revRegDefObject, string attributeName)
         {
+            /**
+         * Possible attributenames: id, max_cred_num, tails_hash or tails_location
+         */
             string result = "";
             int errorCode = NativeMethods.credx_revocation_registry_definition_get_attribute(revRegDefObject.Handle, FfiStr.Create(attributeName), ref result);
 

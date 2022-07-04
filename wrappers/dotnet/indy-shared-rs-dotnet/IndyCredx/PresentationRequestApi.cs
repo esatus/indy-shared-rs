@@ -63,9 +63,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
                         info.NonRevoked = element["non_revoked"].ToObject<NonRevokedInterval>(); ;
                         presentationRequestObject.RequestedAttributes.Add(key, info);
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        Console.WriteLine(ex.Message);
                         continue;
                     }
                 }
@@ -90,9 +89,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
                         info.Restrictions = CreateAttributeFilterList(element["restrictions"]);
                         presentationRequestObject.RequestedPredicates.Add(key, info);
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        Console.WriteLine(ex.Message);
                         continue;
                     }
                 }

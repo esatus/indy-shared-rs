@@ -8,6 +8,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public class SchemaApi
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="originDid"></param>
+        /// <param name="schemaName"></param>
+        /// <param name="schemaVersion"></param>
+        /// <param name="attrNames"></param>
+        /// <param name="seqNo"></param>
+        /// <returns></returns>
         public static async Task<Schema> CreateSchemaAsync(string originDid, string schemaName, string schemaVersion, List<string> attrNames, uint seqNo)
         {
             uint schemaObjectHandle = 0;
@@ -23,6 +32,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(schemaObject);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schemaJson"></param>
+        /// <returns></returns>
         public static async Task<Schema> CreateSchemaFromJsonAsync(string schemaJson)
         {
             uint schemaObjectHandle = 0;
@@ -37,7 +51,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
             Schema schemaObject = await CreateSchemaObjectAsync(schemaObjectHandle);
             return await Task.FromResult(schemaObject);
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <param name="attributeName"></param>
+        /// <returns></returns>
         public static async Task<string> GetSchemaAttributeAsync(Schema schema, string attributeName)
         {
             string result = "";

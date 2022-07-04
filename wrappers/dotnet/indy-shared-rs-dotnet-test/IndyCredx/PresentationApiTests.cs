@@ -169,133 +169,6 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Assert
             actual.Should().BeOfType(typeof(Presentation));
         }
-
-        /*
-        [Test, TestCase(TestName = "CreatePresentationAsync() returns a presentation object with requested_proof when given propper arguments.")]
-        public async Task CreatePresentationAsync()
-        {
-            //Arrange
-            string nonce = await PresentationRequestApi.GenerateNonceAsync();
-            long timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-            string presReqJson = "{" +
-                "\"name\": \"proof\"," +
-                "\"version\": \"1.0\", " +
-                $"\"nonce\": \"{nonce}\"," +
-                "\"requested_attributes\": " +
-                "{" +
-                    "\"reft\": " +
-                    "{" +
-                        "\"name\":\"attr\"" +
-                    "}" +
-                "}," +
-                "\"requested_predicates\": {}," +
-                "\"non_revoked\": " +
-                "{ " +
-                    $"\"from\": {timestamp}," +
-                    $"\"to\": {timestamp}" +
-                "}," +
-                "\"ver\": \"1.0\"" +
-                "}";
-            PresentationRequest presReqObject = await PresentationRequestApi.CreatePresReqFromJsonAsync(presReqJson);
-
-            List<string> attrNames = new() { "attr" };
-            List<string> attrNamesRaw = new() { "value" };
-            List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
-            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
-            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
-            string schemaName = "gvt";
-            string schemaVersion = "1.0";
-            string testTailsPathForRevocation = null;
-
-            MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
-
-            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
-            (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
-
-            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
-            CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
-
-            (CredentialRequest credRequestObject, CredentialRequestMetadata metaDataObject) =
-                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
-
-            (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
-                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
-
-            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
-            {
-                RevRegDefObjectHandle = revRegDefObject.Handle,
-                RevRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
-                RevRegObjectHandle = revRegObject.Handle,
-                TailsPath = revRegDefObject.Value.TailsLocation,
-                RegIdx = 1,
-                RegUsed = new List<long> { 1 }
-            };
-
-            (Credential credObject, _, _    ) =
-                await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
-                attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
-
-            CredentialRevocationState emptyRevocationState = new() { Handle = 0 };
-            CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationStateAsync(
-                revRegDefObject,
-                revRegDeltaObject,
-                credObject.Signature.RCredential.I,
-                timestamp,
-                revRegDefObject.Value.TailsLocation,
-                emptyRevocationState);
-
-            List<CredentialEntry> credentialEntries = new()
-            {
-                //new CredentialEntry(credObject, timestamp, credRevRegState)
-                //with empty timestamp and revState
-                new CredentialEntry(credObject,0, null)
-            };
-
-            List<CredentialProof> credentialProofs = new()
-            {
-                new CredentialProof
-                {
-                    EntryIndex = 1,
-                    IsPredicate = Convert.ToByte(false),
-                    Referent = "testReferent",
-                    Reveal = Convert.ToByte(true)
-                }
-            };
-
-            List<string> selfAttestNames = new() { null };
-
-            List<string> selfAttestValues = new() { null };
-
-            MasterSecret masterSecret = await MasterSecretApi.CreateMasterSecretAsync();
-
-            List<Schema> schemas = new()
-            {
-                schemaObject
-            };
-
-            List<CredentialDefinition> credentialDefinitions = new()
-            {
-                credDefObject
-            };
-
-            //Act
-            Presentation actual = await PresentationApi.CreatePresentationAsync(
-                presReqObject,
-                credentialEntries,
-                credentialProofs,
-                selfAttestNames,
-                selfAttestValues,
-                masterSecret,
-                schemas,
-                credentialDefinitions
-                );
-
-            var presentationJson = Newtonsoft.Json.JsonConvert.SerializeObject(actual);
-
-            //Assert
-            actual.Should().BeOfType(typeof(Presentation));
-        }*/
         #endregion
 
         #region Tests for CreatePresentationFromJsonAsync
@@ -314,7 +187,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         }
 
         [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws IndexOutOfRangeException when given empty string.")]
-        public async Task CreatePresentationFromJsonAsyncThrowsException()
+        public async Task CreatePresentationFromJsonAsyncThrowsIndexOutOfBoundsException()
         {
             //Arrange
             string presentationJson = "";
@@ -324,6 +197,19 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             //Assert
             await act.Should().ThrowAsync<IndexOutOfRangeException>();
+        }
+
+        [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws SharedRsException when given invalid json string.")]
+        public async Task CreatePresentationFromJsonAsyncThrowsSharedRsException()
+        {
+            //Arrange
+            string presentationJson = "{}";
+
+            //Act
+            Func<Task> act = async () => await PresentationApi.CreatePresentationFromJsonAsync(presentationJson);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
         }
         #endregion
 

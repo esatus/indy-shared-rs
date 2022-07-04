@@ -55,7 +55,6 @@ namespace indy_shared_rs_dotnet_test
 
             //Assert
             actual.Should().Be(expected);
-            Console.WriteLine(testException.Message);
         }
     }
 }

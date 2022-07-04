@@ -15,10 +15,10 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Arrange
 
             //Act
-            Action act = () => { ModApi.SetDefaultLoggerAsync(); };
+            Func<Task> act = async () => await ModApi.SetDefaultLoggerAsync();
 
             //Assert
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync<Exception>();
         }
         #endregion
 

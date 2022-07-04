@@ -34,7 +34,6 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Assert
             testObject.Should().BeOfType(typeof(MasterSecret));
             testObject.Value.Ms.Should().NotBeNull();
-            Console.WriteLine("MasterSecret: " + testObject.Value.Ms);
         }
     }
 }
