@@ -9,16 +9,17 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class RevocationApi
     {
         /// <summary>
-        /// 
+        /// Creates a new revocation registry.
         /// </summary>
-        /// <param name="originDid"></param>
-        /// <param name="credDefObject"></param>
-        /// <param name="tag"></param>
-        /// <param name="revRegType"></param>
-        /// <param name="issuanceType"></param>
-        /// <param name="maxCredNumber"></param>
-        /// <param name="tailsDirPath"></param>
-        /// <returns></returns>
+        /// <param name="originDid">Did of issuer.</param>
+        /// <param name="credDefObject">Credential definition.</param>
+        /// <param name="tag">Tag.</param>
+        /// <param name="revRegType">Type of revocation registry.</param>
+        /// <param name="issuanceType">Type of issuance.</param>
+        /// <param name="maxCredNumber">Maximum number of credential entries.</param>
+        /// <param name="tailsDirPath">Path to tails file.</param>
+        /// <exception cref="SharedRsException">Throws when any parameter is invalid.</exception>
+        /// <returns>A new revocation registry, its definition, private object and delta.</returns>
         public static async Task<(RevocationRegistryDefinition, RevocationRegistryDefinitionPrivate, RevocationRegistry, RevocationRegistryDelta)> CreateRevocationRegistryAsync(
             string originDid,
             CredentialDefinition credDefObject,
@@ -60,10 +61,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Creates a new revocation registry object from json string.
         /// </summary>
-        /// <param name="revRegJson"></param>
-        /// <returns></returns>
+        /// <param name="revRegJson">Json string representing a revocation registry object.</param>
+        /// <exception cref="SharedRsException">Throws when provided json string is invalid.</exception>
+        /// <exception cref="IndexOutOfRangeException">Throws when provided json string is empty.</exception>
+        /// <returns>A new revocation registry object.</returns>
         public static async Task<RevocationRegistry> CreateRevocationRegistryFromJsonAsync(string revRegJson)
         {
             uint regEntryObjectHandle = 0;
@@ -79,9 +82,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Creates a new revocation registry definition object from json string.
         /// </summary>
-        /// <param name="revRegDefJson"></param>
+        /// <param name="revRegDefJson">Json string representing a revocation registry definition object.</param>
+        /// <exception cref="SharedRsException">Throws when provided json string is invalid.</exception>
+        /// <exception cref="IndexOutOfRangeException">Throws when provided json string is empty.</exception>
         /// <returns></returns>
         public static async Task<RevocationRegistryDefinition> CreateRevocationRegistryDefinitionFromJsonAsync(string revRegDefJson)
         {
@@ -98,14 +103,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Updates a provided revocation registry object.
         /// </summary>
-        /// <param name="revRegDefObject"></param>
-        /// <param name="revRegObject"></param>
-        /// <param name="issued"></param>
-        /// <param name="revoked"></param>
-        /// <param name="tailsPath"></param>
-        /// <returns></returns>
+        /// <param name="revRegDefObject">Revocation registry definition.</param>
+        /// <param name="revRegObject">Revocation registry.</param>
+        /// <param name="issued">Issued entries.</param>
+        /// <param name="revoked">Revoked entries.</param>
+        /// <param name="tailsPath">Path of tails file.</param>
+        /// <exception cref="SharedRsException">Throws when any parameters are invalid.</exception>
+        /// <returns>An updated revocation registry and its delta.</returns>
         public static async Task<(RevocationRegistry, RevocationRegistryDelta)> UpdateRevocationRegistryAsync(
             RevocationRegistryDefinition revRegDefObject,
             RevocationRegistry revRegObject,
@@ -137,13 +143,14 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Revokes a credential on the revocation registry.
         /// </summary>
-        /// <param name="revRegDefObject"></param>
-        /// <param name="revRegObject"></param>
-        /// <param name="credRevIdx"></param>
-        /// <param name="tailsPath"></param>
-        /// <returns></returns>
+        /// <param name="revRegDefObject">Revocation registry definition.</param>
+        /// <param name="revRegObject">Corresponding revocation registry.</param>
+        /// <param name="credRevIdx">Index of the credential in the revocation registry.</param>
+        /// <param name="tailsPath">Path to tails file.</param>
+        /// <exception cref="SharedRsException"></exception>
+        /// <returns>A new revocation registry and registry delta object with the credential revoked.</returns>
         public static async Task<(RevocationRegistry, RevocationRegistryDelta)> RevokeCredentialAsync(
             RevocationRegistryDefinition revRegDefObject,
             RevocationRegistry revRegObject,
@@ -173,11 +180,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Merges two revocation registry deltas into one.
         /// </summary>
-        /// <param name="revRegDeltaObject1"></param>
-        /// <param name="revRegDeltaObject2"></param>
-        /// <returns></returns>
+        /// <param name="revRegDeltaObject1">First delta.</param>
+        /// <param name="revRegDeltaObject2">Second delta.</param>
+        /// <exception cref="SharedRsException">Throws when any delta is invalid.</exception>
+        /// <returns>The merged revocation registry delta.</returns>
         public static async Task<RevocationRegistryDelta> MergeRevocationRegistryDeltasAsync(
             RevocationRegistryDelta revRegDeltaObject1,
             RevocationRegistryDelta revRegDeltaObject2)
@@ -201,7 +209,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Updated the revocation state or creates a new one.
         /// </summary>
         /// <param name="revRegDefObject"></param>
         /// <param name="revRegDeltaObject"></param>
@@ -209,7 +217,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="timestamp"></param>
         /// <param name="tailsPath"></param>
         /// <param name="revState"></param>
-        /// <returns></returns>
+        /// <exception cref="SharedRsException">Throws when any parameters are invalid.</exception>
+        /// <returns>A new credential revocation state.</returns>
         public static async Task<CredentialRevocationState> CreateOrUpdateRevocationStateAsync(
             RevocationRegistryDefinition revRegDefObject,
             RevocationRegistryDelta revRegDeltaObject,
@@ -241,10 +250,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Creates revocation state object from json string.
         /// </summary>
-        /// <param name="revStateJson"></param>
-        /// <returns></returns>
+        /// <param name="revStateJson">Json string representing a revocation object.</param>
+        /// <exception cref="SharedRsException">Throws when provided json string is invalid.</exception>
+        /// <exception cref="IndexOutOfRangeException">Throws when provided json string is empty.</exception>
+        /// <returns>A new revocation state object.</returns>
         public static async Task<CredentialRevocationState> CreateRevocationStateFromJsonAsync(string revStateJson)
         {
             uint revStateObjectHandle = 0;
@@ -259,16 +270,14 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Get the value of an revocation registry definition attribute (Supported attribute names so far: id, max_cred_num, tails_hash or tails_location).
         /// </summary>
-        /// <param name="revRegDefObject"></param>
-        /// <param name="attributeName"></param>
-        /// <returns></returns>
+        /// <param name="revRegDefObject">Revocation registry definition from which the attribute is requested.</param>
+        /// <param name="attributeName">Name of the requested attribute.</param>
+        /// <exception cref="SharedRsException">Throws when provided attribute name is invalid.</exception>
+        /// <returns>Value of the requested attribute.</returns>
         public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(RevocationRegistryDefinition revRegDefObject, string attributeName)
         {
-            /**
-         * Possible attributenames: id, max_cred_num, tails_hash or tails_location
-         */
             string result = "";
             int errorCode = NativeMethods.credx_revocation_registry_definition_get_attribute(revRegDefObject.Handle, FfiStr.Create(attributeName), ref result);
 

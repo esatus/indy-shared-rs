@@ -11,22 +11,22 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class PresentationApi
     {
         /// <summary>
-        /// 
+        /// Creates a new presentation object from parameters.
         /// </summary>
-        /// <param name="presentationRequest"></param>
-        /// <param name="credentialEntries"></param>
-        /// <param name="credentialProves"></param>
-        /// <param name="selfAttestNames"></param>
-        /// <param name="selfAttestValues"></param>
-        /// <param name="masterSecret"></param>
-        /// <param name="schemas"></param>
-        /// <param name="credDefs"></param>
-        /// <exception cref="SharedRsException"></exception>
+        /// <param name="presentationRequest">Presentation request.</param>
+        /// <param name="credentialEntries">Credential entries.</param>
+        /// <param name="credentialProofs">Credential proofs.</param>
+        /// <param name="selfAttestNames">Names of self attested attributes.</param>
+        /// <param name="selfAttestValues">Values of self attested attributes.</param>
+        /// <param name="masterSecret">Master secret.</param>
+        /// <param name="schemas">Corresponding schemas.</param>
+        /// <param name="credDefs">Credential definitions.</param>
+        /// <exception cref="SharedRsException">Throws when any parameters are invalid.</exception>
         /// <returns>New presentation object.</returns>
         public static async Task<Presentation> CreatePresentationAsync(
             PresentationRequest presentationRequest,
             List<CredentialEntry> credentialEntries,
-            List<CredentialProof> credentialProves,
+            List<CredentialProof> credentialProofs,
             List<string> selfAttestNames,
             List<string> selfAttestValues,
             MasterSecret masterSecret,
@@ -42,7 +42,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             int errorCode = NativeMethods.credx_create_presentation(
                 presentationRequest.Handle,
                 FfiCredentialEntryList.Create(credentialEntries),
-                FfiCredentialProveList.Create(credentialProves),
+                FfiCredentialProveList.Create(credentialProofs),
                 FfiStrList.Create(selfAttestNames),
                 FfiStrList.Create(selfAttestValues),
                 masterSecret.Handle,

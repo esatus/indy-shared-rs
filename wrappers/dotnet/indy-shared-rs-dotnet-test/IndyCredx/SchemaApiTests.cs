@@ -27,8 +27,24 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             testObject.Should().BeOfType(typeof(Schema));
         }
 
+        [Test, TestCase(TestName = "CreateSchemaAsync() throws a SharedRsException if no issuerDid is provided.")]
+        public async Task CreateSchemaThrowsExceptionForMissingIssuerDid()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+
+            //Act
+            Func<Task> act = async () => await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
+        }
+
         [Test, TestCase(TestName = "CreateSchemaAsync() throws a InvalidOperationException if no attribute names are provided.")]
-        public async Task CreateSchemaThrowsException()
+        public async Task CreateSchemaThrowsExceptionForMissingAttributeNames()
         {
             //Arrange
             List<string> attrNames = new() { };
@@ -66,8 +82,8 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             actual.Id.Should().Be("55GkHamhTU1ZbTbV2ab9DE:2:schema name:schema version");
         }
 
-        [Test, TestCase(TestName = "CreateSchemaFromJsonAsync() throws a SharedRsException if an empty json string is provided.")]
-        public async Task CreateSchemaFromJsonAsyncThrowsException()
+        [Test, TestCase(TestName = "CreateSchemaFromJsonAsync() throws a IndexOutOfRangeException if an empty json string is provided.")]
+        public async Task CreateSchemaFromJsonAsyncThrowsExceptionForEmptyString()
         {
             //Arrange
             string schemaJson = "";
@@ -78,10 +94,23 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Assert
             await act.Should().ThrowAsync<IndexOutOfRangeException>();
         }
+
+        [Test, TestCase(TestName = "CreateSchemaFromJsonAsync() throws a SharedRsException if an invalid json string is provided.")]
+        public async Task CreateSchemaFromJsonAsyncThrowsExceptionForInvalidString()
+        {
+            //Arrange
+            string schemaJson = "{}";
+
+            //Act
+            Func<Task> act = async () => await SchemaApi.CreateSchemaFromJsonAsync(schemaJson);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
+        }
         #endregion
 
         #region Tests for GetSchemaAttributeAsync
-        [Test, TestCase(TestName = "GetSchemaAttributeAsync() works for supported attributeNames.")]
+        [Test, TestCase(TestName = "GetSchemaAttributeAsync() works for supported attribute names.")]
         public async Task GetSchemaAttributeAsyncWorks()
         {
             //Arrange

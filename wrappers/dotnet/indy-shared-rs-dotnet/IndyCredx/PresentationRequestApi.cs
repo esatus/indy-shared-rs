@@ -11,6 +11,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
 {
     public static class PresentationRequestApi
     {
+        /// <summary>
+        /// Generates a new random nonce.
+        /// </summary>
+        /// <exception cref="SharedRsException">Throws when nonce can't be generated.</exception>
+        /// <returns>New nonce.</returns>
         public static async Task<string> GenerateNonceAsync()
         {
             string result = "";
@@ -23,6 +28,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
+        /// <summary>
+        /// Creates a new presentation request object from a provided json string.
+        /// </summary>
+        /// <param name="presReqJson">Json string representing a presentation request object.</param>
+        /// <exception cref="SharedRsException">Throws when json string is invalid.</exception>
+        /// <exception cref="IndexOutOfRangeException">Throws when json string is empty.</exception>
+        /// <returns>A new presentation request.</returns>
         public static async Task<PresentationRequest> CreatePresReqFromJsonAsync(string presReqJson)
         {
             uint presReqObjectHandle = 0;
@@ -35,6 +47,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             PresentationRequest presReq = await CreatePresentationRequestObject(presReqObjectHandle);
             return await Task.FromResult(presReq);
         }
+
         private static async Task<PresentationRequest> CreatePresentationRequestObject(uint objectHandle)
         {
             string presReqJson = await ObjectApi.ToJsonAsync(objectHandle);

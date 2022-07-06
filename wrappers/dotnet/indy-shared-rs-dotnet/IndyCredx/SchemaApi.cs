@@ -9,14 +9,16 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public class SchemaApi
     {
         /// <summary>
-        /// 
+        /// Creates a new schema object from provided parameters.
         /// </summary>
-        /// <param name="originDid"></param>
-        /// <param name="schemaName"></param>
-        /// <param name="schemaVersion"></param>
-        /// <param name="attrNames"></param>
-        /// <param name="seqNo"></param>
-        /// <returns></returns>
+        /// <param name="originDid">Did of issuer.</param>
+        /// <param name="schemaName">Schema name.</param>
+        /// <param name="schemaVersion">Version of schema.</param>
+        /// <param name="attrNames">Names of the schema attributes.</param>
+        /// <param name="seqNo">Sequence number.</param>
+        /// <exception cref="SharedRsException">Throws when any parameter is invalid.</exception>
+        /// <exception cref="InvalidOperationException">Throws when attribute names are empty.</exception>
+        /// <returns>A new schema object.</returns>
         public static async Task<Schema> CreateSchemaAsync(string originDid, string schemaName, string schemaVersion, List<string> attrNames, uint seqNo)
         {
             uint schemaObjectHandle = 0;
@@ -33,10 +35,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// 
+        /// Creates a new schema object from json string.
         /// </summary>
-        /// <param name="schemaJson"></param>
-        /// <returns></returns>
+        /// <param name="schemaJson">Json string representing a schema object.</param>
+        /// <exception cref="SharedRsException">Throws when json string is invalid.</exception>
+        /// <exception cref="IndexOutOfRangeException">Throws when json string is empty.</exception>
+        /// <returns>A new schema object.</returns>
         public static async Task<Schema> CreateSchemaFromJsonAsync(string schemaJson)
         {
             uint schemaObjectHandle = 0;
@@ -53,10 +57,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
         
         /// <summary>
-        /// 
+        /// Returns the value of a requested attribute from a schema (Only attribute name "id" is supported so far).
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="attributeName"></param>
+        /// <param name="schema">The schema from which the attribute is requested.</param>
+        /// <param name="attributeName">The name of the attribute.</param>
+        /// <exception cref="SharedRsException">Throws when the attribute name is invalid.</exception>
         /// <returns></returns>
         public static async Task<string> GetSchemaAttributeAsync(Schema schema, string attributeName)
         {

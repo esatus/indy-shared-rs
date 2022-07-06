@@ -25,8 +25,9 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
         #region Tests for CreatePresReq
         [Test, TestCase(TestName = "CreatePresReqFromJsonAsync() creates PresentationRequest from Json.")]
-        public async Task CreatePresReq()
+        public async Task CreatePresReqFromJsonAsyncWorks()
         {
+            //Arrange
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
             long timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
             string presReqJson = "{" +
@@ -76,11 +77,40 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                 "}," +
                 "\"ver\": \"1.0\"" +
                 "}";
+
+            //Act
             PresentationRequest actual = await PresentationRequestApi.CreatePresReqFromJsonAsync(presReqJson);
 
+            //Assert
             actual.Name.Should().Be("proof");
             actual.RequestedAttributes.Count.Should().Be(1);
             actual.RequestedPredicates.Count.Should().Be(1);
+        }
+
+        [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws Exception when Json string is empty.")]
+        public async Task CreatePresReqFromJsonAsyncThrowsExceptionForEmptyString()
+        {
+            //Arrange
+            string presReqJson = "";
+
+            //Act
+            Func<Task> act = async () => await PresentationApi.CreatePresentationFromJsonAsync(presReqJson);
+
+            //Assert
+            await act.Should().ThrowAsync<IndexOutOfRangeException>();
+        }
+
+        [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws SharedRsException when Json string is invalid.")]
+        public async Task CreatePresReqFromJsonAsyncThrowsExceptionForInvalidString()
+        {
+            //Arrange
+            string presReqJson = "{}";
+
+            //Act
+            Func<Task> act = async () => await PresentationApi.CreatePresentationFromJsonAsync(presReqJson);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
         }
         #endregion
     }
