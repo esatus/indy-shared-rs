@@ -3,7 +3,7 @@
     public static class ErrorCodeConverter
     {
         /// <summary>
-        /// Converts the value of ErrorCode to the corresponding string representation for the backend.
+        /// Converts the value of <see cref="ErrorCode"/> to the corresponding <see cref="System.String"/> representation for the backend.
         /// </summary>
         public static string ToErrorCodeString(this ErrorCode errorCode)
         {
