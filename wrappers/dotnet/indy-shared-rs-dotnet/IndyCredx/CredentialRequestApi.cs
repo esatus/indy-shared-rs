@@ -8,15 +8,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class CredentialRequestApi
     {
         /// <summary>
-        /// Creates a new credential request from definition.
+        /// Creates a new <see cref="CredentialRequest"/> from <see cref="CredentialDefinition"/>.
         /// </summary>
         /// <param name="proverDid">Prover DID.</param>
         /// <param name="credentialDefinition">Credential definition.</param>
         /// <param name="masterSecret">New master secret.</param>
         /// <param name="masterSecretId">Id of master secret.</param>
         /// <param name="credentialOffer">Credential offer.</param>
-        /// <exception cref="SharedRsException">Throws when any argument is invalid.</exception>
-        /// <returns>New credential request and its metadata.</returns>
+        /// <exception cref="SharedRsException">Throws if any argument is invalid.</exception>
+        /// <returns>New <see cref="CredentialRequest"/> and its <see cref="CredentialRequestMetadata"/>.</returns>
         public static async Task<(CredentialRequest, CredentialRequestMetadata)> CreateCredentialRequestAsync(
             string proverDid,
             CredentialDefinition credentialDefinition,

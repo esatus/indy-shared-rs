@@ -7,10 +7,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class MasterSecretApi
     {
         /// <summary>
-        /// Creates a new master secret.
+        /// Creates a new <see cref="MasterSecret"/>.
         /// </summary>
-        /// <exception cref="SharedRsException">Throws when secret can't be created.</exception>
-        /// <returns>New master secret.</returns>
+        /// <exception cref="SharedRsException">Throws when <see cref="MasterSecret"/> can't be created.</exception>
+        /// <returns>New <see cref="MasterSecret"/>.</returns>
         public static async Task<MasterSecret> CreateMasterSecretAsync()
         {
             uint result = 0;

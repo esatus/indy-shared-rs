@@ -11,7 +11,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class PresentationApi
     {
         /// <summary>
-        /// Creates a new presentation object from parameters.
+        /// Creates a new <see cref="Presentation"/> object from parameters.
         /// </summary>
         /// <param name="presentationRequest">Presentation request.</param>
         /// <param name="credentialEntries">Credential entries.</param>
@@ -22,7 +22,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="schemas">Corresponding schemas.</param>
         /// <param name="credDefs">Credential definitions.</param>
         /// <exception cref="SharedRsException">Throws when any parameters are invalid.</exception>
-        /// <returns>New presentation object.</returns>
+        /// <returns>New <see cref="Presentation"/> object.</returns>
         public static async Task<Presentation> CreatePresentationAsync(
             PresentationRequest presentationRequest,
             List<CredentialEntry> credentialEntries,
@@ -61,12 +61,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a presentation object from json string.
+        /// Creates a <see cref="Presentation"/> object from json <see cref="System.String"/>.
         /// </summary>
         /// <param name="presentationJson">Json string of presentation object.</param>
-        /// <exception cref="IndexOutOfRangeException">Throws when json string is empty.</exception>
-        /// <exception cref="SharedRsException">Throws when json string is invalid.</exception>
-        /// <returns>New presentation object.</returns>
+        /// <exception cref="IndexOutOfRangeException">Throws when <paramref name="presentationJson"/> is empty.</exception>
+        /// <exception cref="SharedRsException">Throws if <paramref name="presentationJson"/> is an invalid json object.</exception>
+        /// <returns>New <see cref="Presentation"/> object.</returns>
         public static async Task<Presentation> CreatePresentationFromJsonAsync(string presentationJson)
         {
             uint presentationObjectHandle = 0;
@@ -83,14 +83,14 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <summary>
         /// Verifies that a presentation matches its request.
         /// </summary>
-        /// <param name="presentation"></param>
-        /// <param name="presentationRequest"></param>
-        /// <param name="schemas"></param>
+        /// <param name="presentation">Presentation to verify.</param>
+        /// <param name="presentationRequest">Request to verify the <paramref name="presentation"/> object with.</param>
+        /// <param name="schemas">Corresponding schemas.</param>
         /// <param name="credentialDefinitions"></param>
         /// <param name="revocationRegistryDefinitions"></param>
         /// <param name="revocationRegistryEntries"></param>
-        /// <exception cref="SharedRsException"></exception>
-        /// <returns></returns>
+        /// <exception cref="SharedRsException">Throws if any parameter is invalid.</exception>
+        /// <returns>True if provided <see cref="Presentation"/> can be verified, false if not.</returns>
         public static async Task<bool> VerifyPresentationAsync(
             Presentation presentation,
             PresentationRequest presentationRequest,

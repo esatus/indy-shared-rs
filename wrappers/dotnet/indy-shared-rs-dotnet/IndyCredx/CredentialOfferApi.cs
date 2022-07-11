@@ -11,13 +11,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class CredentialOfferApi
     {
         /// <summary>
-        /// Create a new credential offer from credential definition.
+        /// Create a new <see cref="CredentialOffer"/> from <see cref="CredentialDefinition"/>.
         /// </summary>
         /// <param name="schemaId">Id of the corresponding schema.</param>
         /// <param name="credDefObject">Credential definition.</param>
         /// <param name="keyProofObject">Key correctness proof.</param>
-        /// <exception cref="SharedRsException">Throws when any parameter is invalid.</exception>
-        /// <returns>A new credential offer.</returns>
+        /// <exception cref="SharedRsException">Throws if any parameter is invalid.</exception>
+        /// <returns>A new <see cref="CredentialOffer"/>.</returns>
         public static async Task<CredentialOffer> CreateCredentialOfferAsync(
             string schemaId,
             CredentialDefinition credDefObject,

@@ -7,10 +7,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class ObjectApi
     {
         /// <summary>
-        /// Returns the typename of an object from its handle.
+        /// Returns the typename of an object <see cref="System.String"/> representation from its handle.
         /// </summary>
         /// <param name="objectHandle">The handle of the specific object.</param>
-        /// <exception cref="SharedRsException">Throws when obbject handle is invalid.</exception>
+        /// <exception cref="SharedRsException">Throws when <paramref name="objectHandle"/> is invalid.</exception>
         /// <returns>The typename of the object.</returns>
         public static async Task<string> GetTypeNameAsync(uint objectHandle)
         {
@@ -27,7 +27,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Returns the json of an object from its handle.
+        /// Returns the json <see cref="System.String"/> representation of an object from its handle.
         /// </summary>
         /// <param name="objectHandle">The handle of the specific object.</param>
         /// <returns>The json serialization of the object.</returns>

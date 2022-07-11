@@ -12,9 +12,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class PresentationRequestApi
     {
         /// <summary>
-        /// Generates a new random nonce.
+        /// Generates a new <see cref="System.String"/> representation of a random nonce.
         /// </summary>
-        /// <exception cref="SharedRsException">Throws when nonce can't be generated.</exception>
+        /// <exception cref="SharedRsException">Throws when nonce can not be generated.</exception>
         /// <returns>New nonce.</returns>
         public static async Task<string> GenerateNonceAsync()
         {
@@ -29,12 +29,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a new presentation request object from a provided json string.
+        /// Creates a new <see cref="PresentationRequest"/> object from a provided json <see cref="System.String"/>.
         /// </summary>
         /// <param name="presReqJson">Json string representing a presentation request object.</param>
-        /// <exception cref="SharedRsException">Throws when json string is invalid.</exception>
-        /// <exception cref="IndexOutOfRangeException">Throws when json string is empty.</exception>
-        /// <returns>A new presentation request.</returns>
+        /// <exception cref="SharedRsException">Throws when <paramref name="presReqJson"/> is invalid.</exception>
+        /// <exception cref="IndexOutOfRangeException">Throws when <paramref name="presReqJson"/> is empty.</exception>
+        /// <returns>A new <see cref="PresentationRequest"/>.</returns>
         public static async Task<PresentationRequest> CreatePresReqFromJsonAsync(string presReqJson)
         {
             uint presReqObjectHandle = 0;

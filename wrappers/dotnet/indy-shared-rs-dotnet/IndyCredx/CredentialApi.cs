@@ -10,7 +10,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class CredentialApi
     {
         /// <summary>
-        /// Creates a new credential, revocation registry and registry delta object.
+        /// Creates a new tuple of <see cref="Credential"/>, <see cref="RevocationRegistry"/> and <see cref="RevocationRegistryDelta"/> objects.
         /// </summary>
         /// <param name="credDefObject">Definition of the credential.</param>
         /// <param name="credDefPvtObject">Private key params of the credential.</param>
@@ -20,8 +20,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="attributeRawValues">Raw values of the attributes.</param>
         /// <param name="attributeEncodedValues">Encoded values of the attributes.</param>
         /// <param name="credRevInfo">Revocation configuration.</param>
-        /// <exception cref="SharedRsException">Throws when values if the parameters are invalid.</exception>
-        /// <returns>A new credential, revocation registry and registry delta object.</returns>
+        /// <exception cref="SharedRsException">Throws if any parameters are invalid.</exception>
+        /// <returns>A new <see cref="Credential"/>, <see cref="RevocationRegistry"/> and <see cref="RevocationRegistryDelta"/>.</returns>
         public static async Task<(Credential, RevocationRegistry, RevocationRegistryDelta)> CreateCredentialAsync(
             CredentialDefinition credDefObject,
             CredentialDefinitionPrivate credDefPvtObject,
@@ -72,15 +72,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Processes a given credential.
+        /// Processes a given <see cref="Credential"/>.
         /// </summary>
         /// <param name="credential">Credential to be processed.</param>
         /// <param name="credentialRequestMetadata">Metadata of the credential request.</param>
         /// <param name="masterSecret">Used master secret.</param>
         /// <param name="credentialDefinition">Credential definition of the processed credential.</param>
         /// <param name="revocationRegistryDefinition">Revocation registry definition for the processed credential.</param>
-        /// <exception cref="SharedRsException"></exception>
-        /// <returns>A copy of the processed credential.</returns>
+        /// <exception cref="SharedRsException">Throws if any parameters are invalid.</exception>
+        /// <returns>A copy of the processed <see cref="Credential"/>.</returns>
         public static async Task<Credential> ProcessCredentialAsync(
             Credential credential,
             CredentialRequestMetadata credentialRequestMetadata,
@@ -109,12 +109,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Encodes raw attributes to be used in a credential.
+        /// Encodes raw attributes to be used in a <see cref="Credential"/>.
         /// </summary>
         /// <param name="rawAttributes">Attributes to be encoded.</param>
-        /// <exception cref="SharedRsException">Throws when <paramref name="rawAttributes"></paramref> are invalid.</exception>
-        /// <exception cref="InvalidOperationException">Throws when <paramref name="rawAttributes"></paramref> are empty.</exception>
-        /// <returns>Returns the given <paramref name="rawAttributes"></paramref> as encoded attributes.</returns>
+        /// <exception cref="SharedRsException">Throws when <paramref name="rawAttributes"/> are invalid.</exception>
+        /// <exception cref="System.InvalidOperationException">Throws when <paramref name="rawAttributes"/> are empty.</exception>
+        /// <returns>Returns the given <paramref name="rawAttributes"/> as encoded attributes.</returns>
         public static async Task<List<string>> EncodeCredentialAttributesAsync(List<string> rawAttributes)
         {
             string result = "";
@@ -130,12 +130,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Returns the value of a requested credential attribute (Currently supported attribute names: "schema_id", "cred_def_id", "rev_reg_id", "rev_reg_index").
+        /// Returns the value of a requested <see cref="Credential"/> attribute (Currently supported attribute names: "schema_id", "cred_def_id", "rev_reg_id", "rev_reg_index").
         /// </summary>
         /// <param name="credential">The credential object from which the attribute value is requested.</param>
         /// <param name="attributeName">The name of the attribute that is requested.</param>
         /// <exception cref="SharedRsException">Throws when attribute name is invalid.</exception>
-        /// <returns>The value of requested credential attribute.</returns>
+        /// <returns>The value of requested <paramref name="attributeName"/> from the provided <paramref name="credential"/>.</returns>
         public static async Task<string> GetCredentialAttributeAsync(Credential credential, string attributeName)
         {
             string result = "";

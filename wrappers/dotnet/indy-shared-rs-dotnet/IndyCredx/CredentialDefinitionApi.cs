@@ -11,15 +11,15 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class CredentialDefinitionApi
     {
         /// <summary>
-        /// Creates a new credential definition from schema and other parameters (only signatureType "CL" supported so far).
+        /// Creates a new <see cref="CredentialDefinition"/> from schema and other parameters (only signatureType "CL" supported so far).
         /// </summary>
         /// <param name="originDid">Issuer DID.</param>
         /// <param name="schemaObject">Corresponding schema.</param>
         /// <param name="tag">Tag name.</param>
         /// <param name="signatureType">Type of the sginature.</param>
         /// <param name="supportRevocation">Flag if revocation is supported or not.</param>
-        /// <exception cref="SharedRsException">Throws when any provided parameters are invalid.</exception>
-        /// <returns>The new credential definition, private values and key correctness proof.</returns>
+        /// <exception cref="SharedRsException">Throws if any provided parameters are invalid.</exception>
+        /// <returns>The new <see cref="CredentialDefinition"/>, <see cref="CredentialDefinitionPrivate"/> and <see cref="CredentialKeyCorrectnessProof"/>.</returns>
         public static async Task<(CredentialDefinition, CredentialDefinitionPrivate, CredentialKeyCorrectnessProof)> CreateCredentialDefinitionAsync(
             string originDid,
             Schema schemaObject,
@@ -53,12 +53,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Returns the value of a credential definition attribute (only the attribute names "id" and "schema_id" are supported so far).
+        /// Returns the value of a <see cref="CredentialDefinition"/> attribute (only the attribute names "id" and "schema_id" are supported so far).
         /// </summary>
         /// <param name="credDefObject">Definition to get the value from.</param>
         /// <param name="attributeName">Name of the attribute.</param>
-        /// <exception cref="SharedRsException">Throws when attribute name or the credential definition is invalid.</exception>
-        /// <returns>The value of the attribute.</returns>
+        /// <exception cref="SharedRsException">Throws if <paramref name="attributeName"/> or <paramref name="credDefObject"/> are invalid.</exception>
+        /// <returns>The value of the requested <paramref name="attributeName"/> from the provided <paramref name="credDefObject"/>.</returns>
         public static async Task<string> GetCredentialDefinitionAttributeAsync(CredentialDefinition credDefObject, string attributeName)
         {
             string result = "";
@@ -73,11 +73,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a credential definition object from json string.
+        /// Creates a <see cref="CredentialDefinition"/> object from json <see cref="System.String"/>.
         /// </summary>
         /// <param name="credDefJson">Json string encoding a credential definition object.</param>
-        /// <exception cref="SharedRsException">Throws when json string is invalid.</exception>
-        /// <returns>The credential definition object.</returns>
+        /// <exception cref="SharedRsException">Throws when <paramref name="credDefJson"/> is invalid.</exception>
+        /// <returns>The new <see cref="CredentialDefinition"/> object.</returns>
         public static async Task<CredentialDefinition> CreateCredentialDefinitionFromJsonAsync(string credDefJson)
         {
             uint credDefHandle = 0;
