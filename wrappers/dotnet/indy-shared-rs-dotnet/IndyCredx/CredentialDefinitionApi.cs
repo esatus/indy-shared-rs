@@ -73,7 +73,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a <see cref="CredentialDefinition"/> object from json <see cref="System.String"/>.
+        /// Creates a <see cref="CredentialDefinition"/> object from json <see cref="string"/>.
         /// </summary>
         /// <param name="credDefJson">Json string encoding a credential definition object.</param>
         /// <exception cref="SharedRsException">Throws when <paramref name="credDefJson"/> is invalid.</exception>
@@ -110,7 +110,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                     credDefObject.Value.Primary.R.Add(attribute);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new ArgumentException("Could not find field r.", e);
             }
@@ -141,7 +141,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                     keyProofObject.XrCap.Add(attribute);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new ArgumentException("Could not find field xr_cap.", e);
             }

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace indy_shared_rs_dotnet.IndyCredx
+namespace indy_shared_rs_dotnet.Models
 {
     public class SharedRsException : Exception
     {
@@ -15,15 +15,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string msg = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)["message"];
             string errCode = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)["code"];
-            if (int.TryParse(errCode, out int errCodeInt))
-            {
-                return new SharedRsException(
-                    $"'{((ErrorCode)errCodeInt).ToErrorCodeString()}' error occured with ErrorCode '{errCode}' : {msg}.");
-            }
-            else
-            {
-                return new SharedRsException("An unknown error code was received.");
-            }
+            return int.TryParse(errCode, out int errCodeInt)
+                ? new SharedRsException(
+                    $"'{((ErrorCode)errCodeInt).ToErrorCodeString()}' error occured with ErrorCode '{errCode}' : {msg}.")
+                : new SharedRsException("An unknown error code was received.");
         }
     }
 }

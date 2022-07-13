@@ -52,7 +52,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                     credOfferObject.KeyCorrectnessProof.XrCap.Add(attribute);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new ArgumentException("Could not find field xr_cap.", e);
             }

@@ -35,9 +35,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a new <see cref="Schema"/> object from json <see cref="System.String"/>.
+        /// Creates a new <see cref="Schema"/> object from json <see cref="string"/>.
         /// </summary>
-        /// <param name="schemaJson">Json <see cref="System.String"/> representing a <see cref="Schema"/> object.</param>
+        /// <param name="schemaJson">Json <see cref="string"/> representing a <see cref="Schema"/> object.</param>
         /// <exception cref="SharedRsException">Throws when provided <paramref name="schemaJson"/> is invalid.</exception>
         /// <exception cref="System.IndexOutOfRangeException">Throws when <paramref name="schemaJson"/> is empty.</exception>
         /// <returns>A new <see cref="Schema"/> object.</returns>

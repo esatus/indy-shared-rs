@@ -61,7 +61,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a <see cref="Presentation"/> object from json <see cref="System.String"/>.
+        /// Creates a <see cref="Presentation"/> object from json <see cref="string"/>.
         /// </summary>
         /// <param name="presentationJson">Json string of presentation object.</param>
         /// <exception cref="IndexOutOfRangeException">Throws when <paramref name="presentationJson"/> is empty.</exception>

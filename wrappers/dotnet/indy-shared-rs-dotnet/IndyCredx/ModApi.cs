@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using indy_shared_rs_dotnet.Models;
+using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.IndyCredx
 {
@@ -21,7 +22,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <summary>
         /// Gets the current library version.
         /// </summary>
-        /// <returns>Version number as <see cref="System.String"/> representation.</returns>
+        /// <returns>Version number as <see cref="string"/> representation.</returns>
         public static Task<string> GetVersionAsync()
         {
             string result = NativeMethods.credx_version();

@@ -4,7 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>indy_shared_rs_dotnet</RootNamespace>
 	<AssemblyName>Hyperledger.Indy-Shared-Rs</AssemblyName>
-	<RootNamespace>Hyperledger.Indy</RootNamespace>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<Version>0.3.1-alpha</Version>
 	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>

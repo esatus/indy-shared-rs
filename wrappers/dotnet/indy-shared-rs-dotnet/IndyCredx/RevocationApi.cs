@@ -61,9 +61,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a new <see cref="RevocationRegistry"/> object from json <see cref="System.String"/>.
+        /// Creates a new <see cref="RevocationRegistry"/> object from json <see cref="string"/>.
         /// </summary>
-        /// <param name="revRegJson">Json <see cref="System.String"/> representing a <see cref="RevocationRegistry"/> object.</param>
+        /// <param name="revRegJson">Json <see cref="string"/> representing a <see cref="RevocationRegistry"/> object.</param>
         /// <exception cref="SharedRsException">Throws when provided <paramref name="revRegJson"/> is invalid.</exception>
         /// <exception cref="System.IndexOutOfRangeException">Throws when provided <paramref name="revRegJson"/> is empty.</exception>
         /// <returns>A new <see cref="RevocationRegistry"/> object.</returns>
@@ -82,9 +82,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a new <see cref="RevocationRegistryDefinition"/> object from json <see cref="System.String"/>.
+        /// Creates a new <see cref="RevocationRegistryDefinition"/> object from json <see cref="string"/>.
         /// </summary>
-        /// <param name="revRegDefJson">Json <see cref="System.String"/> representing a <see cref="RevocationRegistryDefinition"/> object.</param>
+        /// <param name="revRegDefJson">Json <see cref="string"/> representing a <see cref="RevocationRegistryDefinition"/> object.</param>
         /// <exception cref="SharedRsException">Throws when provided <paramref name="revRegDefJson"/> is invalid.</exception>
         /// <exception cref="System.IndexOutOfRangeException">Throws when provided <paramref name="revRegDefJson"/> is empty.</exception>
         /// <returns>The deserialized <see cref="RevocationRegistryDefinition"/> object that was serialized in json.</returns>
@@ -250,9 +250,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a new <see cref="CredentialRevocationState"/> object from json <see cref="System.String"/>.
+        /// Creates a new <see cref="CredentialRevocationState"/> object from json <see cref="string"/>.
         /// </summary>
-        /// <param name="revStateJson">Json <see cref="System.String"/> representing a revocation object.</param>
+        /// <param name="revStateJson">Json <see cref="string"/> representing a revocation object.</param>
         /// <exception cref="SharedRsException">Throws when provided <paramref name="revStateJson"/> is invalid.</exception>
         /// <exception cref="System.IndexOutOfRangeException">Throws when provided <paramref name="revStateJson"/> is empty.</exception>
         /// <returns>A new <see cref="CredentialRevocationState"/> object.</returns>

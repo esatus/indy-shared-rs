@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using indy_shared_rs_dotnet.Models;
+using System.Text;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -7,7 +8,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class ObjectApi
     {
         /// <summary>
-        /// Returns the typename of an object <see cref="System.String"/> representation from its handle.
+        /// Returns the typename of an object <see cref="string"/> representation from its handle.
         /// </summary>
         /// <param name="objectHandle">The handle of the specific object.</param>
         /// <exception cref="SharedRsException">Throws when <paramref name="objectHandle"/> is invalid.</exception>
@@ -27,7 +28,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Returns the json <see cref="System.String"/> representation of an object from its handle.
+        /// Returns the json <see cref="string"/> representation of an object from its handle.
         /// </summary>
         /// <param name="objectHandle">The handle of the specific object.</param>
         /// <returns>The json serialization of the object.</returns>
@@ -70,11 +71,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
         private static unsafe async Task<string> DecodeToStringAsync(ByteBuffer byteBuffer)
         {
             char[] charArray = new char[byteBuffer.len];
-            UTF8Encoding utf8Decoder = new UTF8Encoding(true, true);
+            UTF8Encoding utf8Decoder = new(true, true);
 
             fixed (char* char_ptr = &charArray[0])
             {
-                utf8Decoder.GetChars(byteBuffer.value, (int)byteBuffer.len, char_ptr, (int)byteBuffer.len);
+                _ = utf8Decoder.GetChars(byteBuffer.value, (int)byteBuffer.len, char_ptr, (int)byteBuffer.len);
             }
             return Task.FromResult(new string(charArray)).GetAwaiter().GetResult();
         }

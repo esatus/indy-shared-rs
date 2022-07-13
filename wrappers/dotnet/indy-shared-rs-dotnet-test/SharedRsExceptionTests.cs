@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using indy_shared_rs_dotnet.IndyCredx;
+using indy_shared_rs_dotnet.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

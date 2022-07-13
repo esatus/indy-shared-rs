@@ -12,7 +12,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
     public static class PresentationRequestApi
     {
         /// <summary>
-        /// Generates a new <see cref="System.String"/> representation of a random nonce.
+        /// Generates a new <see cref="string"/> representation of a random nonce.
         /// </summary>
         /// <exception cref="SharedRsException">Throws when nonce can not be generated.</exception>
         /// <returns>New nonce.</returns>
@@ -29,7 +29,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
-        /// Creates a new <see cref="PresentationRequest"/> object from a provided json <see cref="System.String"/>.
+        /// Creates a new <see cref="PresentationRequest"/> object from a provided json <see cref="string"/>.
         /// </summary>
         /// <param name="presReqJson">Json string representing a presentation request object.</param>
         /// <exception cref="SharedRsException">Throws when <paramref name="presReqJson"/> is invalid.</exception>
@@ -66,8 +66,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 {
                     try
                     {
-                        AttributeInfo info = new();
-                        info.Name = element["name"].Value<string>();
+                        AttributeInfo info = new()
+                        {
+                            Name = element["name"].Value<string>()
+                        };
                         if (element["names"] != null)
                         {
                             info.Names = element["names"].ToObject<List<string>>();
@@ -91,10 +93,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 {
                     try
                     {
-                        PredicateInfo info = new();
-                        info.Name = element["name"].Value<string>();
-                        info.PredicateType = ParsePredicateType(element["p_type"].Value<string>());
-                        info.PredicateValue = element["p_value"].Value<int>();
+                        PredicateInfo info = new()
+                        {
+                            Name = element["name"].Value<string>(),
+                            PredicateType = ParsePredicateType(element["p_type"].Value<string>()),
+                            PredicateValue = element["p_value"].Value<int>()
+                        };
                         if (element["non_revoked"] != null)
                         {
                             info.NonRevoked = element["non_revoked"].ToObject<NonRevokedInterval>();
@@ -120,16 +124,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             {
                 foreach (JObject restriction in restrictionsElement["$or"].Children<JObject>())
                 {
-                    IEnumerable<JProperty> properties;
-                    if (restriction.ToString().Contains("$and"))
-                    {
-                        properties = restriction["$and"].Children<JObject>().Properties();
-                    }
-                    else
-                    {
-                        properties = restriction.Properties();
-                    }
-
+                    IEnumerable<JProperty> properties = restriction.ToString().Contains("$and") ? (IEnumerable<JProperty>)restriction["$and"].Children<JObject>().Properties() : restriction.Properties();
                     string filterJson = "{";
                     foreach (JProperty res in properties)
                     {
@@ -151,14 +146,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         private static PredicateTypes ParsePredicateType(string type)
         {
-            switch (type)
+            return type switch
             {
-
-                case "<": return PredicateTypes.LT;
-                case "<=": return PredicateTypes.LE;
-                case ">": return PredicateTypes.GT;
-                default: return PredicateTypes.GE;
-            }
+                "<" => PredicateTypes.LT,
+                "<=" => PredicateTypes.LE,
+                ">" => PredicateTypes.GT,
+                _ => PredicateTypes.GE,
+            };
         }
     }
 }
