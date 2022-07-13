@@ -11,7 +11,7 @@
 	<Company>Hyperledger Indy</Company>
 	<Product>Hyperledger Indy-Shared-Rs</Product>
 	<Description>
-		.NET wrapper for the Hyperledger indy-shared-rs.
+		.NET wrapper for the Hyperledger Indy-Shared-Rs.
 	</Description>
 	<PackageProjectUrl>https://github.com/hyperledger/indy-shared-rs</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/hyperledger/indy-shared-rs</RepositoryUrl>
