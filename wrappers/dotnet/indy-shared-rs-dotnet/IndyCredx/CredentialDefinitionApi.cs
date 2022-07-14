@@ -106,7 +106,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 foreach (JToken ele in jObj["value"]["primary"]["r"])
                 {
                     string[] attrFields = ele.ToString().Split(':');
-                    KeyProofAttributeValue attribute = new(JsonConvert.DeserializeObject<string>(attrFields[0]), JsonConvert.DeserializeObject<string>(attrFields[1]));
+                    KeyProofAttributeValue attribute = new KeyProofAttributeValue(JsonConvert.DeserializeObject<string>(attrFields[0]), JsonConvert.DeserializeObject<string>(attrFields[1]));
                     credDefObject.Value.Primary.R.Add(attribute);
                 }
             }
@@ -137,7 +137,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 keyProofObject.XrCap = new List<KeyProofAttributeValue>();
                 foreach (JToken ele in jObj["xr_cap"])
                 {
-                    KeyProofAttributeValue attribute = new(ele.First.ToString(), ele.Last.ToString());
+                    KeyProofAttributeValue attribute = new KeyProofAttributeValue(ele.First.ToString(), ele.Last.ToString());
                     keyProofObject.XrCap.Add(attribute);
                 }
             }

@@ -53,7 +53,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         private static unsafe async Task<ByteBuffer> ObjectGetJsonAsync(uint handle)
         {
-            ByteBuffer result = new()
+            ByteBuffer result = new ByteBuffer()
             {
                 len = 0,
                 value = null
@@ -71,7 +71,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         private static unsafe async Task<string> DecodeToStringAsync(ByteBuffer byteBuffer)
         {
             char[] charArray = new char[byteBuffer.len];
-            UTF8Encoding utf8Decoder = new(true, true);
+            UTF8Encoding utf8Decoder = new UTF8Encoding(true, true);
 
             fixed (char* char_ptr = &charArray[0])
             {

@@ -15,7 +15,7 @@ namespace indy_shared_rs_dotnet.Models
             public FfiStr* data;
             public static FfiStrList Create(string[] args)
             {
-                FfiStrList list = new()
+                FfiStrList list = new FfiStrList()
                 {
                     count = (IntPtr)args.Length
                 };
@@ -47,7 +47,7 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiStr Create(string arg)
             {
-                FfiStr FfiString = new()
+                FfiStr FfiString = new FfiStr()
                 {
                     data = new IntPtr()
                 };
@@ -67,10 +67,10 @@ namespace indy_shared_rs_dotnet.Models
 
             public static ByteBuffer Create(string json)
             {
-                UTF8Encoding decoder = new(true, true);
+                UTF8Encoding decoder = new UTF8Encoding(true, true);
                 byte[] bytes = new byte[json.Length];
                 _ = decoder.GetBytes(json, 0, json.Length, bytes, 0);
-                ByteBuffer buffer = new()
+                ByteBuffer buffer = new ByteBuffer()
                 {
                     len = json.Length
                 };
@@ -94,7 +94,7 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiCredRevInfo Create(CredentialRevocationConfig entry)
             {
-                FfiCredRevInfo result = new();
+                FfiCredRevInfo result = new FfiCredRevInfo();
                 if (entry != null)
                 {
                     result.regDefObjectHandle = (IntPtr)entry.RevRegDefObjectHandle;
@@ -115,7 +115,7 @@ namespace indy_shared_rs_dotnet.Models
             public long* data;
             public static FfiLongList Create(long[] args)
             {
-                FfiLongList list = new()
+                FfiLongList list = new FfiLongList()
                 {
                     count = (IntPtr)args.Length
                 };
@@ -141,7 +141,7 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiCredentialEntry Create(CredentialEntry entry)
             {
-                FfiCredentialEntry result = new();
+                FfiCredentialEntry result = new FfiCredentialEntry();
                 if (entry != null)
                 {
                     result.CredentialObjectHandle = (IntPtr)entry.CredentialObjectHandle;
@@ -162,7 +162,7 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiCredentialProoof Create(CredentialProof prove)
             {
-                FfiCredentialProoof result = new()
+                FfiCredentialProoof result = new FfiCredentialProoof()
                 {
                     EntryIndex = prove.EntryIndex,
                     Referent = FfiStr.Create(prove.Referent),
@@ -182,7 +182,7 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiRevocationEntry Create(RevocationRegistryEntry entry)
             {
-                FfiRevocationEntry result = new()
+                FfiRevocationEntry result = new FfiRevocationEntry()
                 {
                     DefEntryIdx = entry.DefEntryIdx,
                     Entry = entry.Entry,
@@ -200,7 +200,7 @@ namespace indy_shared_rs_dotnet.Models
             public FfiCredentialEntry* data;
             public static FfiCredentialEntryList Create(CredentialEntry[] args)
             {
-                FfiCredentialEntryList list = new()
+                FfiCredentialEntryList list = new FfiCredentialEntryList()
                 {
                     count = (IntPtr)args.Length
                 };
@@ -229,7 +229,7 @@ namespace indy_shared_rs_dotnet.Models
             public FfiCredentialProoof* data;
             public static FfiCredentialProveList Create(CredentialProof[] args)
             {
-                FfiCredentialProveList list = new()
+                FfiCredentialProveList list = new FfiCredentialProveList()
                 {
                     count = (IntPtr)args.Length
                 };
@@ -258,7 +258,7 @@ namespace indy_shared_rs_dotnet.Models
             public uint* data;
             public static FfiUIntList Create(uint[] args)
             {
-                FfiUIntList list = new()
+                FfiUIntList list = new FfiUIntList()
                 {
                     count = (IntPtr)args.Length
                 };
@@ -282,7 +282,7 @@ namespace indy_shared_rs_dotnet.Models
             public FfiRevocationEntry* data;
             public static FfiRevocationEntryList Create(RevocationRegistryEntry[] args)
             {
-                FfiRevocationEntryList list = new()
+                FfiRevocationEntryList list = new FfiRevocationEntryList()
                 {
                     count = (IntPtr)args.Length
                 };

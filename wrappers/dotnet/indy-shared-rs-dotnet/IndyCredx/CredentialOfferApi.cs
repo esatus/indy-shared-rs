@@ -48,7 +48,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 credOfferObject.KeyCorrectnessProof.XrCap = new List<KeyProofAttributeValue>();
                 foreach (JToken ele in jObj["key_correctness_proof"]["xr_cap"])
                 {
-                    KeyProofAttributeValue attribute = new(ele.First.ToString(), ele.Last.ToString());
+                    KeyProofAttributeValue attribute = new KeyProofAttributeValue(ele.First.ToString(), ele.Last.ToString());
                     credOfferObject.KeyCorrectnessProof.XrCap.Add(attribute);
                 }
             }

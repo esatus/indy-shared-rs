@@ -66,7 +66,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 {
                     try
                     {
-                        AttributeInfo info = new()
+                        AttributeInfo info = new AttributeInfo()
                         {
                             Name = element["name"].Value<string>()
                         };
@@ -93,7 +93,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 {
                     try
                     {
-                        PredicateInfo info = new()
+                        PredicateInfo info = new PredicateInfo()
                         {
                             Name = element["name"].Value<string>(),
                             PredicateType = ParsePredicateType(element["p_type"].Value<string>()),
@@ -119,7 +119,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         private static List<AttributeFilter> CreateAttributeFilterList(JToken restrictionsElement)
         {
-            List<AttributeFilter> filterList = new();
+            List<AttributeFilter> filterList = new List<AttributeFilter>();
             if (restrictionsElement.HasValues)
             {
                 foreach (JObject restriction in restrictionsElement["$or"].Children<JObject>())
