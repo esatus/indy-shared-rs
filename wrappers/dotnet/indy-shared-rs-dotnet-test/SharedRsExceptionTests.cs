@@ -36,7 +36,7 @@ namespace indy_shared_rs_dotnet_test
         }
 
         [Test, TestCaseSource(nameof(CreateErrorCodeCases))]
-        public async Task SharedRsExceptionsRightMessages(string testMessage, string errorCode, string expected)
+        public Task SharedRsExceptionsRightMessages(string testMessage, string errorCode, string expected)
         {
             //Arrange
             string testErrorMessage = $"{{\"code\":\"{errorCode}\",\"message\":\"{testMessage}\"}}";
@@ -55,6 +55,7 @@ namespace indy_shared_rs_dotnet_test
 
             //Assert
             actual.Should().Be(expected);
+            return Task.CompletedTask;
         }
     }
 }

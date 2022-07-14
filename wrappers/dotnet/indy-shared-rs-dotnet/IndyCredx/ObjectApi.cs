@@ -22,9 +22,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// Removes handle from object.
         /// </summary>
         /// <param name="objectHandle">Object of which the handle is to be removed.</param>
-        public static async Task FreeObjectAsync(uint objectHandle)
+        public static Task FreeObjectAsync(uint objectHandle)
         {
             NativeMethods.credx_object_free(objectHandle);
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -32,11 +33,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// </summary>
         /// <param name="objectHandle">The handle of the specific object.</param>
         /// <returns>The json serialization of the object.</returns>
-        public static unsafe async Task<string> ToJsonAsync(uint objectHandle)
+        public static unsafe Task<string> ToJsonAsync(uint objectHandle)
         {
             ByteBuffer byteBuffer = ObjectGetJsonAsync(objectHandle).GetAwaiter().GetResult();
             string decoded = DecodeToStringAsync(byteBuffer).GetAwaiter().GetResult();
-            return Task.FromResult(decoded).GetAwaiter().GetResult();
+            return Task.FromResult(decoded);
         }
 
         private static async Task<string> ObjectGetTypeNameAsync(uint handle)
@@ -51,7 +52,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
-        private static unsafe async Task<ByteBuffer> ObjectGetJsonAsync(uint handle)
+        private static unsafe Task<ByteBuffer> ObjectGetJsonAsync(uint handle)
         {
             ByteBuffer result = new ByteBuffer()
             {
@@ -65,10 +66,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 string error = ErrorApi.GetCurrentErrorAsync().GetAwaiter().GetResult();
                 throw SharedRsException.FromSdkError(error);
             }
-            return Task.FromResult(result).GetAwaiter().GetResult();
+            return Task.FromResult(result);
         }
 
-        private static unsafe async Task<string> DecodeToStringAsync(ByteBuffer byteBuffer)
+        private static unsafe Task<string> DecodeToStringAsync(ByteBuffer byteBuffer)
         {
             char[] charArray = new char[byteBuffer.len];
             UTF8Encoding utf8Decoder = new UTF8Encoding(true, true);
@@ -77,7 +78,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             {
                 _ = utf8Decoder.GetChars(byteBuffer.value, (int)byteBuffer.len, char_ptr, (int)byteBuffer.len);
             }
-            return Task.FromResult(new string(charArray)).GetAwaiter().GetResult();
+            return Task.FromResult(new string(charArray));
         }
     }
 }
