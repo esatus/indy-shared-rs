@@ -177,7 +177,7 @@ namespace indy_shared_rs_dotnet.Models
         public struct FfiRevocationEntry
         {
             public long DefEntryIdx;
-            public uint Entry;
+            public IntPtr Entry;
             public long Timestamp;
 
             public static FfiRevocationEntry Create(RevocationRegistryEntry entry)
@@ -255,21 +255,21 @@ namespace indy_shared_rs_dotnet.Models
         public unsafe struct FfiUIntList
         {
             public IntPtr count;
-            public uint* data;
-            public static FfiUIntList Create(uint[] args)
+            public IntPtr* data;
+            public static FfiUIntList Create(IntPtr[] args)
             {
                 FfiUIntList list = new FfiUIntList()
                 {
                     count = (IntPtr)args.Length
                 };
-                fixed (uint* uintP = &args[0])
+                fixed (IntPtr* uintP = &args[0])
                 {
                     list.data = uintP;
                 }
                 return list;
             }
 
-            public static FfiUIntList Create(List<uint> args)
+            public static FfiUIntList Create(List<IntPtr> args)
             {
                 return Create(args.ToArray());
             }

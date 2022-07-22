@@ -1,5 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -21,7 +22,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>A new <see cref="Schema"/> object.</returns>
         public static async Task<Schema> CreateSchemaAsync(string originDid, string schemaName, string schemaVersion, List<string> attrNames, uint seqNo)
         {
-            uint schemaObjectHandle = 0;
+            IntPtr schemaObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_create_schema(FfiStr.Create(originDid), FfiStr.Create(schemaName), FfiStr.Create(schemaVersion), FfiStrList.Create(attrNames), seqNo, ref schemaObjectHandle);
 
             if (errorCode != 0)
@@ -43,7 +44,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>A new <see cref="Schema"/> object.</returns>
         public static async Task<Schema> CreateSchemaFromJsonAsync(string schemaJson)
         {
-            uint schemaObjectHandle = 0;
+            IntPtr schemaObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_schema_from_json(ByteBuffer.Create(schemaJson), ref schemaObjectHandle);
 
             if (errorCode != 0)
@@ -78,7 +79,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
-        private static async Task<Schema> CreateSchemaObjectAsync(uint objectHandle)
+        private static async Task<Schema> CreateSchemaObjectAsync(IntPtr objectHandle)
         {
             string schemaJson = await ObjectApi.ToJsonAsync(objectHandle);
             Schema schemaObject = JsonConvert.DeserializeObject<Schema>(schemaJson, Settings.JsonSettings);

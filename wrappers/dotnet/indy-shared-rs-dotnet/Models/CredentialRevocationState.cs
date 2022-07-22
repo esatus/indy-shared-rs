@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace indy_shared_rs_dotnet.Models
 {
     public class CredentialRevocationState
     {
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
 
         [JsonProperty("witness")]
         public Witness Witness { get; set; }

@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace indy_shared_rs_dotnet.Models
 {
     public class RevocationRegistryDelta
     {
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
 
         [JsonProperty("ver")]
         public string Ver { get; set; }

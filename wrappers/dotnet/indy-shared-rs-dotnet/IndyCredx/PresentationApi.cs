@@ -33,10 +33,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<Schema> schemas,
             List<CredentialDefinition> credDefs)
         {
-            uint presentationObjectHandle = 0;
-            List<uint> schemaHandles = (from schema in schemas
+            IntPtr presentationObjectHandle = new IntPtr();
+            List<IntPtr> schemaHandles = (from schema in schemas
                                         select schema.Handle).ToList();
-            List<uint> credDefHandles = (from credDef in credDefs
+            List<IntPtr> credDefHandles = (from credDef in credDefs
                                          select credDef.Handle).ToList();
 
             int errorCode = NativeMethods.credx_create_presentation(
@@ -69,7 +69,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>New <see cref="Presentation"/> object.</returns>
         public static async Task<Presentation> CreatePresentationFromJsonAsync(string presentationJson)
         {
-            uint presentationObjectHandle = 0;
+            IntPtr presentationObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_presentation_from_json(ByteBuffer.Create(presentationJson), ref presentationObjectHandle);
             if (errorCode != 0)
             {
@@ -100,11 +100,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<RevocationRegistryEntry> revocationRegistryEntries)
         {
             byte verify = 0;
-            List<uint> schemaHandles =
+            List<IntPtr> schemaHandles =
                 (from schema in schemas select schema.Handle).ToList();
-            List<uint> credDefHandles =
+            List<IntPtr> credDefHandles =
                 (from credDef in credentialDefinitions select credDef.Handle).ToList();
-            List<uint> revRegDefHandles =
+            List<IntPtr> revRegDefHandles =
                 (from revRegDef in revocationRegistryDefinitions select revRegDef.Handle).ToList();
 
             int errorCode = NativeMethods.credx_verify_presentation(
@@ -125,7 +125,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(Convert.ToBoolean(verify));
         }
 
-        private static async Task<Presentation> CreatePresentationObject(uint objectHandle)
+        private static async Task<Presentation> CreatePresentationObject(IntPtr objectHandle)
         {
             string presentationJson = await ObjectApi.ToJsonAsync(objectHandle);
             Presentation presentationObject = JsonConvert.DeserializeObject<Presentation>(presentationJson, Settings.JsonSettings);

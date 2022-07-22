@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace indy_shared_rs_dotnet.Models
 {
     public class Schema
     {
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }

@@ -27,9 +27,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
             SignatureType signatureType,
             byte supportRevocation)
         {
-            uint credDefHandle = 0;
-            uint credDefPvtHandle = 0;
-            uint keyProofHandle = 0;
+            IntPtr credDefHandle = new IntPtr();
+            IntPtr credDefPvtHandle = new IntPtr();
+            IntPtr keyProofHandle = new IntPtr();
             int errorCode = NativeMethods.credx_create_credential_definition(
                 FfiStr.Create(originDid),
                 schemaObject.Handle,
@@ -80,7 +80,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>The new <see cref="CredentialDefinition"/> object.</returns>
         public static async Task<CredentialDefinition> CreateCredentialDefinitionFromJsonAsync(string credDefJson)
         {
-            uint credDefHandle = 0;
+            IntPtr credDefHandle = new IntPtr();
             int errorCode = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefJson), ref credDefHandle);
 
             if (errorCode != 0)
@@ -93,7 +93,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
-        private static async Task<CredentialDefinition> CreateCredentialDefinitonObject(uint objectHandle)
+        private static async Task<CredentialDefinition> CreateCredentialDefinitonObject(IntPtr objectHandle)
         {
             string credDefJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialDefinition credDefObject = JsonConvert.DeserializeObject<CredentialDefinition>(credDefJson, Settings.JsonSettings);
@@ -117,7 +117,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(credDefObject);
         }
 
-        private static async Task<CredentialDefinitionPrivate> CreateCredentialDefinitonPrivateObject(uint objectHandle)
+        private static async Task<CredentialDefinitionPrivate> CreateCredentialDefinitonPrivateObject(IntPtr objectHandle)
         {
             string credDefPvtJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialDefinitionPrivate credDefPvtObject = JsonConvert.DeserializeObject<CredentialDefinitionPrivate>(credDefPvtJson, Settings.JsonSettings);
@@ -125,7 +125,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(credDefPvtObject);
         }
 
-        private static async Task<CredentialKeyCorrectnessProof> CreateCredentialKeyProofObject(uint objectHandle)
+        private static async Task<CredentialKeyCorrectnessProof> CreateCredentialKeyProofObject(IntPtr objectHandle)
         {
             string keyProofJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialKeyCorrectnessProof keyProofObject = JsonConvert.DeserializeObject<CredentialKeyCorrectnessProof>(keyProofJson, Settings.JsonSettings);

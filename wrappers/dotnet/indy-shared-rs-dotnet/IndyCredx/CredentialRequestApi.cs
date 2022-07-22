@@ -1,5 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
 
@@ -24,8 +25,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
             string masterSecretId,
             CredentialOffer credentialOffer)
         {
-            uint requestHandle = 0;
-            uint metadataHandle = 0;
+            IntPtr requestHandle = new IntPtr();
+            IntPtr metadataHandle = new IntPtr();
             int errorCode = NativeMethods.credx_create_credential_request(
                 FfiStr.Create(proverDid),
                 credentialDefinition.Handle,
@@ -45,7 +46,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return (requestObject, metadataObject);
         }
 
-        private static async Task<CredentialRequest> CreateCredentialRequestObject(uint objectHandle)
+        private static async Task<CredentialRequest> CreateCredentialRequestObject(IntPtr objectHandle)
         {
             string credReqJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialRequest requestObject = JsonConvert.DeserializeObject<CredentialRequest>(credReqJson, Settings.JsonSettings);
@@ -53,7 +54,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(requestObject);
         }
 
-        private static async Task<CredentialRequestMetadata> CreateCredentialRequestMetadataObject(uint objectHandle)
+        private static async Task<CredentialRequestMetadata> CreateCredentialRequestMetadataObject(IntPtr objectHandle)
         {
             string credMetadataJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialRequestMetadata requestObject = JsonConvert.DeserializeObject<CredentialRequestMetadata>(credMetadataJson, Settings.JsonSettings);

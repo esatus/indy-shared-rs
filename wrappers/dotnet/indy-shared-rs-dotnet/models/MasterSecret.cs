@@ -1,8 +1,10 @@
-﻿namespace indy_shared_rs_dotnet.Models
+﻿using System;
+
+namespace indy_shared_rs_dotnet.Models
 {
     public class MasterSecret
     {
         public SecretValue Value { get; set; }
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
     }
 }

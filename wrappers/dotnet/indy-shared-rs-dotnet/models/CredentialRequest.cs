@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace indy_shared_rs_dotnet.Models
 {
@@ -17,6 +18,6 @@ namespace indy_shared_rs_dotnet.Models
         public BlindingMsCorrectnessProof BlindedMsCorrectnessProof { get; set; }
         public string Nonce { get; set; }
         public string MethodName { get; set; }
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
     }
 }

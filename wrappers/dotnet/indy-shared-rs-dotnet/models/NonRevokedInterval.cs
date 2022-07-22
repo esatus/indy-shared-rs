@@ -1,8 +1,10 @@
-﻿namespace indy_shared_rs_dotnet.Models
+﻿using System;
+
+namespace indy_shared_rs_dotnet.Models
 {
     public class NonRevokedInterval
     {
-        public uint From { get; set; }
-        public uint To { get; set; }
+        public IntPtr From { get; set; }
+        public IntPtr To { get; set; }
     }
 }

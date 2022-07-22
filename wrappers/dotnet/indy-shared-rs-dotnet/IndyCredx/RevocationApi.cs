@@ -1,5 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static indy_shared_rs_dotnet.Models.Structures;
@@ -29,10 +30,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
             long maxCredNumber,
             string tailsDirPath)
         {
-            uint regDefObjectHandle = 0;
-            uint regDefPvtObjectHandle = 0;
-            uint regEntryObjectHandle = 0;
-            uint regInitDeltaObjectHandle = 0;
+            IntPtr regDefObjectHandle = new IntPtr();
+            IntPtr regDefPvtObjectHandle = new IntPtr();
+            IntPtr regEntryObjectHandle = new IntPtr();
+            IntPtr regInitDeltaObjectHandle = new IntPtr();
 
             int errorCode = NativeMethods.credx_create_revocation_registry(
                 FfiStr.Create(originDid),
@@ -69,7 +70,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>A new <see cref="RevocationRegistry"/> object.</returns>
         public static async Task<RevocationRegistry> CreateRevocationRegistryFromJsonAsync(string revRegJson)
         {
-            uint regEntryObjectHandle = 0;
+            IntPtr regEntryObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_revocation_registry_from_json(ByteBuffer.Create(revRegJson), ref regEntryObjectHandle);
             if (errorCode != 0)
             {
@@ -90,7 +91,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>The deserialized <see cref="RevocationRegistryDefinition"/> object that was serialized in json.</returns>
         public static async Task<RevocationRegistryDefinition> CreateRevocationRegistryDefinitionFromJsonAsync(string revRegDefJson)
         {
-            uint revRegDefObjectHandle = 0;
+            IntPtr revRegDefObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revRegDefObjectHandle);
             if (errorCode != 0)
             {
@@ -119,8 +120,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<long> revoked,
             string tailsPath)
         {
-            uint revRegObjectHandle = 0;
-            uint revRegDeltaObjectHandle = 0;
+            IntPtr revRegObjectHandle = new IntPtr();
+            IntPtr revRegDeltaObjectHandle = new IntPtr();
 
             int errorCode = NativeMethods.credx_update_revocation_registry(
                 revRegDefObject.Handle,
@@ -157,8 +158,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
             long credRevIdx,
             string tailsPath)
         {
-            uint revRegObjectHandle = 0;
-            uint revRegDeltaObjectHandle = 0;
+            IntPtr revRegObjectHandle = new IntPtr();
+            IntPtr revRegDeltaObjectHandle = new IntPtr();
 
             int errorCode = NativeMethods.credx_revoke_credential(
                 revRegDefObject.Handle,
@@ -190,7 +191,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             RevocationRegistryDelta revRegDeltaObject1,
             RevocationRegistryDelta revRegDeltaObject2)
         {
-            uint revRegDeltaObjectHandleNew = 0;
+            IntPtr revRegDeltaObjectHandleNew = new IntPtr();
 
             int errorCode = NativeMethods.credx_merge_revocation_registry_deltas(
                 revRegDeltaObject1.Handle,
@@ -227,7 +228,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             string tailsPath,
             CredentialRevocationState revState)
         {
-            uint credRevStateObjectHandle = 0;
+            IntPtr credRevStateObjectHandle = new IntPtr();
 
             int errorCode = NativeMethods.credx_create_or_update_revocation_state(
                 revRegDefObject.Handle,
@@ -258,7 +259,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>A new <see cref="CredentialRevocationState"/> object.</returns>
         public static async Task<CredentialRevocationState> CreateRevocationStateFromJsonAsync(string revStateJson)
         {
-            uint revStateObjectHandle = 0;
+            IntPtr revStateObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_revocation_state_from_json(ByteBuffer.Create(revStateJson), ref revStateObjectHandle);
             if (errorCode != 0)
             {
@@ -290,7 +291,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
-        private static async Task<RevocationRegistryDefinition> CreateRevocationRegistryDefinitionObject(uint objectHandle)
+        private static async Task<RevocationRegistryDefinition> CreateRevocationRegistryDefinitionObject(IntPtr objectHandle)
         {
             string regDefJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDefinition regDefObject = JsonConvert.DeserializeObject<RevocationRegistryDefinition>(regDefJson, Settings.JsonSettings);
@@ -298,7 +299,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(regDefObject);
         }
 
-        private static async Task<RevocationRegistryDefinitionPrivate> CreateRevocationRegistryDefinitionPrivateObject(uint objectHandle)
+        private static async Task<RevocationRegistryDefinitionPrivate> CreateRevocationRegistryDefinitionPrivateObject(IntPtr objectHandle)
         {
             string regDefPvtJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDefinitionPrivate regDefPvtObject = JsonConvert.DeserializeObject<RevocationRegistryDefinitionPrivate>(regDefPvtJson, Settings.JsonSettings);
@@ -306,7 +307,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(regDefPvtObject);
         }
 
-        private static async Task<RevocationRegistry> CreateRevocationRegistryObject(uint objectHandle)
+        private static async Task<RevocationRegistry> CreateRevocationRegistryObject(IntPtr objectHandle)
         {
             string revRegJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistry revRegObject = JsonConvert.DeserializeObject<RevocationRegistry>(revRegJson, Settings.JsonSettings);
@@ -314,7 +315,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(revRegObject);
         }
 
-        private static async Task<RevocationRegistryDelta> CreateRevocationRegistryDeltaObject(uint objectHandle)
+        private static async Task<RevocationRegistryDelta> CreateRevocationRegistryDeltaObject(IntPtr objectHandle)
         {
             string revRegDeltaJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDelta revRegDeltaObject = JsonConvert.DeserializeObject<RevocationRegistryDelta>(revRegDeltaJson, Settings.JsonSettings);
@@ -322,7 +323,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(revRegDeltaObject);
         }
 
-        private static async Task<CredentialRevocationState> CreateCredentialRevocationStateObject(uint objectHandle)
+        private static async Task<CredentialRevocationState> CreateCredentialRevocationStateObject(IntPtr objectHandle)
         {
             string credRevStateJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialRevocationState credRevStateObject = JsonConvert.DeserializeObject<CredentialRevocationState>(credRevStateJson, Settings.JsonSettings);

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace indy_shared_rs_dotnet.Models
 {
@@ -15,6 +16,6 @@ namespace indy_shared_rs_dotnet.Models
         public string Nonce { get; set; }
 
         [JsonIgnore]
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
     }
 }
