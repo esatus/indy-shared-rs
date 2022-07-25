@@ -3,6 +3,7 @@
     public class CredentialDefinitionPrivate
     {
         public uint Handle { get; set; }
+        public string JsonString { get; set; }
         public CredDefPvtValue Value { get; set; }
     }
 }

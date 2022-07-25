@@ -49,6 +49,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string credReqJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialRequest requestObject = JsonConvert.DeserializeObject<CredentialRequest>(credReqJson, Settings.JsonSettings);
+            requestObject.JsonString = credReqJson;
             requestObject.Handle = objectHandle;
             return await Task.FromResult(requestObject);
         }
@@ -57,6 +58,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string credMetadataJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialRequestMetadata requestObject = JsonConvert.DeserializeObject<CredentialRequestMetadata>(credMetadataJson, Settings.JsonSettings);
+            requestObject.JsonString = credMetadataJson;
             requestObject.Handle = objectHandle;
             return await Task.FromResult(requestObject);
         }

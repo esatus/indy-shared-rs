@@ -16,5 +16,7 @@ namespace indy_shared_rs_dotnet.Models
 
         [JsonIgnore]
         public uint Handle { get; set; }
+
+        public string JsonString { get; set; }
     }
 }

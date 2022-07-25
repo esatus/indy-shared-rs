@@ -82,6 +82,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string schemaJson = await ObjectApi.ToJsonAsync(objectHandle);
             Schema schemaObject = JsonConvert.DeserializeObject<Schema>(schemaJson, Settings.JsonSettings);
+            schemaObject.JsonString = schemaJson;
             schemaObject.Handle = objectHandle;
             return await Task.FromResult(schemaObject);
         }

@@ -5,6 +5,7 @@ namespace indy_shared_rs_dotnet.Models
     public class CredentialDefinition
     {
         public uint Handle { get; set; }
+        public string JsonString { get; set; }
 
         [JsonProperty("id")]
         public string CredentialDefinitionId { get; set; }

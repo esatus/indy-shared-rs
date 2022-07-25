@@ -130,6 +130,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             string presentationJson = await ObjectApi.ToJsonAsync(objectHandle);
             Presentation presentationObject = JsonConvert.DeserializeObject<Presentation>(presentationJson, Settings.JsonSettings);
 
+            presentationObject.JsonString = presentationJson;
             presentationObject.Handle = objectHandle;
             return await Task.FromResult(presentationObject);
         }

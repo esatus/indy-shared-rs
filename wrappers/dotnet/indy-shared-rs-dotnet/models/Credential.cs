@@ -27,5 +27,6 @@ namespace indy_shared_rs_dotnet.Models
         [JsonProperty("witness")]
         public Witness Witness { get; set; } = null;
         public uint Handle { get; set; }
+        public string JsonString { get; set; }
     }
 }

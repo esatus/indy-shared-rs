@@ -154,6 +154,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string credJson = await ObjectApi.ToJsonAsync(objectHandle);
             Credential credObject = JsonConvert.DeserializeObject<Credential>(credJson, Settings.JsonSettings);
+            credObject.JsonString = credJson;
             credObject.Handle = objectHandle;
             return await Task.FromResult(credObject);
         }
@@ -162,6 +163,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string revRegJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistry revRegObject = JsonConvert.DeserializeObject<RevocationRegistry>(revRegJson, Settings.JsonSettings);
+            revRegObject.JsonString = revRegJson;
             revRegObject.Handle = objectHandle;
             return await Task.FromResult(revRegObject);
         }
@@ -170,6 +172,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string revDeltaJson = await ObjectApi.ToJsonAsync(objectHandle);
             RevocationRegistryDelta revDeltaObject = JsonConvert.DeserializeObject<RevocationRegistryDelta>(revDeltaJson, Settings.JsonSettings);
+            revDeltaObject.JsonString = revDeltaJson;
             revDeltaObject.Handle = objectHandle;
             return await Task.FromResult(revDeltaObject);
         }
