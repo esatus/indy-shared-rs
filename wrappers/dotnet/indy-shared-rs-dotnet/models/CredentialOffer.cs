@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace indy_shared_rs_dotnet.Models
 {
@@ -14,9 +15,7 @@ namespace indy_shared_rs_dotnet.Models
         public CredentialKeyCorrectnessProof KeyCorrectnessProof { get; set; }
         public string Nonce { get; set; }
 
-        [JsonIgnore]
-        public uint Handle { get; set; }
-
         public string JsonString { get; set; }
+        public IntPtr Handle { get; set; }
     }
 }

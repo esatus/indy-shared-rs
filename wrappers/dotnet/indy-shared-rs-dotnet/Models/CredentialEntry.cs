@@ -1,10 +1,12 @@
-﻿namespace indy_shared_rs_dotnet.Models
+﻿using System;
+
+namespace indy_shared_rs_dotnet.Models
 {
     public class CredentialEntry
     {
-        public uint CredentialObjectHandle;
+        public IntPtr CredentialObjectHandle;
         public long Timestamp;
-        public uint RevStateObjectHandle;
+        public IntPtr RevStateObjectHandle;
 
         /** Timestamp and revocationStateObject are optional parameters. Either timestamp and revocation state must be presented, or neither.
          * ´param name="credentialObject" : Credential object
@@ -17,7 +19,7 @@
             if (timestamp == 0 || revocationStateObject == null)
             {
                 Timestamp = -1;
-                RevStateObjectHandle = 0;
+                RevStateObjectHandle = new IntPtr();
             }
             if (revocationStateObject != null)
             {

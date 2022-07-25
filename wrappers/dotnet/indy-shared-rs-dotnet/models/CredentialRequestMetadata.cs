@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace indy_shared_rs_dotnet.Models
 {
@@ -10,7 +11,7 @@ namespace indy_shared_rs_dotnet.Models
 
         [JsonProperty("master_secret_name")]
         public string MsName { get; set; }
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
         public string JsonString { get; set; }
     }
 }

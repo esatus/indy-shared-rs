@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace indy_shared_rs_dotnet.Models
@@ -14,7 +15,7 @@ namespace indy_shared_rs_dotnet.Models
         [JsonProperty("identifiers")]
         public List<Identifier> Identifiers { get; set; }
 
-        public uint Handle { get; set; }
+        public IntPtr Handle { get; set; }
         public string JsonString { get; set; }
     }
 }

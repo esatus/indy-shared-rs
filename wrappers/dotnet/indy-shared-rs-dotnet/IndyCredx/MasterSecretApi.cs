@@ -1,5 +1,6 @@
 ﻿using indy_shared_rs_dotnet.Models;
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet.IndyCredx
@@ -13,7 +14,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>New <see cref="MasterSecret"/>.</returns>
         public static async Task<MasterSecret> CreateMasterSecretAsync()
         {
-            uint result = 0;
+            IntPtr result = new IntPtr();
             int errorCode = NativeMethods.credx_create_master_secret(ref result);
 
             if (errorCode != 0)

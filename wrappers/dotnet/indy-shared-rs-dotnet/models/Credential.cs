@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace indy_shared_rs_dotnet.Models
@@ -26,7 +27,7 @@ namespace indy_shared_rs_dotnet.Models
 
         [JsonProperty("witness")]
         public Witness Witness { get; set; } = null;
-        public uint Handle { get; set; }
         public string JsonString { get; set; }
+        public IntPtr Handle { get; set; }
     }
 }

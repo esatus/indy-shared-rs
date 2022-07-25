@@ -37,7 +37,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>A new <see cref="PresentationRequest"/>.</returns>
         public static async Task<PresentationRequest> CreatePresReqFromJsonAsync(string presReqJson)
         {
-            uint presReqObjectHandle = 0;
+            IntPtr presReqObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_presentation_request_from_json(ByteBuffer.Create(presReqJson), ref presReqObjectHandle);
             if (errorCode != 0)
             {
@@ -48,7 +48,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(presReq);
         }
 
-        private static async Task<PresentationRequest> CreatePresentationRequestObject(uint objectHandle)
+        private static async Task<PresentationRequest> CreatePresentationRequestObject(IntPtr objectHandle)
         {
             string presReqJson = await ObjectApi.ToJsonAsync(objectHandle);
             PresentationRequest presentationRequestObject = JsonConvert.DeserializeObject<PresentationRequest>(presReqJson, Settings.JsonSettings);

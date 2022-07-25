@@ -346,7 +346,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             //Assert
             actual.Value.Revoked.Should().HaveCount(1);
-            actual.Value.Revoked.Contains(2).Should().BeTrue();
+            actual.Value.Revoked.Contains((IntPtr) 2).Should().BeTrue();
         }
 
         [Test, TestCase(TestName = "MergeRevocationRegistryDeltaAsync() throws SharedRsException when one delta is invalid.")]

@@ -23,7 +23,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             CredentialDefinition credDefObject,
             CredentialKeyCorrectnessProof keyProofObject)
         {
-            uint credOfferObjectHandle = 0;
+            IntPtr credOfferObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_create_credential_offer(FfiStr.Create(schemaId), credDefObject.Handle, keyProofObject.Handle, ref credOfferObjectHandle);
 
             if (errorCode != 0)
@@ -36,7 +36,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(credOfferObject);
         }
 
-        private static async Task<CredentialOffer> CreateCredentialOfferObject(uint objectHandle)
+        private static async Task<CredentialOffer> CreateCredentialOfferObject(IntPtr objectHandle)
         {
             string credOfferJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.JsonSettings);

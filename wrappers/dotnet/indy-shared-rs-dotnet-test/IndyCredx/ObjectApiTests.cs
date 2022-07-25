@@ -30,7 +30,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Arrange
 
             //Act
-            Func<Task> act = async () => await ObjectApi.GetTypeNameAsync(0);
+            Func<Task> act = async () => await ObjectApi.GetTypeNameAsync(new IntPtr());
 
             //Assert
             await act.Should().ThrowAsync<SharedRsException>();
