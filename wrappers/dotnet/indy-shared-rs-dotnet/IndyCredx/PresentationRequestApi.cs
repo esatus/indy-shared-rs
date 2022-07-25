@@ -52,6 +52,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string presReqJson = await ObjectApi.ToJsonAsync(objectHandle);
             PresentationRequest presentationRequestObject = JsonConvert.DeserializeObject<PresentationRequest>(presReqJson, Settings.JsonSettings);
+            presentationRequestObject.JsonString = presReqJson;
 
             presentationRequestObject.RequestedAttributes = new Dictionary<string, AttributeInfo>();
             presentationRequestObject.RequestedPredicates = new Dictionary<string, PredicateInfo>();

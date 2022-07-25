@@ -40,6 +40,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         {
             string credOfferJson = await ObjectApi.ToJsonAsync(objectHandle);
             CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.JsonSettings);
+            credOfferObject.JsonString = credOfferJson;
             credOfferObject.Handle = objectHandle;
 
             try

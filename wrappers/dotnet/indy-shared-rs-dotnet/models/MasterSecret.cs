@@ -4,5 +4,6 @@
     {
         public SecretValue Value { get; set; }
         public uint Handle { get; set; }
+        public string JsonString { get; set; }
     }
 }

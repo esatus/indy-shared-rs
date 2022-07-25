@@ -6,6 +6,7 @@ namespace indy_shared_rs_dotnet.Models
     {
         public uint Handle { get; set; }
         public string Id { get; set; }
+        public string JsonString { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
         public string Ver { get; set; }

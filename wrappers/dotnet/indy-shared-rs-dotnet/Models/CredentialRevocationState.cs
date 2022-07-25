@@ -6,6 +6,8 @@ namespace indy_shared_rs_dotnet.Models
     {
         public uint Handle { get; set; }
 
+        public string JsonString { get; set; }
+
         [JsonProperty("witness")]
         public Witness Witness { get; set; }
 
