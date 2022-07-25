@@ -18,6 +18,9 @@ namespace indy_shared_rs_dotnet.Models
         [JsonProperty("tag")]
         public string Tag { get; set; }
 
+        [JsonProperty("ver")]
+        public string Ver { get; set; }
+
         public CredentialDefinitionData Value { get; set; }
     }
 }
