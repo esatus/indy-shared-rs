@@ -60,5 +60,20 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
             return await Task.FromResult(credOfferObject);
         }
+
+        private static async Task<CredentialOffer> CreateCredentialOfferFromJsonAsync(string credDefJson)
+        {
+            IntPtr credOfferHandle = new IntPtr();
+            int errorCode = NativeMethods.credx_credential_offer_from_json(ByteBuffer.Create(credDefJson), ref credOfferHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            CredentialOffer result = await CreateCredentialOfferObject(credOfferHandle);
+            return await Task.FromResult(result);
+        }
     }
 }

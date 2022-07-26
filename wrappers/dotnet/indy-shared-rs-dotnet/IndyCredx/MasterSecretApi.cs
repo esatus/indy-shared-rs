@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using static indy_shared_rs_dotnet.Models.Structures;
 
 namespace indy_shared_rs_dotnet.IndyCredx
 {
@@ -28,6 +29,28 @@ namespace indy_shared_rs_dotnet.IndyCredx
             msObject.JsonString = masterSecretJson;
             msObject.Handle = result;
             return await Task.FromResult(msObject);
+        }
+        private static async Task<MasterSecret> CreateMasterSecretObject(IntPtr objectHandle)
+        {
+            string masterSecretJson = await ObjectApi.ToJsonAsync(objectHandle);
+            MasterSecret requestObject = JsonConvert.DeserializeObject<MasterSecret>(masterSecretJson, Settings.JsonSettings);
+            requestObject.JsonString = masterSecretJson;
+            requestObject.Handle = objectHandle;
+            return await Task.FromResult(requestObject);
+        }
+        private static async Task<MasterSecret> CreateMasterSecretFromJsonAsync(string masterSecretJson)
+        {
+            IntPtr masterSecretHandle = new IntPtr();
+            int errorCode = NativeMethods.credx_master_secret_from_json(ByteBuffer.Create(masterSecretJson), ref masterSecretHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            MasterSecret result = await CreateMasterSecretObject(masterSecretHandle);
+            return await Task.FromResult(result);
         }
 
     }

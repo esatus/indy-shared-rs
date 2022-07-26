@@ -127,6 +127,21 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(credDefPvtObject);
         }
 
+        private static async Task<CredentialDefinitionPrivate> CreateCredentialDefinitionPrivateFromJsonAsync(string credDefPrivJson)
+        {
+            IntPtr credDefPrivHandle = new IntPtr();
+            int errorCode = NativeMethods.credx_credential_definition_private_from_json(ByteBuffer.Create(credDefPrivJson), ref credDefPrivHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            CredentialDefinitionPrivate result = await CreateCredentialDefinitonPrivateObject(credDefPrivHandle);
+            return await Task.FromResult(result);
+        }
+
         private static async Task<CredentialKeyCorrectnessProof> CreateCredentialKeyProofObject(IntPtr objectHandle)
         {
             string keyProofJson = await ObjectApi.ToJsonAsync(objectHandle);

@@ -37,16 +37,28 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_credential_definition_from_json(ByteBuffer credDefJson, ref IntPtr credDefObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_credential_definition_private_from_json(ByteBuffer credDefJson, ref IntPtr credDefPrivObjectHandle);
         #endregion
 
         #region CredentialOffer 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_create_credential_offer(FfiStr schemaId, IntPtr credDefObjectHandle, IntPtr keyProofObjectHandle, ref IntPtr credOfferHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_credential_offer_from_json(ByteBuffer credOfferJson, ref IntPtr credOfferObjectHandle);
         #endregion
 
         #region CredentialRequest
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_create_credential_request(FfiStr proverDid, IntPtr credDefObjectHandle, IntPtr masterSecretObjectHandle, FfiStr masterSecretId, IntPtr credOfferObjectHandle, ref IntPtr credReqObjectHandle, ref IntPtr credReqMetaObjectHandle);
+        
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_credential_request_from_json(ByteBuffer credReqJson, ref IntPtr credReqObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_credential_request_metadata_from_json(ByteBuffer credReqMetaJson, ref IntPtr credReqMetaObjectHandle);
         #endregion
 
         #region Credential
@@ -71,12 +83,18 @@ namespace indy_shared_rs_dotnet.IndyCredx
         internal static extern int credx_process_credential(IntPtr credObjectHandle, IntPtr credReqObjectHandle, IntPtr masterSecretObjectHandle, IntPtr credDefObjectHandle, IntPtr revRegDefObjectHandle, ref IntPtr resultObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_credential_from_json(ByteBuffer credJson, ref IntPtr credObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_credential_get_attribute(IntPtr credObjectHandle, FfiStr attributeName, ref string result);
         #endregion
 
         #region MasterSecret
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_create_master_secret(ref IntPtr masterSecretObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_master_secret_from_json(ByteBuffer masterSecretJson, ref IntPtr masterSecretObjectHandle);
         #endregion
 
         #region Presentation
