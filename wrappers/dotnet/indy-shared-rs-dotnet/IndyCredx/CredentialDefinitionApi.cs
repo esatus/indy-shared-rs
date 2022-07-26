@@ -228,6 +228,20 @@ namespace indy_shared_rs_dotnet.IndyCredx
             }
             return await Task.FromResult(keyProofObject);
         }
+        private static async Task<CredentialKeyCorrectnessProof> CreateKeyCorrectnessProofFromJsonAsync(string keyCorrectnessProofJson)
+        {
+            IntPtr keyCorrectnessProofHandle = new IntPtr();
+            int errorCode = NativeMethods.credx_key_correctness_proof_from_json(ByteBuffer.Create(keyCorrectnessProofJson), ref keyCorrectnessProofHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            CredentialKeyCorrectnessProof result = await CreateCredentialKeyProofObject(keyCorrectnessProofHandle);
+            return await Task.FromResult(result);
+        }
         #endregion
     }
 }

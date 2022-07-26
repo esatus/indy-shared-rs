@@ -40,6 +40,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_credential_definition_private_from_json(ByteBuffer credDefJson, ref IntPtr credDefPrivObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_key_correctness_proof_from_json(ByteBuffer keyCorrectnessProofJson, ref IntPtr keyCorrectnessProofObjectHandle);
         #endregion
 
         #region CredentialOffer 
