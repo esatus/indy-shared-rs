@@ -170,6 +170,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_revocation_state_from_json(ByteBuffer credentialRevocationStateJson, ref IntPtr credentialRevocationStateObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_revocation_registry_delta_from_json(ByteBuffer credentialRevocationRegistryDeltaJson, ref IntPtr credentialRevocationRegistryDeltaObjectHandle);
         #endregion
 
         #region Schema

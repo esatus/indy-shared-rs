@@ -62,6 +62,60 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
+        /// Creates a new <see cref="RevocationRegistry"/> object and its corresponding informative objects.
+        /// </summary>
+        /// <param name="originDid">Did of issuer.</param>
+        /// <param name="credDefJson">Credential definition.</param>
+        /// <param name="tag">Tag.</param>
+        /// <param name="revRegType">Type of revocation registry.</param>
+        /// <param name="issuanceType">Type of issuance.</param>
+        /// <param name="maxCredNumber">Maximum number of credential entries.</param>
+        /// <param name="tailsDirPath">Path to tails file.</param>
+        /// <exception cref="SharedRsException">Throws if any parameter is invalid.</exception>
+        /// <returns>A new <see cref="RevocationRegistry"/>, its <see cref="RevocationRegistryDefinition"/>, <see cref="RevocationRegistryDefinitionPrivate"/> and <see cref="RevocationRegistryDelta"/> all as JSON.</returns>
+        public static async Task<(string, string, string, string)> CreateRevocationRegistryJsonAsync(
+            string originDid,
+            string credDefJson,
+            string tag,
+            RegistryType revRegType,
+            IssuerType issuanceType,
+            long maxCredNumber,
+            string tailsDirPath)
+        {
+            IntPtr regDefObjectHandle = new IntPtr();
+            IntPtr regDefPvtObjectHandle = new IntPtr();
+            IntPtr regEntryObjectHandle = new IntPtr();
+            IntPtr regInitDeltaObjectHandle = new IntPtr();
+            IntPtr credDefObjectHandle = new IntPtr();
+            _ = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefJson), ref credDefObjectHandle);
+
+            int errorCode = NativeMethods.credx_create_revocation_registry(
+                FfiStr.Create(originDid),
+                credDefObjectHandle,
+                FfiStr.Create(tag),
+                FfiStr.Create(revRegType.ToString()),
+                FfiStr.Create(issuanceType.ToString()),
+                maxCredNumber,
+                FfiStr.Create(tailsDirPath),
+                ref regDefObjectHandle,
+                ref regDefPvtObjectHandle,
+                ref regEntryObjectHandle,
+                ref regInitDeltaObjectHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+            string regDefJson = await ObjectApi.ToJsonAsync(regDefObjectHandle);
+            string regDefPvtJson = await ObjectApi.ToJsonAsync(regDefPvtObjectHandle);
+            string revRegJson = await ObjectApi.ToJsonAsync(regEntryObjectHandle);
+            string regInitDeltaJson = await ObjectApi.ToJsonAsync(regInitDeltaObjectHandle);
+
+            return await Task.FromResult((regDefJson, regDefPvtJson, revRegJson, regInitDeltaJson));
+        }
+
+        /// <summary>
         /// Creates a new <see cref="RevocationRegistry"/> object from json <see cref="string"/>.
         /// </summary>
         /// <param name="revRegJson">Json <see cref="string"/> representing a <see cref="RevocationRegistry"/> object.</param>
@@ -144,6 +198,51 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
+        /// Updates a provided <see cref="RevocationRegistry"/> object.
+        /// </summary>
+        /// <param name="revRegDefJson">Revocation registry definition.</param>
+        /// <param name="revRegJson">Revocation registry.</param>
+        /// <param name="issued">Issued entries.</param>
+        /// <param name="revoked">Revoked entries.</param>
+        /// <param name="tailsPath">Path of tails file.</param>
+        /// <exception cref="SharedRsException">Throws if any parameter is invalid.</exception>
+        /// <returns>An updated <see cref="RevocationRegistry"/> and its <see cref="RevocationRegistryDelta"/> as JSON.</returns>
+        public static async Task<(string, string)> UpdateRevocationRegistryAsync(
+            string revRegDefJson,
+            string revRegJson,
+            List<long> issued,
+            List<long> revoked,
+            string tailsPath)
+        {
+            IntPtr revRegObjectHandle = new IntPtr();
+            IntPtr revRegDeltaObjectHandle = new IntPtr();
+            IntPtr revocationRegistryDefinitionHandle = new IntPtr();
+            IntPtr revocationRegistryHandle = new IntPtr();
+
+            _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revocationRegistryDefinitionHandle);
+            _ = NativeMethods.credx_revocation_registry_from_json(ByteBuffer.Create(revRegJson), ref revocationRegistryHandle);
+
+            int errorCode = NativeMethods.credx_update_revocation_registry(
+                revocationRegistryDefinitionHandle,
+                revocationRegistryHandle,
+                FfiLongList.Create(issued),
+                FfiLongList.Create(revoked),
+                FfiStr.Create(tailsPath),
+                ref revRegObjectHandle,
+                ref revRegDeltaObjectHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+            string revRegUpdatedJson = await ObjectApi.ToJsonAsync(revRegObjectHandle);
+            string revRegDeltaJson = await ObjectApi.ToJsonAsync(revRegDeltaObjectHandle);
+
+            return await Task.FromResult((revRegUpdatedJson, revRegDeltaJson));
+        }
+
+        /// <summary>
         /// Revokes a <see cref="Credential"/> on the revocation registry.
         /// </summary>
         /// <param name="revRegDefObject">Revocation registry definition.</param>
@@ -181,6 +280,48 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
+        /// Revokes a <see cref="Credential"/> on the revocation registry.
+        /// </summary>
+        /// <param name="revRegDefJson">Revocation registry definition.</param>
+        /// <param name="revRegJson">Corresponding revocation registry.</param>
+        /// <param name="credRevIdx">Index of the <see cref="Credential"/> in the revocation registry.</param>
+        /// <param name="tailsPath">Path to tails file.</param>
+        /// <exception cref="SharedRsException">Throws if any parameter is invalid.</exception>
+        /// <returns>A new <see cref="RevocationRegistry"/> and <see cref="RevocationRegistryDelta"/> object with the refered <see cref="Credential"/> revoked.</returns>
+        public static async Task<(string, string)> RevokeCredentialAsync(
+            string revRegDefJson,
+            string revRegJson,
+            long credRevIdx,
+            string tailsPath)
+        {
+            IntPtr revRegObjectHandle = new IntPtr();
+            IntPtr revRegDeltaObjectHandle = new IntPtr();
+            IntPtr revocationRegistryDefinitionHandle = new IntPtr();
+            IntPtr revocationRegistryHandle = new IntPtr();
+
+            _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revocationRegistryDefinitionHandle);
+            _ = NativeMethods.credx_revocation_registry_from_json(ByteBuffer.Create(revRegJson), ref revocationRegistryHandle);
+
+            int errorCode = NativeMethods.credx_revoke_credential(
+                revocationRegistryDefinitionHandle,
+                revocationRegistryHandle,
+                credRevIdx,
+                FfiStr.Create(tailsPath),
+                ref revRegObjectHandle,
+                ref revRegDeltaObjectHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+            string revRegUpdatedJson = await ObjectApi.ToJsonAsync(revRegObjectHandle);
+            string revRegDeltaJson = await ObjectApi.ToJsonAsync(revRegDeltaObjectHandle);
+
+            return await Task.FromResult((revRegUpdatedJson, revRegDeltaJson));
+        }
+
+        /// <summary>
         /// Merges two <see cref="RevocationRegistryDelta"/> objects into one.
         /// </summary>
         /// <param name="revRegDeltaObject1">First delta.</param>
@@ -207,6 +348,40 @@ namespace indy_shared_rs_dotnet.IndyCredx
             RevocationRegistryDelta revRegDeltaObjectNew = await CreateRevocationRegistryDeltaObject(revRegDeltaObjectHandleNew);
 
             return await Task.FromResult(revRegDeltaObjectNew);
+        }
+
+        /// <summary>
+        /// Merges two <see cref="RevocationRegistryDelta"/> objects into one.
+        /// </summary>
+        /// <param name="revRegDeltaJson1">First delta.</param>
+        /// <param name="revRegDeltaJson2">Second delta.</param>
+        /// <exception cref="SharedRsException">Throws if <paramref name="revRegDeltaObject1"/> or <paramref name="revRegDeltaObject2"/> are invalid.</exception>
+        /// <returns>The merged <see cref="RevocationRegistryDelta"/>.</returns>
+        public static async Task<string> MergeRevocationRegistryDeltasAsync(
+            string revRegDeltaJson1,
+            string revRegDeltaJson2)
+        {
+            IntPtr revRegDeltaObjectHandleNew = new IntPtr();
+            IntPtr revRegDeltaInputHandle1 = new IntPtr();
+            IntPtr revRegDeltaInputHandle2 = new IntPtr();
+
+            _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revRegDeltaJson1), ref revRegDeltaInputHandle1);
+            _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revRegDeltaJson2), ref revRegDeltaInputHandle2);
+
+            int errorCode = NativeMethods.credx_merge_revocation_registry_deltas(
+                revRegDeltaInputHandle1,
+                revRegDeltaInputHandle2,
+                ref revRegDeltaObjectHandleNew);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            string revRegDeltaJson = await ObjectApi.ToJsonAsync(revRegDeltaObjectHandleNew);
+
+            return await Task.FromResult(revRegDeltaJson);
         }
 
         /// <summary>
@@ -251,6 +426,54 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         /// <summary>
+        /// Updates the provided <see cref="CredentialRevocationState"/> or creates a new one.
+        /// </summary>
+        /// <param name="revRegDefObject">The revocation registry definition.</param>
+        /// <param name="revRegDeltaObject">The revocation registry delta.</param>
+        /// <param name="revRegIndex">The revocation registry index.</param>
+        /// <param name="timestamp">Unix timestamp.</param>
+        /// <param name="tailsPath">Path to the tails file.</param>
+        /// <param name="revState">Revocation state to update.</param>
+        /// <exception cref="SharedRsException">Throws if any parameter is invalid.</exception>
+        /// <returns>A new <see cref="CredentialRevocationState"/> object.</returns>
+        public static async Task<string> CreateOrUpdateRevocationStateAsync(
+            string revRegDefJson,
+            string revRegDeltaJson,
+            long revRegIndex,
+            long timestamp,
+            string tailsPath,
+            string revStateJson)
+        {
+            IntPtr credRevStateObjectHandle = new IntPtr();
+            IntPtr revRegDefHandle = new IntPtr();
+            IntPtr revRegDeltaHandle = new IntPtr();
+            IntPtr revStateHandle = new IntPtr();
+
+            _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revRegDefHandle);
+            _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revRegDeltaJson), ref revRegDeltaHandle);
+            _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revStateJson), ref revStateHandle);
+
+            int errorCode = NativeMethods.credx_create_or_update_revocation_state(
+                revRegDefHandle,
+                revRegDeltaHandle,
+                revRegIndex,
+                timestamp,
+                FfiStr.Create(tailsPath),
+                revStateHandle,
+                ref credRevStateObjectHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            string credRevStateJson = await ObjectApi.ToJsonAsync(credRevStateObjectHandle);
+
+            return await Task.FromResult(credRevStateJson);
+        }
+
+        /// <summary>
         /// Creates a new <see cref="CredentialRevocationState"/> object from json <see cref="string"/>.
         /// </summary>
         /// <param name="revStateJson">Json <see cref="string"/> representing a revocation object.</param>
@@ -277,10 +500,46 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="attributeName">Name of the requested attribute.</param>
         /// <exception cref="SharedRsException">Throws when provided <paramref name="attributeName"/> or <paramref name="revRegDefObject"/> are invalid.</exception>
         /// <returns>The value of the requested <paramref name="attributeName"/> from the provided <paramref name="revRegDefObject"/>.</returns>
-        public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(RevocationRegistryDefinition revRegDefObject, string attributeName)
+        public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(
+            RevocationRegistryDefinition revRegDefObject,
+            string attributeName)
         {
             string result = "";
-            int errorCode = NativeMethods.credx_revocation_registry_definition_get_attribute(revRegDefObject.Handle, FfiStr.Create(attributeName), ref result);
+            
+            int errorCode = NativeMethods.credx_revocation_registry_definition_get_attribute(
+                revRegDefObject.Handle,
+                FfiStr.Create(attributeName),
+                ref result);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            return await Task.FromResult(result);
+        }
+
+        /// <summary>
+        /// Get the value of an <see cref="RevocationRegistryDefinition"/> attribute (Supported attribute names so far: id, max_cred_num, tails_hash or tails_location).
+        /// </summary>
+        /// <param name="revRegDefJson">Revocation registry definition from which the attribute is requested.</param>
+        /// <param name="attributeName">Name of the requested attribute.</param>
+        /// <exception cref="SharedRsException">Throws when provided <paramref name="attributeName"/> or <paramref name="revRegDefObject"/> are invalid.</exception>
+        /// <returns>The value of the requested <paramref name="attributeName"/> from the provided <paramref name="revRegDefObject"/>.</returns>
+        public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(
+            string revRegDefJson,
+            string attributeName)
+        {
+            string result = "";
+            IntPtr revRegDefHandle = new IntPtr();
+
+            _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revRegDefHandle);
+
+            int errorCode = NativeMethods.credx_revocation_registry_definition_get_attribute(
+                revRegDefHandle,
+                FfiStr.Create(attributeName),
+                ref result);
 
             if (errorCode != 0)
             {
