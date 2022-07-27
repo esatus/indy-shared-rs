@@ -49,11 +49,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
             string credDefObjectJson,
             string keyProofObjectJson)
         {
-            CredentialDefinition credDefObject = await CreateCredentialDefinitionFromJsonAsync(credDefObjectJson);
-            CredentialKeyCorrectnessProof keyProofObject = await CreateKeyCorrectnessProofFromJsonAsync(keyProofObjectJson);
+            IntPtr credDefObjectHandle = new IntPtr();
+            IntPtr keyProofObjecthandle = new IntPtr();
+            _ = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefObjectJson), ref credDefObjectHandle);
+            _ = NativeMethods.credx_key_correctness_proof_from_json(ByteBuffer.Create(keyProofObjectJson), ref keyProofObjecthandle);
 
             IntPtr credOfferObjectHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_create_credential_offer(FfiStr.Create(schemaId), credDefObject.Handle, keyProofObject.Handle, ref credOfferObjectHandle);
+            int errorCode = NativeMethods.credx_create_credential_offer(FfiStr.Create(schemaId), credDefObjectHandle, keyProofObjecthandle, ref credOfferObjectHandle);
 
             if (errorCode != 0)
             {
@@ -61,8 +63,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            CredentialOffer credOfferObject = await CreateCredentialOfferObject(credOfferObjectHandle);
-            return await Task.FromResult(credOfferObject.JsonString);
+            string credOfferJson = await ObjectApi.ToJsonAsync(credOfferObjectHandle);
+            return await Task.FromResult(credOfferJson);
         }
 
         #region private methods
