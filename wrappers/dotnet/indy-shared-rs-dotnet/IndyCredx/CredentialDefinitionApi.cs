@@ -56,7 +56,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// Creates a new <see cref="CredentialDefinition"/> as JSON string from schema and other parameters (only signatureType "CL" supported so far).
         /// </summary>
         /// <param name="originDid">Issuer DID.</param>
-        /// <param name="schemaObject">Corresponding schema.</param>
+        /// <param name="schemaObjectJson">Corresponding schema.</param>
         /// <param name="tag">Tag name.</param>
         /// <param name="signatureType">Type of the sginature.</param>
         /// <param name="supportRevocation">Flag if revocation is supported or not.</param>
@@ -64,7 +64,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>The new <see cref="CredentialDefinition"/> as JSON string, <see cref="CredentialDefinitionPrivate"/> as JSON string and <see cref="CredentialKeyCorrectnessProof"/> as JSON String.</returns>
         public static async Task<(string, string, string)> CreateCredentialDefinitionJsonAsync(
             string originDid,
-            Schema schemaObject,
+            string schemaObjectJson,
             string tag,
             SignatureType signatureType,
             byte supportRevocation)
@@ -72,9 +72,12 @@ namespace indy_shared_rs_dotnet.IndyCredx
             IntPtr credDefHandle = new IntPtr();
             IntPtr credDefPvtHandle = new IntPtr();
             IntPtr keyProofHandle = new IntPtr();
+            IntPtr schemaObjectHandle = new IntPtr();
+            _ = NativeMethods.credx_schema_from_json(ByteBuffer.Create(schemaObjectJson), ref schemaObjectHandle);
+
             int errorCode = NativeMethods.credx_create_credential_definition(
                 FfiStr.Create(originDid),
-                schemaObject.Handle,
+                schemaObjectHandle,
                 FfiStr.Create(tag),
                 FfiStr.Create(signatureType.ToString()),
                 supportRevocation,
@@ -88,10 +91,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            CredentialDefinition credDefObject = await CreateCredentialDefinitonObject(credDefHandle);
-            CredentialDefinitionPrivate credDefPvtObject = await CreateCredentialDefinitonPrivateObject(credDefPvtHandle);
-            CredentialKeyCorrectnessProof keyProofObject = await CreateCredentialKeyProofObject(keyProofHandle);
-            return await Task.FromResult((credDefObject.JsonString, credDefPvtObject.JsonString, keyProofObject.JsonString));
+            string credDefObjectJson = await ObjectApi.ToJsonAsync(credDefHandle);
+            string credDefPvtObjectJson = await ObjectApi.ToJsonAsync(credDefPvtHandle);
+            string keyProofObjectJson = await ObjectApi.ToJsonAsync(keyProofHandle);
+
+            return await Task.FromResult((credDefObjectJson, credDefPvtObjectJson, keyProofObjectJson));
         }
 
         /// <summary>
@@ -122,9 +126,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>The value of the requested <paramref name="attributeName"/> from the provided <paramref name="credDefObject"/>.</returns>
         public static async Task<string> GetCredentialDefinitionAttributeAsync(string credDefObjectJson, string attributeName)
         {
-            CredentialDefinition credDefObject = await CreateCredentialDefinitionFromJsonAsync(credDefObjectJson);
+            IntPtr credDefHandle = new IntPtr();
+            _ = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefObjectJson), ref credDefHandle);
             string result = "";
-            int errorCode = NativeMethods.credx_credential_definition_get_attribute(credDefObject.Handle, FfiStr.Create(attributeName), ref result);
+            int errorCode = NativeMethods.credx_credential_definition_get_attribute(credDefHandle, FfiStr.Create(attributeName), ref result);
 
             if (errorCode != 0)
             {
