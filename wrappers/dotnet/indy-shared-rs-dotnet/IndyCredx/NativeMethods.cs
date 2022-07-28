@@ -149,6 +149,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
         internal static extern int credx_revocation_registry_definition_from_json(ByteBuffer revRegJson, ref IntPtr revRegObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_revocation_registry_definition_private_from_json(ByteBuffer revRegDefPvtJson, ref IntPtr revRegDefPvtObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_update_revocation_registry(
             IntPtr revRegDefObjectHandle,
             IntPtr revRegObjectHandle,
