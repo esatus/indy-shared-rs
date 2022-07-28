@@ -72,10 +72,10 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                 await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObjectJson, "tag", SignatureType.CL, 1);
 
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObjectJson, "schema_id");
-            string credOfferObjectJson = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObjectJson, keyProofObjectJson);
+            string credOfferObjectJson = await CredentialOfferApi.CreateCredentialOfferJsonAsync(schemaId, credDefObjectJson, keyProofObjectJson);
 
             (string credRequestObjectJson, string metaDataObjectJson) =
-                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObjectJson, masterSecretObjectJson, "testMasterSecretName", credOfferObjectJson);
+                await CredentialRequestApi.CreateCredentialRequestJsonAsync(proverDid, credDefObjectJson, masterSecretObjectJson, "testMasterSecretName", credOfferObjectJson);
 
             (string revRegDefObjectJson, string revRegDefPvtObjectJson, string revRegObjectJson, string revRegDeltaObjectJson) =
                 await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDefObjectJson, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
@@ -218,10 +218,10 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                 await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObjectJson, "tag", SignatureType.CL, 1);
 
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObjectJson, "schema_id");
-            string credOfferObjectJson = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObjectJson, keyProofObjectJson);
+            string credOfferObjectJson = await CredentialOfferApi.CreateCredentialOfferJsonAsync(schemaId, credDefObjectJson, keyProofObjectJson);
 
             (string credRequestObjectJson, string metaDataObjectJson) =
-                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObjectJson, masterSecretObjectJson, "testMasterSecretName", credOfferObjectJson);
+                await CredentialRequestApi.CreateCredentialRequestJsonAsync(proverDid, credDefObjectJson, masterSecretObjectJson, "testMasterSecretName", credOfferObjectJson);
 
             (string revRegDefObjectJson, string revRegDefPvtObjectJson, string revRegObjectJson, _) =
                 await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDefObjectJson, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
@@ -346,10 +346,10 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                 await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
 
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
-            string credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
+            string credOfferObject = await CredentialOfferApi.CreateCredentialOfferJsonAsync(schemaId, credDefObject, keyProofObject);
 
             (string credRequestObject, string metaDataObject) =
-                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+                await CredentialRequestApi.CreateCredentialRequestJsonAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
 
             (string revRegDefObject, string revRegDefPvtObject, string revRegObject, string revRegDeltaObject) =
                 await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
@@ -364,15 +364,13 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             string attrCredDefId = await CredentialApi.GetCredentialAttributeAsync(credObject, "cred_def_id");
             string attrRevRegId = await CredentialApi.GetCredentialAttributeAsync(credObject, "rev_reg_id");
             string attrRevRegIndex = await CredentialApi.GetCredentialAttributeAsync(credObject, "rev_reg_index");
-            //string attrDefault = await CredentialApi.GetCredentialAttributeAsync(credObject, "default");
 
             //Assert
-            //attrSchemaId.Should().Be(credObject.SchemaId);
-            attrSchemaId.Should().Be(JObject.Parse(credObject)["schemaid"].ToString());
-            //attrCredDefId.Should().Be(credObject.CredentialDefinitionId);
-            //attrRevRegId.Should().Be(credObject.RevocationRegistryId);
-            //attrRevRegIndex.Should().Be(credObject.Signature.RCredential.I.ToString());
-            //attrDefault.Should().Be("");
+            attrSchemaId.Should().Be(JObject.Parse(credObject)["schema_id"].ToString());
+            attrCredDefId.Should().Be(JObject.Parse(credObject)["cred_def_id"].ToString());
+            attrRevRegId.Should().Be(JObject.Parse(credObject)["rev_reg_id"].ToString());
+            attrRevRegIndex.Should().Be(JObject.Parse(JObject.Parse(JObject.Parse(credObject)["signature"].ToString())["r_credential"].ToString())["i"].ToString());
+
         }
 
         [Test, TestCase(TestName = "GetCredentialAttributeAsync() throws SharedRsException when given empty attribute name.")]

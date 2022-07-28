@@ -44,7 +44,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="keyProofObjectJson">Key correctness proof as JSON string.</param>
         /// <exception cref="SharedRsException">Throws if any parameter is invalid.</exception>
         /// <returns>A new <see cref="CredentialOffer"/> as JSON string.</returns>
-        public static async Task<string> CreateCredentialOfferAsync(
+        public static async Task<string> CreateCredentialOfferJsonAsync(
             string schemaId,
             string credDefObjectJson,
             string keyProofObjectJson)
