@@ -32,6 +32,27 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             testObject.Should().BeOfType(typeof(CredentialOffer));
         }
 
+        [Test, TestCase(TestName = "CreateCredentialOfferAsync() with json input returns CredentialOffer object.")]
+        public async Task CreateCredentialOfferJsonWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+
+            string schemaObjectJson = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (string credDef, _, string keyProof) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObjectJson, "tag", SignatureType.CL, 1);
+
+            //Act
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDef, "schema_id");
+            string testObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDef, keyProof);
+
+            //Assert
+            testObject.Should().NotBeNullOrEmpty();
+        }
+
         private static IEnumerable<TestCaseData> CreateCredentialOfferCases()
         {
             yield return new TestCaseData(false, false, false)
