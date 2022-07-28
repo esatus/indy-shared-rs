@@ -39,6 +39,34 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             metaData.Should().BeOfType(typeof(CredentialRequestMetadata));
         }
 
+        [Test, TestCase(TestName = "CreateCredentialRequestAsync() with all Arguments set returns a request and metadata.")]
+        public async Task CreateCredentialRequestJsonAsyncWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+
+            MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDefObject, _, CredentialKeyCorrectnessProof keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
+            CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
+
+            //Act
+            (CredentialRequest request, CredentialRequestMetadata metaData) = await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+
+            //Assert
+            request.Should().NotBeNull();
+            request.Should().BeOfType(typeof(CredentialRequest));
+            metaData.Should().NotBeNull();
+            metaData.Should().BeOfType(typeof(CredentialRequestMetadata));
+        }
+
         private static IEnumerable<TestCaseData> CreateCredentialRequestCases()
         {
             yield return new TestCaseData(false, false, false, false, false)

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using indy_shared_rs_dotnet.IndyCredx;
 using indy_shared_rs_dotnet.Models;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -39,15 +40,6 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
 
-            //CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
-            //{
-            //    RevRegDefObjectHandle = revRegDefObject.Handle,
-            //    RevRegDefPvtObjectHandle = revRegDefPvtObject.Handle,
-            //    RevRegObjectHandle = revRegObject.Handle,
-            //    TailsPath = revRegDefObject.Value.TailsLocation,
-            //    RegIdx = 1,
-            //    RegUsed = new List<long> { 1 }
-            //};
 
             //Act
             (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
@@ -332,6 +324,54 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             attrCredDefId.Should().Be(credObject.CredentialDefinitionId);
             attrRevRegId.Should().Be(credObject.RevocationRegistryId);
             attrRevRegIndex.Should().Be(credObject.Signature.RCredential.I.ToString());
+            //attrDefault.Should().Be("");
+        }
+
+        [Test, TestCase(TestName = "GetCredentialAttributeAsync() with JSON inputs works for attribute names: schema_id, cred_def_id, rev_reg_id.")]
+        public async Task GetCredentialAttributeJsonAsync()
+        {
+            //Arrange
+            List<string> attrNames = new() { "name", "age", "sex" };
+            List<string> attrNamesRaw = new() { "Alex", "20", "male" };
+            List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPathForRevocation = null;
+            string masterSecretObject = await MasterSecretApi.CreateMasterSecretJsonAsync();
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (string credDefObject, string credDefPvtObject, string keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
+            string credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
+
+            (string credRequestObject, string metaDataObject) =
+                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+
+            (string revRegDefObject, string revRegDefPvtObject, string revRegObject, string revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
+
+            (string credObject, string revRegObjectNew, string revDeltaObject) =
+                await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
+                attrNames, attrNamesRaw, attrNamesEnc, revRegDefObject, revRegDefPvtObject, revRegObject, 1, new List<long>() { 1 });
+
+            //Act
+            //note: only attribute "schema_id", "cred_def_id", "rev_reg_id", "rev_reg_index" supported so far.
+            string attrSchemaId = await CredentialApi.GetCredentialAttributeAsync(credObject, "schema_id");
+            string attrCredDefId = await CredentialApi.GetCredentialAttributeAsync(credObject, "cred_def_id");
+            string attrRevRegId = await CredentialApi.GetCredentialAttributeAsync(credObject, "rev_reg_id");
+            string attrRevRegIndex = await CredentialApi.GetCredentialAttributeAsync(credObject, "rev_reg_index");
+            //string attrDefault = await CredentialApi.GetCredentialAttributeAsync(credObject, "default");
+
+            //Assert
+            //attrSchemaId.Should().Be(credObject.SchemaId);
+            attrSchemaId.Should().Be(JObject.Parse(credObject)["schemaid"].ToString());
+            //attrCredDefId.Should().Be(credObject.CredentialDefinitionId);
+            //attrRevRegId.Should().Be(credObject.RevocationRegistryId);
+            //attrRevRegIndex.Should().Be(credObject.Signature.RCredential.I.ToString());
             //attrDefault.Should().Be("");
         }
 
