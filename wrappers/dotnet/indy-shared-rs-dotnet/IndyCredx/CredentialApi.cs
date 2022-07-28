@@ -32,8 +32,22 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<string> attributeNames,
             List<string> attributeRawValues,
             List<string> attributeEncodedValues,
-            CredentialRevocationConfig credRevInfo)
+            RevocationRegistryDefinition revocationRegistryDefinition,
+            RevocationRegistryDefinitionPrivate revocationRegistryDefinitionPrivate,
+            RevocationRegistry revocationRegistry,
+            long regIdx, 
+            List<long> regUsed)
         {
+            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
+            {
+                RevRegDefObjectHandle = revocationRegistryDefinition.Handle,
+                RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivate.Handle,
+                RevRegObjectHandle = revocationRegistry.Handle,
+                TailsPath = revocationRegistryDefinition.Value.TailsLocation,
+                RegIdx = regIdx,
+                RegUsed = regUsed
+            };
+
             IntPtr credObjectHandle = new IntPtr();
             IntPtr revRegObjectHandle = new IntPtr();
             IntPtr revDeltaObjectHandle = new IntPtr();
@@ -94,21 +108,49 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<string> attributeNames,
             List<string> attributeRawValues,
             List<string> attributeEncodedValues,
-            CredentialRevocationConfig credRevInfo)  // TODO ??? replace with json?
+            string revocationRegistryDefinitionJson,
+            string revocationRegistryDefinitionPrivateJson,
+            string revocationRegistryJson,
+            long regIdx,
+            List<long> regUsed)
         {
-            CredentialDefinition credDefObject = await CreateCredentialDefinitionFromJsonAsync(credDefObjectJson);
-            CredentialDefinitionPrivate credDefPvtObject = await CreateCredentialDefinitionPrivateFromJsonAsync(credDefPvtObjectJson);
-            CredentialOffer credOfferObject = await CreateCredentialOfferFromJsonAsync(credOfferObjectJson);
-            CredentialRequest credReqObject = await CreateCredentialRequestFromJsonAsync(credReqObjectJson);
+
+            IntPtr credDefObjectHandle = new IntPtr();
+            IntPtr credDefPvtObjectHandle = new IntPtr();
+            IntPtr credOfferObjectHandle = new IntPtr();
+            IntPtr credReqObjectHandle = new IntPtr();
+            IntPtr revocationRegistryDefinitionHandle = new IntPtr();
+            IntPtr revocationRegistryDefinitionPrivateJsonHandle = new IntPtr();
+            IntPtr revocationRegistryJsonHandle = new IntPtr();
+            _ = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefObjectJson), ref credDefObjectHandle);
+            _ = NativeMethods.credx_credential_definition_private_from_json(ByteBuffer.Create(credDefPvtObjectJson), ref credDefPvtObjectHandle);
+            _ = NativeMethods.credx_credential_offer_from_json(ByteBuffer.Create(credOfferObjectJson), ref credOfferObjectHandle);
+            _ = NativeMethods.credx_credential_request_from_json(ByteBuffer.Create(credReqObjectJson), ref credReqObjectHandle);
+            _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revocationRegistryDefinitionJson), ref revocationRegistryDefinitionHandle);
+            _ = NativeMethods.credx_revocation_registry_definition_private_from_json(ByteBuffer.Create(revocationRegistryDefinitionPrivateJson), ref revocationRegistryDefinitionPrivateJsonHandle);
+            _ = NativeMethods.credx_revocation_registry_from_json(ByteBuffer.Create(revocationRegistryJson), ref revocationRegistryJsonHandle);
+
+            string x = JObject.Parse(revocationRegistryDefinitionJson)["value"].ToString();
+            string tailsLocation = JObject.Parse(x)["tailsLocation"].ToString();
+
+            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
+            {
+                RevRegDefObjectHandle = revocationRegistryDefinitionHandle,
+                RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivateJsonHandle,
+                RevRegObjectHandle = revocationRegistryJsonHandle,
+                TailsPath = tailsLocation,
+                RegIdx = regIdx,
+                RegUsed = regUsed
+            };
 
             IntPtr credObjectHandle = new IntPtr();
             IntPtr revRegObjectHandle = new IntPtr();
             IntPtr revDeltaObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_create_credential(
-                credDefObject.Handle,
-                credDefPvtObject.Handle,
-                credOfferObject.Handle,
-                credReqObject.Handle,
+                credDefObjectHandle,
+                credDefPvtObjectHandle,
+                credOfferObjectHandle,
+                credReqObjectHandle,
                 FfiStrList.Create(attributeNames),
                 FfiStrList.Create(attributeRawValues),
                 FfiStrList.Create(attributeEncodedValues),
@@ -123,21 +165,21 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            Credential credObject = await CreateCredentialObjectAsync(credObjectHandle);
+            string credJson = await ObjectApi.ToJsonAsync(credObjectHandle);
 
-            RevocationRegistry revRegObject = null;
+            string revRegJson = null;
             if (!revRegObjectHandle.Equals(new IntPtr()))
             {
-                revRegObject = await CreateRevocationRegistryObjectAsync(revRegObjectHandle);
+                revRegJson = await ObjectApi.ToJsonAsync(revRegObjectHandle);
             }
 
-            RevocationRegistryDelta revDeltaObject = null;
+            string revDeltaJson = null;
             if (!revDeltaObjectHandle.Equals(new IntPtr()))
             {
-                revDeltaObject = await CreateRevocationRegistryDeltaObjectAsync(revDeltaObjectHandle);
+                revDeltaJson = await ObjectApi.ToJsonAsync(revDeltaObjectHandle);
             }
 
-            return await Task.FromResult((credObject.JsonString, revRegObject.JsonString, revDeltaObject.JsonString));
+            return await Task.FromResult((credJson, revRegJson, revDeltaJson));
         }
 
         /// <summary>
@@ -192,20 +234,26 @@ namespace indy_shared_rs_dotnet.IndyCredx
             string credentialRequestMetadataJson,
             string masterSecretJson,
             string credentialDefinitionJson,
-            RevocationRegistryDefinition revocationRegistryDefinition) // TODO ??? replace
+            string revocationRegistryDefinition)
         {
-            Credential credential = await CreateCredentialFromJsonAsync(credentialJson);
-            CredentialRequestMetadata credentialRequestMetadata = await CreateCredentialRequestMetadataFromJsonAsync(credentialRequestMetadataJson);
-            MasterSecret masterSecret = await CreateMasterSecretFromJsonAsync(masterSecretJson);
-            CredentialDefinition credentialDefinition = await CreateCredentialDefinitionFromJsonAsync(credentialDefinitionJson);
+            IntPtr credObjectHandle = new IntPtr();
+            IntPtr credReqMetadataObjectHandle = new IntPtr();
+            IntPtr masterSecretObjectHandle = new IntPtr();
+            IntPtr credDefObjectHandle = new IntPtr();
+            IntPtr revRegDefObjectHandle = new IntPtr();
+            _ = NativeMethods.credx_credential_from_json(ByteBuffer.Create(credentialJson), ref credObjectHandle);
+            _ = NativeMethods.credx_credential_request_metadata_from_json(ByteBuffer.Create(credentialRequestMetadataJson), ref credReqMetadataObjectHandle);
+            _ = NativeMethods.credx_master_secret_from_json(ByteBuffer.Create(masterSecretJson), ref masterSecretObjectHandle);
+            _ = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credentialDefinitionJson), ref credDefObjectHandle);
+            _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revocationRegistryDefinition), ref revRegDefObjectHandle);
 
             IntPtr credentialObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_process_credential(
-                credential.Handle,
-                credentialRequestMetadata.Handle,
-                masterSecret.Handle,
-                credentialDefinition.Handle,
-                revocationRegistryDefinition.Handle,
+                credObjectHandle,
+                credReqMetadataObjectHandle,
+                masterSecretObjectHandle,
+                credDefObjectHandle,
+                revRegDefObjectHandle,
                 ref credentialObjectHandle);
 
             if (errorCode != 0)
@@ -214,9 +262,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            Credential credentialObject = await CreateCredentialObjectAsync(credentialObjectHandle);
+            string credentialObjectJson = await ObjectApi.ToJsonAsync(credentialObjectHandle);
 
-            return await Task.FromResult(credentialObject.JsonString);
+            return await Task.FromResult(credentialObjectJson);
         }
 
         /// <summary>
@@ -270,9 +318,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <returns>The value of requested <paramref name="attributeName"/> from the provided <paramref name="credential"/>.</returns>
         public static async Task<string> GetCredentialAttributeAsync(string credentialJson, string attributeName)
         {
-            Credential credential = await CreateCredentialFromJsonAsync(credentialJson);
+            IntPtr credObjectHandle = new IntPtr();
+            _ = NativeMethods.credx_credential_from_json(ByteBuffer.Create(credentialJson), ref credObjectHandle);
             string result = "";
-            int errorCode = NativeMethods.credx_credential_get_attribute(credential.Handle, FfiStr.Create(attributeName), ref result);
+            int errorCode = NativeMethods.credx_credential_get_attribute(credObjectHandle, FfiStr.Create(attributeName), ref result);
 
             if (errorCode != 0)
             {
@@ -284,27 +333,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         }
 
         #region private methods
-        /// <summary>
-        /// Creates a new <see cref="Credential"/> object from json <see cref="string"/>.
-        /// </summary>
-        /// <param name="schemaJson">Json <see cref="string"/> representing a <see cref="Credential"/> object.</param>
-        /// <exception cref="SharedRsException">Throws when provided <paramref name="schemaJson"/> is invalid.</exception>
-        /// <exception cref="System.IndexOutOfRangeException">Throws when <paramref name="schemaJson"/> is empty.</exception>
-        /// <returns>A new <see cref="Credential"/> object.</returns>
-        private static async Task<Credential> CreateCredentialFromJsonAsync(string credJson)
-        {
-            IntPtr credentialObjectHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_from_json(ByteBuffer.Create(credJson), ref credentialObjectHandle);
 
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            Credential credentialObject = await CreateCredentialObjectAsync(credentialObjectHandle);
-            return await Task.FromResult(credentialObject);
-        }
         private static async Task<Credential> CreateCredentialObjectAsync(IntPtr objectHandle)
         {
             string credJson = await ObjectApi.ToJsonAsync(objectHandle);
@@ -328,170 +357,6 @@ namespace indy_shared_rs_dotnet.IndyCredx
             revDeltaObject.JsonString = revDeltaJson;
             revDeltaObject.Handle = objectHandle;
             return await Task.FromResult(revDeltaObject);
-        }
-        private static async Task<CredentialDefinition> CreateCredentialDefinitionFromJsonAsync(string credDefJson)
-        {
-            IntPtr credDefHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefJson), ref credDefHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            CredentialDefinition result = await CreateCredentialDefinitonObject(credDefHandle);
-            return await Task.FromResult(result);
-        }
-        private static async Task<CredentialDefinition> CreateCredentialDefinitonObject(IntPtr objectHandle)
-        {
-            string credDefJson = await ObjectApi.ToJsonAsync(objectHandle);
-            CredentialDefinition credDefObject = JsonConvert.DeserializeObject<CredentialDefinition>(credDefJson, Settings.JsonSettings);
-            credDefObject.JsonString = credDefJson;
-            credDefObject.Handle = objectHandle;
-
-            try
-            {
-                JObject jObj = JObject.Parse(credDefJson);
-                credDefObject.Value.Primary.R = new List<KeyProofAttributeValue>();
-                foreach (JToken ele in jObj["value"]["primary"]["r"])
-                {
-                    string[] attrFields = ele.ToString().Split(':');
-                    KeyProofAttributeValue attribute = new KeyProofAttributeValue(JsonConvert.DeserializeObject<string>(attrFields[0]), JsonConvert.DeserializeObject<string>(attrFields[1]));
-                    credDefObject.Value.Primary.R.Add(attribute);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException("Could not find field r.", e);
-            }
-            return await Task.FromResult(credDefObject);
-        }
-        private static async Task<CredentialOffer> CreateCredentialOfferFromJsonAsync(string credOfferJson)
-        {
-            IntPtr credOfferHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_offer_from_json(ByteBuffer.Create(credOfferJson), ref credOfferHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            CredentialOffer result = await CreateCredentialOfferObject(credOfferHandle);
-            return await Task.FromResult(result);
-        }
-        private static async Task<CredentialOffer> CreateCredentialOfferObject(IntPtr objectHandle)
-        {
-            string credOfferJson = await ObjectApi.ToJsonAsync(objectHandle);
-            CredentialOffer credOfferObject = JsonConvert.DeserializeObject<CredentialOffer>(credOfferJson, Settings.JsonSettings);
-            credOfferObject.JsonString = credOfferJson;
-            credOfferObject.Handle = objectHandle;
-
-            try
-            {
-                JObject jObj = JObject.Parse(credOfferJson);
-                credOfferObject.KeyCorrectnessProof.XrCap = new List<KeyProofAttributeValue>();
-                foreach (JToken ele in jObj["key_correctness_proof"]["xr_cap"])
-                {
-                    KeyProofAttributeValue attribute = new KeyProofAttributeValue(ele.First.ToString(), ele.Last.ToString());
-                    credOfferObject.KeyCorrectnessProof.XrCap.Add(attribute);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new ArgumentException("Could not find field xr_cap.", e);
-            }
-
-            return await Task.FromResult(credOfferObject);
-        }
-        private static async Task<CredentialDefinitionPrivate> CreateCredentialDefinitionPrivateFromJsonAsync(string credDefPrivJson)
-        {
-            IntPtr credDefPrivHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_definition_private_from_json(ByteBuffer.Create(credDefPrivJson), ref credDefPrivHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            CredentialDefinitionPrivate result = await CreateCredentialDefinitonPrivateObject(credDefPrivHandle);
-            return await Task.FromResult(result);
-        }
-        private static async Task<CredentialDefinitionPrivate> CreateCredentialDefinitonPrivateObject(IntPtr objectHandle)
-        {
-            string credDefPvtJson = await ObjectApi.ToJsonAsync(objectHandle);
-            CredentialDefinitionPrivate credDefPvtObject = JsonConvert.DeserializeObject<CredentialDefinitionPrivate>(credDefPvtJson, Settings.JsonSettings);
-            credDefPvtObject.JsonString = credDefPvtJson;
-            credDefPvtObject.Handle = objectHandle;
-            return await Task.FromResult(credDefPvtObject);
-        }
-        private static async Task<CredentialRequest> CreateCredentialRequestFromJsonAsync(string credReqJson)
-        {
-            IntPtr credReqHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_request_from_json(ByteBuffer.Create(credReqJson), ref credReqHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            CredentialRequest result = await CreateCredentialRequestObject(credReqHandle);
-            return await Task.FromResult(result);
-        }
-        private static async Task<CredentialRequest> CreateCredentialRequestObject(IntPtr objectHandle)
-        {
-            string credReqJson = await ObjectApi.ToJsonAsync(objectHandle);
-            CredentialRequest requestObject = JsonConvert.DeserializeObject<CredentialRequest>(credReqJson, Settings.JsonSettings);
-            requestObject.JsonString = credReqJson;
-            requestObject.Handle = objectHandle;
-            return await Task.FromResult(requestObject);
-        }
-        private static async Task<CredentialRequestMetadata> CreateCredentialRequestMetadataObject(IntPtr objectHandle)
-        {
-            string credMetadataJson = await ObjectApi.ToJsonAsync(objectHandle);
-            CredentialRequestMetadata requestObject = JsonConvert.DeserializeObject<CredentialRequestMetadata>(credMetadataJson, Settings.JsonSettings);
-            requestObject.JsonString = credMetadataJson;
-            requestObject.Handle = objectHandle;
-            return await Task.FromResult(requestObject);
-        }
-        private static async Task<CredentialRequestMetadata> CreateCredentialRequestMetadataFromJsonAsync(string credReqMetaJson)
-        {
-            IntPtr credReqHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_request_metadata_from_json(ByteBuffer.Create(credReqMetaJson), ref credReqHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            CredentialRequestMetadata result = await CreateCredentialRequestMetadataObject(credReqHandle);
-            return await Task.FromResult(result);
-        }
-        private static async Task<MasterSecret> CreateMasterSecretObject(IntPtr objectHandle)
-        {
-            string masterSecretJson = await ObjectApi.ToJsonAsync(objectHandle);
-            MasterSecret requestObject = JsonConvert.DeserializeObject<MasterSecret>(masterSecretJson, Settings.JsonSettings);
-            requestObject.JsonString = masterSecretJson;
-            requestObject.Handle = objectHandle;
-            return await Task.FromResult(requestObject);
-        }
-        private static async Task<MasterSecret> CreateMasterSecretFromJsonAsync(string masterSecretJson)
-        {
-            IntPtr masterSecretHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_master_secret_from_json(ByteBuffer.Create(masterSecretJson), ref masterSecretHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            MasterSecret result = await CreateMasterSecretObject(masterSecretHandle);
-            return await Task.FromResult(result);
         }
         #endregion
     }

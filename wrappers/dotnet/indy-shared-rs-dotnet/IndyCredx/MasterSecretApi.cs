@@ -34,7 +34,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// Creates a new <see cref="MasterSecret"/>.
         /// </summary>
         /// <exception cref="SharedRsException">Throws when <see cref="MasterSecret"/> can't be created.</exception>
-        /// <returns>New <see cref="MasterSecret"/>.</returns>
+        /// <returns>New <see cref="MasterSecret"/> as JSON string.</returns>
         public static async Task<string> CreateMasterSecretJsonAsync()
         {
             IntPtr result = new IntPtr();
