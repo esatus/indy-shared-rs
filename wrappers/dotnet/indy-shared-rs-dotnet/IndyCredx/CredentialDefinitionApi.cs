@@ -146,7 +146,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="credDefJson">Json string encoding a credential definition object.</param>
         /// <exception cref="SharedRsException">Throws when <paramref name="credDefJson"/> is invalid.</exception>
         /// <returns>The new <see cref="CredentialDefinition"/> object.</returns>
-        private static async Task<CredentialDefinition> CreateCredentialDefinitionFromJsonAsync(string credDefJson)
+        public static async Task<CredentialDefinition> CreateCredentialDefinitionFromJsonAsync(string credDefJson)
         {
             IntPtr credDefHandle = new IntPtr();
             int errorCode = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefJson), ref credDefHandle);

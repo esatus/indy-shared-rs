@@ -103,7 +103,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             (Credential credObject, RevocationRegistry revRegObjectNew, RevocationRegistryDelta revDeltaObject) =
                 await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
-                attrNames, attrNamesRaw, attrNamesEnc, credRevInfo);
+                attrNames, attrNamesRaw, attrNamesEnc, revRegDefObject, revRegDefPvtObject, revRegObject, 1, new List<long>() { 1 });
 
             CredentialRevocationState emptyRevocationState = new() { Handle = new IntPtr() };
             CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationStateAsync(

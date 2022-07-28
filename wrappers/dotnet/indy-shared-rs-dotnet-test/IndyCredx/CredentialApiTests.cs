@@ -61,7 +61,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         }
 
         [Test, TestCase(TestName = "CreateCredentialAsync() with JSON input creates a credential and revocation registry object.")]
-        public async Task CreateCredentialAsyncWorks2()
+        public async Task CreateCredentialAsyncJsonWorks()
         {
             //Arrange
             List<string> attrNames = new() { "name", "age", "sex" };
