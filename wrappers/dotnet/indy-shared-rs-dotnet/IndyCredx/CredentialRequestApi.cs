@@ -56,7 +56,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="credentialOffer">Credential offer.</param>
         /// <exception cref="SharedRsException">Throws if any argument is invalid.</exception>
         /// <returns>New <see cref="CredentialRequest"/> as JSON string and its <see cref="CredentialRequestMetadata"/> as JSON string.</returns>
-        public static async Task<(string, string)> CreateCredentialRequestAsync(
+        public static async Task<(string, string)> CreateCredentialRequestJsonAsync(
             string proverDid,
             string credentialDefinitionJson,
             string masterSecretJson,

@@ -49,22 +49,20 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             string schemaName = "gvt";
             string schemaVersion = "1.0";
 
-            MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
-            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            string masterSecretObject = await MasterSecretApi.CreateMasterSecretJsonAsync();
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
-            (CredentialDefinition credDefObject, _, CredentialKeyCorrectnessProof keyProofObject) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+            (string credDefObject, string _, string keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
-            CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
+            string credOfferObject = await CredentialOfferApi.CreateCredentialOfferJsonAsync(schemaId, credDefObject, keyProofObject);
 
             //Act
-            (CredentialRequest request, CredentialRequestMetadata metaData) = await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+            (string request, string metaData) = await CredentialRequestApi.CreateCredentialRequestJsonAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
 
             //Assert
-            request.Should().NotBeNull();
-            request.Should().BeOfType(typeof(CredentialRequest));
-            metaData.Should().NotBeNull();
-            metaData.Should().BeOfType(typeof(CredentialRequestMetadata));
+            request.Should().NotBeNullOrEmpty();
+            metaData.Should().NotBeNullOrEmpty();
         }
 
         private static IEnumerable<TestCaseData> CreateCredentialRequestCases()
