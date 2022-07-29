@@ -737,7 +737,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         }
 
         [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() works.")]
-        public async Task CreateOrUpdateRevocationStateAsyncWorks()
+        public async Task CreateOrUpdateRevocationStateAsyncWorksWithJson()
         {
             //Arrange
             List<string> attrNames = new() { "gender", "age", "sex" };
@@ -773,7 +773,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         }
 
         [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() throws SharedRsException when revocation registry delta is invalid.")]
-        public async Task CreateOrUpdateRevocationStateAsyncThrowsException()
+        public async Task CreateOrUpdateRevocationStateAsyncThrowsExceptionWithJson()
         {
             //Arrange
             List<string> attrNames = new() { "gender", "age", "sex" };
