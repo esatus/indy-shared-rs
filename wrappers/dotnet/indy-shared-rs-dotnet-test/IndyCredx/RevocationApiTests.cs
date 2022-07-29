@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using indy_shared_rs_dotnet.IndyCredx;
 using indy_shared_rs_dotnet.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -54,6 +56,44 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             //Assert
             await act.Should().ThrowAsync<SharedRsException>(); 
+        }
+
+        [Test, TestCase(TestName = "CreateRevocationRegistryJsonAsync() returns a CredentialDefintion, CredentialDefinitionPrivate and CredentialKeyCorrectnessProof object.")]
+        public async Task CreateRevocationRegistryJsonAsyncWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (string credDef, _, _) = await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            //Act
+            (string revRegDefObject, string revRegDefPvtObject, string revRegObject, string revRegDeltaObject) = await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+            
+            //Assert
+            JObject.Parse(revRegDefObject)["ver"].Should().NotBeNull();
+            JObject.Parse(revRegDefPvtObject)["value"].Should().NotBeNull();
+            JObject.Parse(revRegObject)["ver"].Should().NotBeNull();
+            JObject.Parse(revRegDeltaObject)["ver"].Should().NotBeNull();
+        }
+
+        [Test, TestCase(TestName = "CreateRevocationRegistryJsonAsync() throws SharedRsException when provided credential definition is invalid.")]
+        public async Task CreateRevocationRegistryJsonAsyncThrowsException()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string testTailsPath = null;
+
+            //Act
+            Func<Task> act = async () => await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, "{}", "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
         }
         #endregion
 
@@ -231,6 +271,75 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Assert
             await act.Should().ThrowAsync<SharedRsException>();
         }
+
+        [Test, TestCase(TestName = "UpdateRevocationRegistryAsync() works.")]
+        public async Task UpdateRevocationRegistryWorksWithJson()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (string credDef, _, _) = await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            (string revRegDefJson, _, string tmpRevRegJson, _) =
+                await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+            RevocationRegistryDefinition revRegDefObject = await RevocationApi.CreateRevocationRegistryDefinitionFromJsonAsync(revRegDefJson);
+            List<long> issuedList = new List<long> { 0 };
+            List<long> revokedList = new List<long> { 0 };
+
+            //Act
+            (string revRegJson, string revRegDeltaJson) =
+                await RevocationApi.UpdateRevocationRegistryAsync(
+                    revRegDefJson,
+                    tmpRevRegJson,
+                    issuedList,
+                    revokedList,
+                    revRegDefObject.Value.TailsLocation);
+
+
+            //Assert
+            revRegJson.Should().NotBeEmpty();
+            revRegDeltaJson.Should().NotBeEmpty();
+        }
+
+        [Test, TestCase(TestName = "UpdateRevocationRegistryAsync() throws SharedRsException when revocation registry is invalid.")]
+        public async Task UpdateRevocationRegistryThrowsExceptionWithJson()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (string credDef, _, _) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            (string revRegDefObject, _, string tmpRevRegObject, _) =
+                await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            List<long> issuedList = new List<long>() { 0 };
+            List<long> revokedList = new List<long>() { 0 };
+
+            //Act
+            Func<Task> act = async () => await RevocationApi.UpdateRevocationRegistryAsync(
+                    revRegDefObject,
+                    "",
+                    issuedList,
+                    revokedList,
+                    ""
+                    );
+
+            //Assert
+            await act.Should().ThrowAsync<Exception>();
+        }
         #endregion
 
         #region Tests for RevokeCredentialAsync
@@ -298,6 +407,76 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             //Assert
             await act.Should().ThrowAsync<SharedRsException>();
+        }
+
+        [Test, TestCase(TestName = "RevokeCredentialAsync() works.")]
+        public async Task RevokeCredentialWorksWithJson()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (string credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            (string revRegDefJson,
+                _,
+                string tmpRevRegJson,
+                _) = await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            RevocationRegistryDefinition revRegDefObject = await RevocationApi.CreateRevocationRegistryDefinitionFromJsonAsync(revRegDefJson);
+
+            //Act
+            (_, string deltaJson) =
+                await RevocationApi.RevokeCredentialAsync(
+                    revRegDefJson,
+                    tmpRevRegJson,
+                    0,
+                    revRegDefObject.Value.TailsLocation
+                    );
+
+            RevocationRegistryDelta actual = JsonConvert.DeserializeObject<RevocationRegistryDelta>(deltaJson);
+
+            //Assert
+            actual.Value.PrevAccum.Should().NotBeNull();
+            actual.Value.Revoked.Should().HaveCount(1);
+        }
+
+        [Test, TestCase(TestName = "RevokeCredential() throws SharedRsException when revocation registry is invalid.")]
+        public async Task RevokeCredentialThrowsExceptionWithJson()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (string credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            (string revRegDefObject,
+                _,
+                string tmpRevRegObject,
+                _) = await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            //Act
+            Func<Task> act = async () => await RevocationApi.RevokeCredentialAsync(
+                    revRegDefObject,
+                    "",
+                    0,
+                    ""
+                    );
+
+            //Assert
+            await act.Should().ThrowAsync<Exception>();
         }
         #endregion
 
@@ -392,9 +571,171 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Assert
             await act.Should().ThrowAsync<SharedRsException>();
         }
+
+        [Test, TestCase(TestName = "MergeRevocationRegistryAsync() works.")]
+        public async Task MergeRevocationRegistryDeltasWorksWithJson()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (string credDef, _, _) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            (string revRegDefJson, _, string revRegJson, _) =
+                await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            RevocationRegistryDefinition revRegDefObject = await RevocationApi.CreateRevocationRegistryDefinitionFromJsonAsync(revRegDefJson);
+
+            List<long> issuedList1 = new List<long> { 0, 2 };
+            List<long> issuedList2 = new List<long> { 0, 3 };
+            List<long> revokedList1 = new List<long> { 0, 2 };
+            List<long> revokedList2 = new List<long> { 0, 3 };
+
+            (_, string delta1) = await RevocationApi.UpdateRevocationRegistryAsync(
+                revRegDefJson,
+                revRegJson,
+                issuedList1,
+                revokedList1,
+                revRegDefObject.Value.TailsLocation
+                );
+            (_, string delta2) = await RevocationApi.UpdateRevocationRegistryAsync(
+                revRegDefJson,
+                revRegJson,
+                issuedList2,
+                revokedList2,
+                revRegDefObject.Value.TailsLocation
+                );
+
+            //Act
+            string deltaJson = await RevocationApi.MergeRevocationRegistryDeltasAsync(delta1, delta2);
+
+            RevocationRegistryDelta actual = JsonConvert.DeserializeObject<RevocationRegistryDelta>(deltaJson);
+
+            //Assert
+            actual.Value.Revoked.Should().HaveCount(1);
+            actual.Value.Revoked.Contains((IntPtr)2).Should().BeTrue();
+        }
+
+        [Test, TestCase(TestName = "MergeRevocationRegistryDeltaAsync() throws SharedRsException when one delta is invalid.")]
+        public async Task MergeRevocationRegistryDeltasASyncThrowsExceptionWithJson()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (string credDef, _, _) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            (string revRegDefJson, _, string revRegJson, _) =
+                await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            RevocationRegistryDefinition revRegDefObject = await RevocationApi.CreateRevocationRegistryDefinitionFromJsonAsync(revRegDefJson);
+
+            List<long> issuedList1 = new List<long> { 0, 2 };
+            List<long> issuedList2 = new List<long> { 0, 3 };
+            List<long> revokedList1 = new List<long> { 0, 2 };
+            List<long> revokedList2 = new List<long> { 0, 3 };
+
+            (_, string delta1) = await RevocationApi.UpdateRevocationRegistryAsync(
+                revRegDefJson,
+                revRegJson,
+                issuedList1,
+                revokedList1,
+                revRegDefObject.Value.TailsLocation
+                );
+
+            //Act
+            Func<Task> act = async () => await RevocationApi.MergeRevocationRegistryDeltasAsync(delta1, "{}");
+
+            //Assert
+            await act.Should().ThrowAsync<Exception>();
+        }
         #endregion
 
         #region Tests for CreateOrUpdateRevocationState
+        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() works.")]
+        public async Task CreateOrUpdateRevocationStateAsyncWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+
+            (RevocationRegistryDefinition revRegDefObject, _, _, RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            CredentialRevocationState revState = new();
+
+            //Act
+            CredentialRevocationState actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject,
+                revRegDeltaObject,
+                0,
+                0,
+                revRegDefObject.Value.TailsLocation,
+                revState
+                );
+
+            //Assert
+            actual.Should().NotBeNull();
+        }
+
+        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() throws SharedRsException when revocation registry delta is invalid.")]
+        public async Task CreateOrUpdateRevocationStateAsyncThrowsException()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+
+            (RevocationRegistryDefinition revRegDefObject, _, _, RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            CredentialRevocationState revState = new();
+
+            //Act
+            Func<Task> act = async () => await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject,
+                new(),
+                0,
+                0,
+                revRegDefObject.Value.TailsLocation,
+                revState
+                );
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
+        }
+
         [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() works.")]
         public async Task CreateOrUpdateRevocationStateAsyncWorks()
         {
