@@ -39,6 +39,32 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             metaData.Should().BeOfType(typeof(CredentialRequestMetadata));
         }
 
+        [Test, TestCase(TestName = "CreateCredentialRequestAsync() with all Arguments set returns a request and metadata.")]
+        public async Task CreateCredentialRequestJsonAsyncWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+
+            string masterSecretObject = await MasterSecretApi.CreateMasterSecretJsonAsync();
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (string credDefObject, string _, string keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
+            string credOfferObject = await CredentialOfferApi.CreateCredentialOfferJsonAsync(schemaId, credDefObject, keyProofObject);
+
+            //Act
+            (string request, string metaData) = await CredentialRequestApi.CreateCredentialRequestJsonAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+
+            //Assert
+            request.Should().NotBeNullOrEmpty();
+            metaData.Should().NotBeNullOrEmpty();
+        }
+
         private static IEnumerable<TestCaseData> CreateCredentialRequestCases()
         {
             yield return new TestCaseData(false, false, false, false, false)

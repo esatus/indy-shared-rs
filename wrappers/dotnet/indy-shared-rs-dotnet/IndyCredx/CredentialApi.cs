@@ -35,10 +35,10 @@ namespace indy_shared_rs_dotnet.IndyCredx
             RevocationRegistryDefinition revocationRegistryDefinition,
             RevocationRegistryDefinitionPrivate revocationRegistryDefinitionPrivate,
             RevocationRegistry revocationRegistry,
-            long regIdx, 
+            long regIdx,
             List<long> regUsed)
         {
-            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
+            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig()
             {
                 RevRegDefObjectHandle = revocationRegistryDefinition.Handle,
                 RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivate.Handle,
@@ -79,7 +79,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             }
 
             RevocationRegistryDelta revDeltaObject = null;
-            if (!revDeltaObjectHandle.Equals( new IntPtr()))
+            if (!revDeltaObjectHandle.Equals(new IntPtr()))
             {
                 revDeltaObject = await CreateRevocationRegistryDeltaObjectAsync(revDeltaObjectHandle);
             }
@@ -133,7 +133,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             string x = JObject.Parse(revocationRegistryDefinitionJson)["value"].ToString();
             string tailsLocation = JObject.Parse(x)["tailsLocation"].ToString();
 
-            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig
+            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig()
             {
                 RevRegDefObjectHandle = revocationRegistryDefinitionHandle,
                 RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivateJsonHandle,
