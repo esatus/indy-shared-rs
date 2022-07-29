@@ -411,6 +411,47 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Assert
             await act.Should().ThrowAsync<SharedRsException>();
         }
+
+        [Test, TestCase(TestName = "GetCredentialAttributeAsync() with JSON inputs throws SharedRsException when given empty attribute name.")]
+        public async Task GetCredentialAttributeJsonAsyncThrowsException()
+        {
+            //Arrange
+            string attributeName = "";
+
+            List<string> attrNames = new() { "name", "age", "sex" };
+            List<string> attrNamesRaw = new() { "Alex", "20", "male" };
+            List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPathForRevocation = null;
+            string masterSecretObject = await MasterSecretApi.CreateMasterSecretJsonAsync();
+
+            string schemaObject = await SchemaApi.CreateSchemaJsonAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (string credDefObject, string credDefPvtObject, string keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
+            string credOfferObject = await CredentialOfferApi.CreateCredentialOfferJsonAsync(schemaId, credDefObject, keyProofObject);
+
+            (string credRequestObject, string metaDataObject) =
+                await CredentialRequestApi.CreateCredentialRequestJsonAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+
+            (string revRegDefObject, string revRegDefPvtObject, string revRegObject, string revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryJsonAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
+
+            (string credObject, string revRegObjectNew, string revDeltaObject) =
+                await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
+                attrNames, attrNamesRaw, attrNamesEnc, revRegDefObject, revRegDefPvtObject, revRegObject, 1, new List<long>() { 1 });
+
+            //Act
+            Func<Task> act = async () => await CredentialApi.GetCredentialAttributeAsync(credObject, attributeName);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
+
+        }
         #endregion
     }
 }
