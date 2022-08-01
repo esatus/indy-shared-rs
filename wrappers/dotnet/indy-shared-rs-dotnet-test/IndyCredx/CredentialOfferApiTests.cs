@@ -22,7 +22,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
             (CredentialDefinition credDef, _, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
 
             //Act
             string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDef, "schema_id");
@@ -60,17 +60,17 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             if (hasSchemaId)
             {
-                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
                 schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(tmpCredDef, "schema_id");
             }
             if (hasCredDef)
             {
-                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
                 credDef = tmpCredDef;
             }
             if (hasKeyProof)
             {
-                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+                (CredentialDefinition tmpCredDef, CredentialDefinitionPrivate tmpCredDefPrivate, CredentialKeyCorrectnessProof tmpKeyProof) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
                 keyProof = tmpKeyProof;
             }
 

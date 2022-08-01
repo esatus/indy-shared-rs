@@ -25,7 +25,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             Schema schemaObject,
             string tag,
             SignatureType signatureType,
-            byte supportRevocation)
+            bool supportRevocation)
         {
             IntPtr credDefHandle = new IntPtr();
             IntPtr credDefPvtHandle = new IntPtr();
@@ -35,7 +35,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 schemaObject.Handle,
                 FfiStr.Create(tag),
                 FfiStr.Create(signatureType.ToString()),
-                supportRevocation,
+                Convert.ToByte(supportRevocation),
                 ref credDefHandle,
                 ref credDefPvtHandle,
                 ref keyProofHandle);
@@ -67,7 +67,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             string schemaObjectJson,
             string tag,
             SignatureType signatureType,
-            byte supportRevocation)
+            bool supportRevocation)
         {
             IntPtr credDefHandle = new IntPtr();
             IntPtr credDefPvtHandle = new IntPtr();
@@ -80,7 +80,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 schemaObjectHandle,
                 FfiStr.Create(tag),
                 FfiStr.Create(signatureType.ToString()),
-                supportRevocation,
+                Convert.ToByte(supportRevocation),
                 ref credDefHandle,
                 ref credDefPvtHandle,
                 ref keyProofHandle);
