@@ -201,7 +201,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         #region Schema
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern int credx_create_schema(FfiStr originDid, FfiStr schemaName, FfiStr schemaVersion, FfiStrList attrNames, uint seqNo, ref IntPtr schemaObjectHandle);
+        internal static extern int credx_create_schema(FfiStr originDid, FfiStr schemaName, FfiStr schemaVersion, FfiStrList attrNames, long seqNo, ref IntPtr schemaObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_schema_get_attribute(IntPtr schemaObjectHandle, FfiStr attributeName, ref string result);

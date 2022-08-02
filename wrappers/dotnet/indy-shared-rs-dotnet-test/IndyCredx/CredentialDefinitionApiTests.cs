@@ -24,7 +24,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             //Act
             (CredentialDefinition credDef, CredentialDefinitionPrivate credDefPvt, CredentialKeyCorrectnessProof keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
 
             //Assert
             credDef.Should().BeOfType(typeof(CredentialDefinition));
@@ -36,45 +36,16 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         {
             yield return new TestCaseData(null, null, null, null)
                 .SetName("CreateCredentialDefinition() throws SharedRsException if all arguments are null.");
-            yield return new TestCaseData(null, "tag", SignatureType.CL, (byte)1)
+            yield return new TestCaseData(null, "tag", SignatureType.CL, true)
                 .SetName("CreateCredentialDefinition() throws SharedRsException if issuerDid is null.");
-            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", null, SignatureType.CL, (byte)1)
+            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", null, SignatureType.CL, true)
                 .SetName("CreateCredentialDefinition() throws SharedRsException if tag is null.");
-            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", "tag", 99, (byte)1)
+            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", "tag", 99, true)
                 .SetName("CreateCredentialDefinition() throws SharedRsException if signatureType is invalid.");
         }
 
         [Test, TestCaseSource(nameof(CreateCredentialDefinitionCases))]
-        public async Task CreateCredentialDefinitionThrowsException(string issuerDid, string tag, SignatureType signatureType, byte supportRevocation)
-        {
-            //Arrange
-            List<string> attrNames = new() { "gender", "age", "sex" };
-            string schemaIssuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
-            string schemaName = "gvt";
-            string schemaVersion = "1.0";
-            Schema schemaObject = await SchemaApi.CreateSchemaAsync(schemaIssuerDid, schemaName, schemaVersion, attrNames, 0);
-
-            //Act
-            Func<Task> act = async () => await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, tag, signatureType, supportRevocation);
-
-            //Assert
-            await act.Should().ThrowAsync<SharedRsException>();
-        }
-
-        private static IEnumerable<TestCaseData> CreateCredentialDefinitionJsonCases()
-        {
-            yield return new TestCaseData(null, null, null, null)
-                .SetName("CreateCredentialDefinition() throws SharedRsException if all arguments are null.");
-            yield return new TestCaseData(null, "tag", SignatureType.CL, (byte)1)
-                .SetName("CreateCredentialDefinition() throws SharedRsException if issuerDid is null.");
-            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", null, SignatureType.CL, (byte)1)
-                .SetName("CreateCredentialDefinition() throws SharedRsException if tag is null.");
-            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", "tag", 99, (byte)1)
-                .SetName("CreateCredentialDefinition() throws SharedRsException if signatureType is invalid.");
-        }
-
-        [Test, TestCaseSource(nameof(CreateCredentialDefinitionJsonCases))]
-        public async Task CreateCredentialDefinitionJsonThrowsException(string issuerDid, string tag, SignatureType signatureType, byte supportRevocation)
+        public async Task CreateCredentialDefinitionThrowsException(string issuerDid, string tag, SignatureType signatureType, bool supportRevocation)
         {
             //Arrange
             List<string> attrNames = new() { "gender", "age", "sex" };
@@ -92,7 +63,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
         #endregion
 
         #region Tests for CreateCredentialDefinitionJsonAsync
-        [Test, TestCase(TestName = "CreateCredentialDefinitionJsonAsync() with JSON inputsreturns a CredentialDefintion, CredentialDefinitionPrivate and CredentialKeyCorrectnessProof object.")]
+        [Test, TestCase(TestName = "CreateCredentialDefinitionJsonAsync() with JSON inputs returns a CredentialDefintion, CredentialDefinitionPrivate and CredentialKeyCorrectnessProof object.")]
         public async Task CreateCredentialDefinitionJsonWorks()
         {
             //Arrange
@@ -105,12 +76,41 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             //Act
             (string credDef, string credDefPvt, string keyProof) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObjectJson, "tag", SignatureType.CL, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObjectJson, "tag", SignatureType.CL, true);
 
             //Assert
             credDef.Should().NotBeNullOrEmpty();
             credDefPvt.Should().NotBeNullOrEmpty();
             keyProof.Should().NotBeNullOrEmpty();
+        }
+
+        private static IEnumerable<TestCaseData> CreateCredentialDefinitionJsonCases()
+        {
+            yield return new TestCaseData(null, null, null, null)
+                .SetName("CreateCredentialDefinition() throws SharedRsException if all arguments are null.");
+            yield return new TestCaseData(null, "tag", SignatureType.CL, true)
+                .SetName("CreateCredentialDefinition() throws SharedRsException if issuerDid is null.");
+            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", null, SignatureType.CL, true)
+                .SetName("CreateCredentialDefinition() throws SharedRsException if tag is null.");
+            yield return new TestCaseData("NcYxiDXkpYi6ov5FcYDi1e", "tag", 99, true)
+                .SetName("CreateCredentialDefinition() throws SharedRsException if signatureType is invalid.");
+        }
+
+        [Test, TestCaseSource(nameof(CreateCredentialDefinitionJsonCases))]
+        public async Task CreateCredentialDefinitionJsonThrowsException(string issuerDid, string tag, SignatureType signatureType, bool supportRevocation)
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string schemaIssuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string schemaObjectJson = await SchemaApi.CreateSchemaJsonAsync(schemaIssuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            //Act
+            Func<Task> act = async () => await CredentialDefinitionApi.CreateCredentialDefinitionJsonAsync(issuerDid, schemaObjectJson, tag, signatureType, supportRevocation);
+
+            //Assert
+            await act.Should().ThrowAsync<SharedRsException>();
         }
         #endregion
 
@@ -134,7 +134,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
 
             (CredentialDefinition credDefObject, _, _) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
 
             //Act
             string actual = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, tag);
@@ -153,7 +153,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             string schemaVersion = "1.0";
             Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
             (CredentialDefinition credDefObject, _, _) =
-                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, 1);
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
 
             //Act
             Func<Task> act = async() => await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "blubb");
