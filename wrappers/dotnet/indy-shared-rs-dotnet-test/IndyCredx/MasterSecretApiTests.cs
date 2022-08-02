@@ -35,5 +35,18 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             testObject.Should().BeOfType(typeof(MasterSecret));
             testObject.Value.Ms.Should().NotBeNull();
         }
+
+        [Test]
+        [TestCase(TestName = "CreateMasterSecret returns a master secret as JSON string.")]
+        public async Task CreateMasterSecretJsonWorks()
+        {
+            //Arrange
+
+            //Act
+            string testObject = await MasterSecretApi.CreateMasterSecretJsonAsync();
+
+            //Assert
+            testObject.Should().NotBeNullOrEmpty();
+        }
     }
 }

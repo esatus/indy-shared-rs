@@ -56,7 +56,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <param name="credentialOffer">Credential offer.</param>
         /// <exception cref="SharedRsException">Throws if any argument is invalid.</exception>
         /// <returns>New <see cref="CredentialRequest"/> as JSON string and its <see cref="CredentialRequestMetadata"/> as JSON string.</returns>
-        public static async Task<(string, string)> CreateCredentialRequestAsync(
+        public static async Task<(string, string)> CreateCredentialRequestJsonAsync(
             string proverDid,
             string credentialDefinitionJson,
             string masterSecretJson,
@@ -102,20 +102,6 @@ namespace indy_shared_rs_dotnet.IndyCredx
             requestObject.Handle = objectHandle;
             return await Task.FromResult(requestObject);
         }
-        private static async Task<CredentialRequest> CreateCredentialRequestFromJsonAsync(string credReqJson)
-        {
-            IntPtr credReqHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_request_from_json(ByteBuffer.Create(credReqJson), ref credReqHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            CredentialRequest result = await CreateCredentialRequestObject(credReqHandle);
-            return await Task.FromResult(result);
-        }
         private static async Task<CredentialRequestMetadata> CreateCredentialRequestMetadataObject(IntPtr objectHandle)
         {
             string credMetadataJson = await ObjectApi.ToJsonAsync(objectHandle);
@@ -123,20 +109,6 @@ namespace indy_shared_rs_dotnet.IndyCredx
             requestObject.JsonString = credMetadataJson;
             requestObject.Handle = objectHandle;
             return await Task.FromResult(requestObject);
-        }
-        private static async Task<CredentialRequestMetadata> CreateCredentialRequestMetadataFromJsonAsync(string credReqMetaJson)
-        {
-            IntPtr credReqHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_credential_request_metadata_from_json(ByteBuffer.Create(credReqMetaJson), ref credReqHandle);
-
-            if (errorCode != 0)
-            {
-                string error = await ErrorApi.GetCurrentErrorAsync();
-                throw SharedRsException.FromSdkError(error);
-            }
-
-            CredentialRequestMetadata result = await CreateCredentialRequestMetadataObject(credReqHandle);
-            return await Task.FromResult(result);
         }
         #endregion
     }

@@ -13,19 +13,21 @@ namespace indy_shared_rs_dotnet.Models
          *  param name="timestamp" : Value of -1 corresponds to None value
          *  param name="revocationStateObject" : CredentialRevocationState object
          **/
-        public CredentialEntry(Credential credentialObject, long timestamp = -1, CredentialRevocationState revocationStateObject = null)
+        public static CredentialEntry CreateCredentialEntry(Credential credentialObject, long timestamp = -1, CredentialRevocationState revocationStateObject = null)
         {
-            CredentialObjectHandle = credentialObject.Handle;
+            CredentialEntry entry = new CredentialEntry();
+            entry.CredentialObjectHandle = credentialObject.Handle;
             if (timestamp == 0 || revocationStateObject == null)
             {
-                Timestamp = -1;
-                RevStateObjectHandle = new IntPtr();
+                entry.Timestamp = -1;
+                entry.RevStateObjectHandle = new IntPtr();
             }
             if (revocationStateObject != null)
             {
-                Timestamp = timestamp;
-                RevStateObjectHandle = revocationStateObject.Handle;
+                entry.Timestamp = timestamp;
+                entry.RevStateObjectHandle = revocationStateObject.Handle;
             }
+            return entry;
         }
     }
 }
