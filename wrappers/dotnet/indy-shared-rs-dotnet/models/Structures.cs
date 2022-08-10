@@ -53,7 +53,7 @@ namespace indy_shared_rs_dotnet.Models
                 };
                 if (arg != null)
                 {
-                    FfiString.data = Marshal.StringToCoTaskMemUTF8(arg);
+                    FfiString.data = Marshal.StringToCoTaskMemAnsi(arg);
                 }
                 return FfiString;
             }
