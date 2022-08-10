@@ -69,7 +69,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             PresentationRequest presReqObject = await PresentationRequestApi.CreatePresReqFromJsonAsync(presReqJson);
 
             List<string> attrNames = new() { "name", "age", "sex" };
-            List<string> attrNamesRaw = new() { "Alex", "20", "male" };
+            List<string> attrNamesRaw = new() { "Alex", "20", "male" };,0
             List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
             string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
             string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
