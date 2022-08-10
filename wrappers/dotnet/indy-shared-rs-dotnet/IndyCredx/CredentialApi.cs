@@ -284,7 +284,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 string error = await ErrorApi.GetCurrentErrorAsync();
                 throw SharedRsException.FromSdkError(error);
             }
-            string[] abc = result.Split(",");
+            string[] abc = result.Split(',');
             return await Task.FromResult(abc.ToList());
         }
 
