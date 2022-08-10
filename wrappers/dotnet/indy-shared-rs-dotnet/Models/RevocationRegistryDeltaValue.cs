@@ -13,9 +13,9 @@ namespace indy_shared_rs_dotnet.Models
         public string Accum { get; set; }
 
         [JsonProperty("issued")]
-        public HashSet<IntPtr> Issued { get; set; }
+        public HashSet<uint> Issued { get; set; }
 
         [JsonProperty("revoked")]
-        public HashSet<IntPtr> Revoked { get; set; }
+        public HashSet<uint> Revoked { get; set; }
     }
 }

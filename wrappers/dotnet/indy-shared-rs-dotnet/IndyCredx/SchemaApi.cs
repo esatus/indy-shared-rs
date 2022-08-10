@@ -20,7 +20,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <exception cref="SharedRsException">Throws when any parameter is invalid.</exception>
         /// <exception cref="System.InvalidOperationException">Throws when <paramref name="attrNames"/> are empty.</exception>
         /// <returns>A new <see cref="Schema"/> object.</returns>
-        public static async Task<Schema> CreateSchemaAsync(string originDid, string schemaName, string schemaVersion, List<string> attrNames, uint seqNo)
+        public static async Task<Schema> CreateSchemaAsync(
+            string originDid, 
+            string schemaName, 
+            string schemaVersion, 
+            List<string> attrNames, 
+            long seqNo = -1 //default None 
+            )
         {
             IntPtr schemaObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_create_schema(FfiStr.Create(originDid), FfiStr.Create(schemaName), FfiStr.Create(schemaVersion), FfiStrList.Create(attrNames), seqNo, ref schemaObjectHandle);
@@ -46,7 +52,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// <exception cref="SharedRsException">Throws when any parameter is invalid.</exception>
         /// <exception cref="System.InvalidOperationException">Throws when <paramref name="attrNames"/> are empty.</exception>
         /// <returns>A new <see cref="string"/> schema json.</returns>
-        public static async Task<string> CreateSchemaJsonAsync(string originDid, string schemaName, string schemaVersion, List<string> attrNames, uint seqNo)
+        public static async Task<string> CreateSchemaJsonAsync(
+            string originDid, 
+            string schemaName, 
+            string schemaVersion, 
+            List<string> attrNames, 
+            long seqNo = -1 //default None
+            )
         {
             IntPtr schemaObjectHandle = new IntPtr();
             int errorCode = NativeMethods.credx_create_schema(FfiStr.Create(originDid), FfiStr.Create(schemaName), FfiStr.Create(schemaVersion), FfiStrList.Create(attrNames), seqNo, ref schemaObjectHandle);

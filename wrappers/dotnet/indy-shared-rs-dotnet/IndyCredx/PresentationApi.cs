@@ -239,13 +239,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
             foreach (string credentialDefinitionJson in credentialDefinitionJsons)
             {
                 IntPtr newCredentialDefinitionHandle = new IntPtr();
-                _ = NativeMethods.credx_schema_from_json(ByteBuffer.Create(credentialDefinitionJson), ref newCredentialDefinitionHandle);
+                _ = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credentialDefinitionJson), ref newCredentialDefinitionHandle);
                 credDefHandles.Add(newCredentialDefinitionHandle);
             }
             foreach (string revocationRegistryDefinitionJson in revocationRegistryDefinitionJsons)
             {
                 IntPtr newRevocationRegistryDefinitionHandle = new IntPtr();
-                _ = NativeMethods.credx_schema_from_json(ByteBuffer.Create(revocationRegistryDefinitionJson), ref newRevocationRegistryDefinitionHandle);
+                _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revocationRegistryDefinitionJson), ref newRevocationRegistryDefinitionHandle);
                 revRegDefHandles.Add(newRevocationRegistryDefinitionHandle);
             }
             foreach (string revocationRegistryEntryJson in revocationRegistryEntryJsons)
