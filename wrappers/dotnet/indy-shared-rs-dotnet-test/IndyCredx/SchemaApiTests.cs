@@ -133,7 +133,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             actual.Id.Should().Be("55GkHamhTU1ZbTbV2ab9DE:2:schema name:schema version");
         }
 
-        [Test, TestCase(TestName = "CreateSchemaFromJsonAsync() throws a IndexOutOfRangeException if an empty json string is provided.")]
+        [Test, TestCase(TestName = "CreateSchemaFromJsonAsync() throws a SharedRsException if an empty json string is provided.")]
         public async Task CreateSchemaFromJsonAsyncThrowsExceptionForEmptyString()
         {
             //Arrange
@@ -143,7 +143,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Func<Task> act = async () => await SchemaApi.CreateSchemaFromJsonAsync(schemaJson);
 
             //Assert
-            await act.Should().ThrowAsync<IndexOutOfRangeException>();
+            await act.Should().ThrowAsync<SharedRsException>();
         }
 
         [Test, TestCase(TestName = "CreateSchemaFromJsonAsync() throws a SharedRsException if an invalid json string is provided.")]

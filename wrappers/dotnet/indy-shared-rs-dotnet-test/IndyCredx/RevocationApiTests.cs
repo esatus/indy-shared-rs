@@ -116,7 +116,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             expected.Should().BeOfType<RevocationRegistry>();
         }
 
-        [Test, TestCase(TestName = "CreateRevocationRegistryFromJsonAsync() throws IndexOutOfRangeException when provided with an empty json string ")]
+        [Test, TestCase(TestName = "CreateRevocationRegistryFromJsonAsync() throws SharedRsException when provided with an empty json string ")]
         public async Task CreateRevocationRegistryFromJsonAsyncThrowsExceptionForEmptyString()
         {
             //Arrange
@@ -126,7 +126,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Func<Task> act = async () => await RevocationApi.CreateRevocationRegistryFromJsonAsync(revRegJson);
 
             //Assert
-            await act.Should().ThrowAsync<IndexOutOfRangeException>();
+            await act.Should().ThrowAsync<SharedRsException>();
         }
 
         [Test, TestCase(TestName = "CreateRevocationRegistryFromJsonAsync() throws SharedRsException when provided with invalid json string.")]
@@ -174,7 +174,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             expected.Should().BeOfType<RevocationRegistryDefinition>();
         }
 
-        [Test, TestCase(TestName = "CreateRevocationRegistryDefinitionFromJsonAsync() throws IndexOutOfRangeException when provided with empty json string.")]
+        [Test, TestCase(TestName = "CreateRevocationRegistryDefinitionFromJsonAsync() throws SharedRsException when provided with empty json string.")]
         public async Task CreateRevocationRegistryDefinitionFromJsonAsyncThrowsExceptionForEmptyString()
         {
             //Arrange
@@ -184,7 +184,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Func<Task> act = async () => await RevocationApi.CreateRevocationRegistryDefinitionFromJsonAsync(revRegDefJson);
 
             //Assert
-            await act.Should().ThrowAsync<IndexOutOfRangeException>();
+            await act.Should().ThrowAsync<SharedRsException>();
         }
 
         [Test, TestCase(TestName = "CreateRevocationRegistryDefinitionFromJsonAsync() throws SharedRsException when provided with invalid json string.")]
@@ -833,7 +833,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             actual.Should().BeOfType<CredentialRevocationState>();
         }
 
-        [Test, TestCase(TestName = "CreateRevocationStateFromJsonAsync() throws IndexOutOfRangeException when provided with an empty json string.")]
+        [Test, TestCase(TestName = "CreateRevocationStateFromJsonAsync() throws SharedRsException when provided with an empty json string.")]
         public async Task CreateRevocationStateFromJsonAsyncThrowsExceptionsForEmptyString()
         {
             //Arrange
@@ -843,7 +843,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Func<Task> act = async () => await RevocationApi.CreateRevocationStateFromJsonAsync(revStateJson);
 
             //Assert
-            await act.Should().ThrowAsync<IndexOutOfRangeException>();
+            await act.Should().ThrowAsync<SharedRsException>();
         }
 
         [Test, TestCase(TestName = "CreateRevocationStateFromJsonAsync() throws SharedRsException when provided with an invalid json string.")]

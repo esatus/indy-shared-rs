@@ -621,7 +621,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             _ = actual.Identifiers[0].CredentialDefinitionId.Should().Be("55GkHamhTU1ZbTbV2ab9DE:3:CL:15:tag");
         }
 
-        [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws IndexOutOfRangeException when given empty string.")]
+        [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws SharedRsException when given empty string.")]
         public async Task CreatePresentationFromJsonAsyncThrowsIndexOutOfBoundsException()
         {
             //Arrange
@@ -631,7 +631,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Func<Task> act = async () => await PresentationApi.CreatePresentationFromJsonAsync(presentationJson);
 
             //Assert
-            _ = await act.Should().ThrowAsync<IndexOutOfRangeException>();
+            _ = await act.Should().ThrowAsync<SharedRsException>();
         }
 
         [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws SharedRsException when given invalid json string.")]

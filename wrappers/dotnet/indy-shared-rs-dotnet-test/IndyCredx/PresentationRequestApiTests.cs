@@ -87,7 +87,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             actual.RequestedPredicates.Count.Should().Be(1);
         }
 
-        [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws Exception when Json string is empty.")]
+        [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws SharedRsException when Json string is empty.")]
         public async Task CreatePresReqFromJsonAsyncThrowsExceptionForEmptyString()
         {
             //Arrange
@@ -97,7 +97,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             Func<Task> act = async () => await PresentationApi.CreatePresentationFromJsonAsync(presReqJson);
 
             //Assert
-            await act.Should().ThrowAsync<IndexOutOfRangeException>();
+            await act.Should().ThrowAsync<SharedRsException>();
         }
 
         [Test, TestCase(TestName = "CreatePresentationFromJsonAsync() throws SharedRsException when Json string is invalid.")]
