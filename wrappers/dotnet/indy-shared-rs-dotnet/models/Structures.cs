@@ -63,20 +63,26 @@ namespace indy_shared_rs_dotnet.Models
         public unsafe struct ByteBuffer
         {
             public long len;
-            public byte* value;
+            public IntPtr value;
 
             public static ByteBuffer Create(string json)
             {
-                UTF8Encoding decoder = new UTF8Encoding(true, true);
-                byte[] bytes = new byte[json.Length];
-                _ = decoder.GetBytes(json, 0, json.Length, bytes, 0);
-                ByteBuffer buffer = new ByteBuffer()
+                ByteBuffer buffer = new ByteBuffer();
+                if (!string.IsNullOrEmpty(json))
                 {
-                    len = json.Length
-                };
-                fixed (byte* bytebuffer_p = &bytes[0])
+                    UTF8Encoding decoder = new UTF8Encoding(true, true);
+                    byte[] bytes = new byte[json.Length];
+                    _ = decoder.GetBytes(json, 0, json.Length, bytes, 0);
+                    buffer.len = json.Length;
+                    fixed (byte* bytebuffer_p = &bytes[0])
+                    {
+                        buffer.value = new IntPtr(bytebuffer_p);
+                    }
+                }
+                else
                 {
-                    buffer.value = bytebuffer_p;
+                    buffer.len = 0;
+                    buffer.value = new IntPtr();
                 }
                 return buffer;
             }
@@ -97,9 +103,9 @@ namespace indy_shared_rs_dotnet.Models
                 FfiCredRevInfo result = new FfiCredRevInfo();
                 if (entry != null)
                 {
-                    result.regDefObjectHandle = (IntPtr)entry.RevRegDefObjectHandle;
-                    result.regDefPvtObjectHandle = (IntPtr)entry.RevRegDefPvtObjectHandle;
-                    result.registryObjectHandle = (IntPtr)entry.RevRegObjectHandle;
+                    result.regDefObjectHandle = entry.RevRegDefObjectHandle;
+                    result.regDefPvtObjectHandle = entry.RevRegDefPvtObjectHandle;
+                    result.registryObjectHandle = entry.RevRegObjectHandle;
                     result.regIdx = (IntPtr)entry.RegIdx;
                     result.regUsed = FfiLongList.Create(entry.RegUsed);
                     result.tailsPath = FfiStr.Create(entry.TailsPath);
@@ -144,9 +150,9 @@ namespace indy_shared_rs_dotnet.Models
                 FfiCredentialEntry result = new FfiCredentialEntry();
                 if (entry != null)
                 {
-                    result.CredentialObjectHandle = (IntPtr)entry.CredentialObjectHandle;
+                    result.CredentialObjectHandle = entry.CredentialObjectHandle;
                     result.Timestamp = entry.Timestamp;
-                    result.RevStateObjectHandle = (IntPtr)entry.RevStateObjectHandle;
+                    result.RevStateObjectHandle = entry.RevStateObjectHandle;
                 }
                 return result;
             }
