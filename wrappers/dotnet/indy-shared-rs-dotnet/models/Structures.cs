@@ -6,7 +6,7 @@ using System.Text;
 
 namespace indy_shared_rs_dotnet.Models
 {
-    public class Structures
+    internal class Structures
     {
         [StructLayout(LayoutKind.Sequential)]
         public unsafe struct FfiStrList
@@ -89,7 +89,7 @@ namespace indy_shared_rs_dotnet.Models
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct FfiCredRevInfo
+        public unsafe struct FfiCredRevInfo
         {
             public IntPtr regDefObjectHandle;
             public IntPtr regDefPvtObjectHandle;
@@ -98,18 +98,17 @@ namespace indy_shared_rs_dotnet.Models
             public FfiLongList regUsed;
             public FfiStr tailsPath;
 
-            public static FfiCredRevInfo Create(CredentialRevocationConfig entry)
+            internal static FfiCredRevInfo Create(Models.CredentialRevocationConfig entry)
             {
                 FfiCredRevInfo result = new FfiCredRevInfo();
-                if (entry != null)
-                {
-                    result.regDefObjectHandle = entry.RevRegDefObjectHandle;
-                    result.regDefPvtObjectHandle = entry.RevRegDefPvtObjectHandle;
-                    result.registryObjectHandle = entry.RevRegObjectHandle;
-                    result.regIdx = (IntPtr)entry.RegIdx;
-                    result.regUsed = FfiLongList.Create(entry.RegUsed);
-                    result.tailsPath = FfiStr.Create(entry.TailsPath);
-                }
+
+                result.regDefObjectHandle = entry.RevRegDefObjectHandle;
+                result.regDefPvtObjectHandle = entry.RevRegDefPvtObjectHandle;
+                result.registryObjectHandle = entry.RevRegObjectHandle;
+                result.regIdx = (IntPtr)entry.RegIdx;
+                result.regUsed = FfiLongList.Create(entry.RegUsed);
+                result.tailsPath = FfiStr.Create(entry.TailsPath);
+
                 return result;
             }
         }
@@ -119,22 +118,35 @@ namespace indy_shared_rs_dotnet.Models
         {
             public IntPtr count;
             public long* data;
-            public static FfiLongList Create(long[] args)
+            public static FfiLongList Create(long[] args = null)
             {
-                FfiLongList list = new FfiLongList()
+                FfiLongList list = new FfiLongList();
+                if(args != null)
                 {
-                    count = (IntPtr)args.Length
-                };
-                fixed (long* uintP = &args[0])
+                    list.count = (IntPtr)args.Length;
+                    fixed (long* uintP = &args[0])
+                    {
+                        list.data = uintP;
+                    }
+                }
+                else
                 {
-                    list.data = uintP;
+                    list.count = IntPtr.Zero;
+                    list.data = (long*)0;
                 }
                 return list;
             }
 
             public static FfiLongList Create(List<long> args)
             {
-                return Create(args.ToArray());
+                if(args != null)
+                {
+                    return Create(args.ToArray());
+                }
+                else
+                {
+                    return Create();
+                }
             }
         }
 
@@ -159,16 +171,16 @@ namespace indy_shared_rs_dotnet.Models
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct FfiCredentialProoof
+        public struct FfiCredentialProof
         {
             public long EntryIndex;
             public FfiStr Referent;
             public byte IsPredicate;
             public byte Reveal;
 
-            public static FfiCredentialProoof Create(CredentialProof prove)
+            public static FfiCredentialProof Create(CredentialProof prove)
             {
-                FfiCredentialProoof result = new FfiCredentialProoof()
+                FfiCredentialProof result = new FfiCredentialProof()
                 {
                     EntryIndex = prove.EntryIndex,
                     Referent = FfiStr.Create(prove.Referent),
@@ -232,19 +244,19 @@ namespace indy_shared_rs_dotnet.Models
         public unsafe struct FfiCredentialProveList
         {
             public IntPtr count;
-            public FfiCredentialProoof* data;
+            public FfiCredentialProof* data;
             public static FfiCredentialProveList Create(CredentialProof[] args)
             {
                 FfiCredentialProveList list = new FfiCredentialProveList()
                 {
                     count = (IntPtr)args.Length
                 };
-                FfiCredentialProoof[] ffiCredentialProves = new FfiCredentialProoof[args.Length];
+                FfiCredentialProof[] ffiCredentialProves = new FfiCredentialProof[args.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
-                    ffiCredentialProves[i] = FfiCredentialProoof.Create(args[i]);
+                    ffiCredentialProves[i] = FfiCredentialProof.Create(args[i]);
                 }
-                fixed (FfiCredentialProoof* ffiProveP = &ffiCredentialProves[0])
+                fixed (FfiCredentialProof* ffiProveP = &ffiCredentialProves[0])
                 {
                     list.data = ffiProveP;
                 }

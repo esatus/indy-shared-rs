@@ -147,17 +147,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
         private static PredicateTypes ParsePredicateType(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "<": 
-                    return PredicateTypes.LT;
-                case "<=": 
-                    return PredicateTypes.LE;
-                case ">": 
-                    return PredicateTypes.GT;
-                default: 
-                    return PredicateTypes.GE;
-            }
+                "<" => PredicateTypes.LT,
+                "<=" => PredicateTypes.LE,
+                ">" => PredicateTypes.GT,
+                _ => PredicateTypes.GE,
+            };
         }
     }
 }

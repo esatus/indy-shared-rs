@@ -32,26 +32,52 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<string> attributeNames,
             List<string> attributeRawValues,
             List<string> attributeEncodedValues,
-            RevocationRegistryDefinition revocationRegistryDefinition,
-            RevocationRegistryDefinitionPrivate revocationRegistryDefinitionPrivate,
-            RevocationRegistry revocationRegistry,
-            long regIdx,
-            List<long> regUsed)
+            RevocationRegistryDefinition revocationRegistryDefinition = null,
+            RevocationRegistryDefinitionPrivate revocationRegistryDefinitionPrivate = null,
+            RevocationRegistry revocationRegistry = null,
+            long regIdx = -1,
+            List<long> regUsed = null)
         {
-            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig()
-            {
-                RevRegDefObjectHandle = revocationRegistryDefinition.Handle,
-                RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivate.Handle,
-                RevRegObjectHandle = revocationRegistry.Handle,
-                TailsPath = revocationRegistryDefinition.Value.TailsLocation,
-                RegIdx = regIdx,
-                RegUsed = regUsed
-            };
-
             IntPtr credObjectHandle = new IntPtr();
             IntPtr revRegObjectHandle = new IntPtr();
             IntPtr revDeltaObjectHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_create_credential(
+            int errorCode = 0;
+            if (revocationRegistryDefinition == null
+                && revocationRegistryDefinitionPrivate == null
+                && revocationRegistry == null
+                && regIdx == -1
+                && regUsed == null)
+            {
+                errorCode = NativeMethods.credx_create_credential(
+                credDefObject.Handle,
+                credDefPvtObject.Handle,
+                credOfferObject.Handle,
+                credReqObject.Handle,
+                FfiStrList.Create(attributeNames),
+                FfiStrList.Create(attributeRawValues),
+                FfiStrList.Create(attributeEncodedValues),
+                new IntPtr(),
+                ref credObjectHandle,
+                ref revRegObjectHandle,
+                ref revDeltaObjectHandle);
+            }
+            else if (revocationRegistryDefinition != null
+                && revocationRegistryDefinitionPrivate != null
+                && revocationRegistry != null
+                && regIdx != -1
+                && regUsed != null)
+            {
+                CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig()
+                {
+                    RevRegDefObjectHandle = revocationRegistryDefinition.Handle,
+                    RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivate.Handle,
+                    RevRegObjectHandle = revocationRegistry.Handle,
+                    TailsPath = revocationRegistryDefinition.Value.TailsLocation,
+                    RegIdx = regIdx,
+                    RegUsed = regUsed
+                };
+
+                errorCode = NativeMethods.credx_create_credential(
                 credDefObject.Handle,
                 credDefPvtObject.Handle,
                 credOfferObject.Handle,
@@ -63,6 +89,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 ref credObjectHandle,
                 ref revRegObjectHandle,
                 ref revDeltaObjectHandle);
+            }
+            else
+            {
+                throw new SharedRsException("Revocation data incomplete.", ErrorCode.Input);
+            }
 
             if (errorCode != 0)
             {
@@ -108,45 +139,74 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<string> attributeNames,
             List<string> attributeRawValues,
             List<string> attributeEncodedValues,
-            string revocationRegistryDefinitionJson,
-            string revocationRegistryDefinitionPrivateJson,
-            string revocationRegistryJson,
-            long regIdx,
-            List<long> regUsed)
+            string revocationRegistryDefinitionJson = null,
+            string revocationRegistryDefinitionPrivateJson = null,
+            string revocationRegistryJson = null,
+            long regIdx = -1,
+            List<long> regUsed = null)
         {
-
             IntPtr credDefObjectHandle = new IntPtr();
             IntPtr credDefPvtObjectHandle = new IntPtr();
             IntPtr credOfferObjectHandle = new IntPtr();
             IntPtr credReqObjectHandle = new IntPtr();
-            IntPtr revocationRegistryDefinitionHandle = new IntPtr();
-            IntPtr revocationRegistryDefinitionPrivateJsonHandle = new IntPtr();
-            IntPtr revocationRegistryJsonHandle = new IntPtr();
+            
             _ = NativeMethods.credx_credential_definition_from_json(ByteBuffer.Create(credDefObjectJson), ref credDefObjectHandle);
             _ = NativeMethods.credx_credential_definition_private_from_json(ByteBuffer.Create(credDefPvtObjectJson), ref credDefPvtObjectHandle);
             _ = NativeMethods.credx_credential_offer_from_json(ByteBuffer.Create(credOfferObjectJson), ref credOfferObjectHandle);
             _ = NativeMethods.credx_credential_request_from_json(ByteBuffer.Create(credReqObjectJson), ref credReqObjectHandle);
-            _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revocationRegistryDefinitionJson), ref revocationRegistryDefinitionHandle);
-            _ = NativeMethods.credx_revocation_registry_definition_private_from_json(ByteBuffer.Create(revocationRegistryDefinitionPrivateJson), ref revocationRegistryDefinitionPrivateJsonHandle);
-            _ = NativeMethods.credx_revocation_registry_from_json(ByteBuffer.Create(revocationRegistryJson), ref revocationRegistryJsonHandle);
-
-            string x = JObject.Parse(revocationRegistryDefinitionJson)["value"].ToString();
-            string tailsLocation = JObject.Parse(x)["tailsLocation"].ToString();
-
-            CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig()
-            {
-                RevRegDefObjectHandle = revocationRegistryDefinitionHandle,
-                RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivateJsonHandle,
-                RevRegObjectHandle = revocationRegistryJsonHandle,
-                TailsPath = tailsLocation,
-                RegIdx = regIdx,
-                RegUsed = regUsed
-            };
 
             IntPtr credObjectHandle = new IntPtr();
             IntPtr revRegObjectHandle = new IntPtr();
             IntPtr revDeltaObjectHandle = new IntPtr();
-            int errorCode = NativeMethods.credx_create_credential(
+            int errorCode = 0;
+
+            if (revocationRegistryDefinitionJson == null
+                && revocationRegistryDefinitionPrivateJson == null
+                && revocationRegistryJson == null
+                && regIdx == -1
+                && regUsed == null)
+            {
+                errorCode = NativeMethods.credx_create_credential(
+                credDefObjectHandle,
+                credDefPvtObjectHandle,
+                credOfferObjectHandle,
+                credReqObjectHandle,
+                FfiStrList.Create(attributeNames),
+                FfiStrList.Create(attributeRawValues),
+                FfiStrList.Create(attributeEncodedValues),
+                new IntPtr(),
+                ref credObjectHandle,
+                ref revRegObjectHandle,
+                ref revDeltaObjectHandle);
+            }
+            else if(revocationRegistryDefinitionJson != null
+                && revocationRegistryDefinitionPrivateJson != null
+                && revocationRegistryJson != null
+                && regIdx != -1
+                && regUsed != null)
+            {
+                IntPtr revocationRegistryDefinitionHandle = new IntPtr();
+                IntPtr revocationRegistryDefinitionPrivateJsonHandle = new IntPtr();
+                IntPtr revocationRegistryJsonHandle = new IntPtr();
+
+                _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revocationRegistryDefinitionJson), ref revocationRegistryDefinitionHandle);
+                _ = NativeMethods.credx_revocation_registry_definition_private_from_json(ByteBuffer.Create(revocationRegistryDefinitionPrivateJson), ref revocationRegistryDefinitionPrivateJsonHandle);
+                _ = NativeMethods.credx_revocation_registry_from_json(ByteBuffer.Create(revocationRegistryJson), ref revocationRegistryJsonHandle);
+
+                string x = JObject.Parse(revocationRegistryDefinitionJson)["value"].ToString();
+                string tailsLocation = JObject.Parse(x)["tailsLocation"].ToString();
+
+                CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig()
+                {
+                    RevRegDefObjectHandle = revocationRegistryDefinitionHandle,
+                    RevRegDefPvtObjectHandle = revocationRegistryDefinitionPrivateJsonHandle,
+                    RevRegObjectHandle = revocationRegistryJsonHandle,
+                    TailsPath = tailsLocation,
+                    RegIdx = regIdx,
+                    RegUsed = regUsed
+                };
+
+                errorCode = NativeMethods.credx_create_credential(
                 credDefObjectHandle,
                 credDefPvtObjectHandle,
                 credOfferObjectHandle,
@@ -158,6 +218,11 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 ref credObjectHandle,
                 ref revRegObjectHandle,
                 ref revDeltaObjectHandle);
+            }
+            else
+            {
+                throw new SharedRsException("Revocation data incomplete.", ErrorCode.Input);
+            }
 
             if (errorCode != 0)
             {

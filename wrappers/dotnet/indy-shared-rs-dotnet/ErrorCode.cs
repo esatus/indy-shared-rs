@@ -8,29 +8,19 @@
         /// <returns>Matching <see cref="string"/> for each provided code to use in error messages.</returns>
         public static string ToErrorCodeString(this ErrorCode errorCode)
         {
-            switch (errorCode)
+            return errorCode switch
             {
-                case ErrorCode.Success: 
-                    return "Success";
-                case ErrorCode.Input: 
-                    return "Input";
-                case ErrorCode.IOError: 
-                    return "IOError";
-                case ErrorCode.InvalidState: 
-                    return "InvalidState";
-                case ErrorCode.Unexpected: 
-                    return "Unexpected";
-                case ErrorCode.CredentialRevoked: 
-                    return "CredentialRevoked";
-                case ErrorCode.InvalidUserRevocId: 
-                    return "InvalidUserRevocId";
-                case ErrorCode.ProofRejected: 
-                    return "ProofRejected";
-                case ErrorCode.RevocationRegistryFull: 
-                    return "RevocationRegistryFull";
-                default: 
-                    return "Unknown error code";
-            }
+                ErrorCode.Success => "Success",
+                ErrorCode.Input => "Input",
+                ErrorCode.IOError => "IOError",
+                ErrorCode.InvalidState => "InvalidState",
+                ErrorCode.Unexpected => "Unexpected",
+                ErrorCode.CredentialRevoked => "CredentialRevoked",
+                ErrorCode.InvalidUserRevocId => "InvalidUserRevocId",
+                ErrorCode.ProofRejected => "ProofRejected",
+                ErrorCode.RevocationRegistryFull => "RevocationRegistryFull",
+                _ => "Unknown error code",
+            };
         }
     }
 
