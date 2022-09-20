@@ -247,6 +247,22 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult((credJson, revRegJson, revDeltaJson));
         }
 
+        public static async Task<Credential> CreateCredentialFromJsonAsync(string credentialJson)
+        {
+            IntPtr credObjectHandle = new IntPtr();
+            int errorCode = NativeMethods.credx_credential_from_json(ByteBuffer.Create(credentialJson), ref credObjectHandle);
+
+            if (errorCode != 0)
+            {
+                string error = await ErrorApi.GetCurrentErrorAsync();
+                throw SharedRsException.FromSdkError(error);
+            }
+
+            Credential result = await CreateCredentialObjectAsync(credObjectHandle);
+
+            return result;
+        }
+
         /// <summary>
         /// Processes a given <see cref="Credential"/>.
         /// </summary>
@@ -327,9 +343,9 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 throw SharedRsException.FromSdkError(error);
             }
 
-            string credentialObjectJson = await ObjectApi.ToJsonAsync(credentialObjectHandle);
+            Credential credentialObject = await CreateCredentialObjectAsync(credentialObjectHandle);
 
-            return await Task.FromResult(credentialObjectJson);
+            return credentialObject.JsonString;
         }
 
         /// <summary>
