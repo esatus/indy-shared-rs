@@ -15,28 +15,41 @@ namespace indy_shared_rs_dotnet.Models
             public FfiStr* data;
             public static FfiStrList Create(string[] args)
             {
-                FfiStrList list = new FfiStrList()
+                FfiStrList list = new FfiStrList();
+                if(args != null && args.Any())
                 {
-                    count = (IntPtr)args.Length
-                };
-                if (args.First() != null)
+                    list.count = (IntPtr)args.Length;
+                    if (args.First() != null)
+                    {
+                        FfiStr[] ffiStrings = new FfiStr[(uint)args.Length];
+                        for (int i = 0; i < args.Length; i++)
+                        {
+                            ffiStrings[i] = FfiStr.Create(args[i]);
+                        }
+                        fixed (FfiStr* ffiStr_p = &ffiStrings[0])
+                        {
+                            list.data = ffiStr_p;
+                        }
+                    }
+                }
+                else
                 {
-                    FfiStr[] ffiStrings = new FfiStr[(uint)args.Length];
-                    for (int i = 0; i < args.Length; i++)
-                    {
-                        ffiStrings[i] = FfiStr.Create(args[i]);
-                    }
-                    fixed (FfiStr* ffiStr_p = &ffiStrings[0])
-                    {
-                        list.data = ffiStr_p;
-                    }
+                    list.count = IntPtr.Zero;
+                    list.data = null;
                 }
                 return list;
             }
 
             public static FfiStrList Create(List<string> args)
             {
-                return Create(args.ToArray());
+                if(args != null)
+                {
+                    return Create(args.ToArray());
+                }
+                else
+                {
+                    return Create(new List<string>());
+                }
             }
         }
 

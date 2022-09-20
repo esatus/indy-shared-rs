@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace indy_shared_rs_dotnet_test.IndyCredx
@@ -309,34 +310,93 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             _ = await func.Should().ThrowAsync<Exception>();
         }
 
-        [Test, TestCase(TestName = "CreatePresentationAsync() returns a presentation object as JSON string of a self attestable proof when given the propper arguments.")]
+        [Test, TestCase(TestName = "CreatePresentationAsync() returns a presentation object as JSON string for a proof with only self attest.")]
         public async Task CreatePresentationJsonAsyncOfSelfAttestProof()
         {
             //Arrange
             string nonce = await PresentationRequestApi.GenerateNonceAsync();
-            long timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-            string presReqJson = "{" +
-                "\"name\": \"proof\"," +
-                "\"version\": \"1.0\", " +
-                $"\"nonce\": \"{nonce}\"," +
-                "\"requested_attributes\": " +
+            string presReqJson = 
                 "{" +
-                    "\"reft\": " +
-                    "{" +
-                        "\"name\":\"attr\"," +
-                        "\"value\":\"myValue\"," +
-                        "\"names\": [], " +
-                        "\"non_revoked\":" +
-                        "{ " +
-                            $"\"from\": {timestamp}, " +
-                            $"\"to\": {timestamp}" +
+                    "\"name\": \"proof\"," +
+                    "\"version\": \"1.0\", " +
+                    $"\"nonce\": \"{nonce}\"," +
+                    "\"requested_attributes\": " +
+                        "{" +
+                            "\"ref1\": " +
+                            "{" +
+                            "\"name\":\"name\"," +
+                            "\"names\": [], " +
+                            "\"non_revoked\":" +
+                            "{ " +
+                            "}" +
                         "}" +
-                    "}" +
-                "}," +
-                "\"requested_predicates\": " +
+                    "}," +
+                    "\"requested_predicates\": " +
+                    "{" +
+                    "}," +
+                    "\"ver\": \"1.0\"" +
+                "}";
+
+            List<string> selfAttestNames = new()
+            {
+                "name"
+            };
+
+            List<string> selfAttestValues = new()
+            {
+                "testSelfAttestName1"
+            };
+
+            string masterSecret = await MasterSecretApi.CreateMasterSecretJsonAsync();
+
+            //Act
+            string actual = await PresentationApi.CreatePresentationAsync(
+                presReqJson,
+                new List<string>(),
+                new List<string>(),
+                selfAttestNames,
+                selfAttestValues,
+                masterSecret,
+                new List<string>(),
+                new List<string>()
+                );
+
+            //Assert
+            _ = actual.Should().NotBeNullOrEmpty();
+        }
+
+        [Test, TestCase(TestName = "CreatePresentationAsync() returns a presentation object as JSON string for a proof with only non self attest.")]
+        public async Task CreatePresentationJsonAsyncForNonSelfAttest()
+        {
+            //Arrange
+            string nonce = await PresentationRequestApi.GenerateNonceAsync();
+            long timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            string presReqJson = 
                 "{" +
-                "}," +
-                "\"ver\": \"1.0\"" +
+                    "\"name\": \"proof\"," +
+                    "\"version\": \"1.0\", " +
+                    $"\"nonce\": \"{nonce}\"," +
+                    "\"requested_attributes\": " +
+                    "{" +
+                        "\"ref1\": " +
+                        "{" +
+                            "\"name\":\"age\"," +
+                            "\"names\": [], " +
+                            "\"non_revoked\":" +
+                            "{ " +
+                                $"\"from\": {timestamp}, " +
+                                $"\"to\": {timestamp}" +
+                            "}," +
+                            "\"restrictions\":" +
+                            "[" +
+                                "{\"schema_issuer_did\": \"NcYxiDXkpYi6ov5FcYDi1e\"}" +
+                            "]" +
+                        "}" +
+                    "}," +
+                    "\"requested_predicates\": " +
+                    "{" +
+                    "}," +
+                    "\"ver\": \"1.0\"" +
                 "}";
 
             List<string> attrNames = new() { "name", "age", "sex" };
@@ -374,7 +434,128 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                 revRegDefObject.Value.TailsLocation,
                 emptyRevocationState);
 
+            List<string> credentialEntries = new()
+            {
+               JsonConvert.SerializeObject(CredentialEntry.CreateCredentialEntry(credObject, timestamp, credRevRegState))
+                //with empty timestamp and revState
+                //new CredentialEntry(credObject,0, null)
+            };
 
+            List<string> credentialProofs = new()
+            {
+                JsonConvert.SerializeObject(new CredentialProof
+                {
+                    EntryIndex = 0,
+                    IsPredicate = Convert.ToByte(false),
+                    Referent = "ref1",
+                    Reveal = Convert.ToByte(true)
+                })
+            };
+
+            string masterSecret = await MasterSecretApi.CreateMasterSecretJsonAsync();
+
+            List<string> schemas = new()
+            {
+                schemaObject.JsonString
+            };
+
+            List<string> credentialDefinitions = new()
+            {
+                credDefObject.JsonString
+            };
+
+            //Act
+            string actual = await PresentationApi.CreatePresentationAsync(
+                presReqJson,
+                credentialEntries,
+                credentialProofs,
+                null,
+                null,
+                masterSecret,
+                schemas,
+                credentialDefinitions
+                );
+
+            //Assert
+            _ = actual.Should().NotBeNullOrEmpty();
+        }
+
+        [Test, TestCase(TestName = "CreatePresentationAsync() returns a presentation object as JSON string for a proof with self attest and non self attest.")]
+        public async Task CreatePresentationJsonAsyncForAnyProof()
+        {
+            //Arrange
+            string nonce = await PresentationRequestApi.GenerateNonceAsync();
+            long timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            string presReqJson = 
+                "{" +
+                    "\"name\": \"proof\"," +
+                    "\"version\": \"1.0\", " +
+                    $"\"nonce\": \"{nonce}\"," +
+                    "\"requested_attributes\": " +
+                    "{" +
+                        "\"ref1\": " +
+                        "{" +
+                            "\"name\":\"name\"," +
+                            "\"names\": [], " +
+                            "\"non_revoked\":" +
+                            "{ " +
+                            "}" +
+                        "}," +
+                        "\"ref2\": " +
+                        "{" +
+                            "\"name\":\"age\"," +
+                            "\"names\": [], " +
+                            "\"non_revoked\":" +
+                            "{ " +
+                                $"\"from\": {timestamp}, " +
+                                $"\"to\": {timestamp}" +
+                            "}," +
+                            "\"restrictions\":" +
+                            "[" +
+                                "{\"schema_issuer_did\": \"NcYxiDXkpYi6ov5FcYDi1e\"}" +
+                            "]" +
+                        "}" +
+                    "}," +
+                    "\"requested_predicates\": " +
+                    "{" +
+                    "}," +
+                    "\"ver\": \"1.0\"" +
+                "}";
+
+            List<string> attrNames = new() { "name", "age", "sex" };
+            List<string> attrNamesRaw = new() { "Alex", "20", "male" };
+            List<string> attrNamesEnc = await CredentialApi.EncodeCredentialAttributesAsync(attrNamesRaw);
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string proverDid = "VsKV7grR1BUE29mG2Fm2kX";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPathForRevocation = null;
+
+            MasterSecret masterSecretObject = await MasterSecretApi.CreateMasterSecretAsync();
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+            (CredentialDefinition credDefObject, CredentialDefinitionPrivate credDefPvtObject, CredentialKeyCorrectnessProof keyProofObject) =
+                await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
+
+            string schemaId = await CredentialDefinitionApi.GetCredentialDefinitionAttributeAsync(credDefObject, "schema_id");
+            CredentialOffer credOfferObject = await CredentialOfferApi.CreateCredentialOfferAsync(schemaId, credDefObject, keyProofObject);
+            (CredentialRequest credRequestObject, _) =
+                await CredentialRequestApi.CreateCredentialRequestAsync(proverDid, credDefObject, masterSecretObject, "testMasterSecretName", credOfferObject);
+
+            (RevocationRegistryDefinition revRegDefObject, RevocationRegistryDefinitionPrivate revRegDefPvtObject, RevocationRegistry revRegObject, RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDefObject, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPathForRevocation);
+            (Credential credObject, _, _) =
+                await CredentialApi.CreateCredentialAsync(credDefObject, credDefPvtObject, credOfferObject, credRequestObject,
+                attrNames, attrNamesRaw, attrNamesEnc, revRegDefObject, revRegDefPvtObject, revRegObject, 1, new List<long>() { 1 });
+
+            CredentialRevocationState emptyRevocationState = new() { Handle = new IntPtr() };
+            CredentialRevocationState credRevRegState = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject,
+                revRegDeltaObject,
+                credObject.Signature.RCredential.I,
+                timestamp,
+                revRegDefObject.Value.TailsLocation,
+                emptyRevocationState);
 
             List<string> credentialEntries = new()
             {
@@ -387,16 +568,16 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             {
                 JsonConvert.SerializeObject(new CredentialProof
                 {
-                    EntryIndex = 1,
+                    EntryIndex = 0,
                     IsPredicate = Convert.ToByte(false),
-                    Referent = "testReferent",
+                    Referent = "ref2",
                     Reveal = Convert.ToByte(true)
                 })
             };
 
             List<string> selfAttestNames = new()
             {
-                "attr"
+                "name"
             };
 
             List<string> selfAttestValues = new()
@@ -419,17 +600,16 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Act
             string actual = await PresentationApi.CreatePresentationAsync(
                 presReqJson,
-                new List<string>(),
-                new List<string>(),
+                credentialEntries,
+                credentialProofs,
                 selfAttestNames,
                 selfAttestValues,
                 masterSecret,
-                new List<string>(),
-                new List<string>()
+                schemas,
+                credentialDefinitions
                 );
 
             //Assert
-            Console.WriteLine(actual);
             _ = actual.Should().NotBeNullOrEmpty();
         }
 

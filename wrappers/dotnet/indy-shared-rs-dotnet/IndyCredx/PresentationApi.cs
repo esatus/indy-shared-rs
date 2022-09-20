@@ -39,49 +39,16 @@ namespace indy_shared_rs_dotnet.IndyCredx
             List<IntPtr> credDefHandles = (from credDef in credDefs
                                          select credDef.Handle).ToList();
 
-            int errorCode;
-            if (credentialEntries != null && credentialEntries.Any())
-            {
-                if (selfAttestNames != null && selfAttestNames.Any())
-                {
-                    errorCode = NativeMethods.credx_create_presentation(
-                        presentationRequest.Handle,
-                        FfiCredentialEntryList.Create(credentialEntries),
-                        FfiCredentialProveList.Create(credentialProofs),
-                        FfiStrList.Create(selfAttestNames),
-                        FfiStrList.Create(selfAttestValues),
-                        masterSecret.Handle,
-                        FfiUIntList.Create(schemaHandles),
-                        FfiUIntList.Create(credDefHandles),
-                        ref presentationObjectHandle);
-                }
-                else
-                {
-                    errorCode = NativeMethods.credx_create_presentation(
-                        presentationRequest.Handle,
-                        FfiCredentialEntryList.Create(credentialEntries),
-                        FfiCredentialProveList.Create(credentialProofs),
-                        IntPtr.Zero,
-                        IntPtr.Zero,
-                        masterSecret.Handle,
-                        FfiUIntList.Create(schemaHandles),
-                        FfiUIntList.Create(credDefHandles),
-                        ref presentationObjectHandle);
-                }
-            }
-            else
-            {
-                errorCode = NativeMethods.credx_create_presentation(
-                    presentationRequest.Handle,
-                    FfiCredentialEntryList.Create(new List<CredentialEntry>()),
-                    FfiCredentialProveList.Create(new List<CredentialProof>()),
-                    FfiStrList.Create(selfAttestNames),
-                    FfiStrList.Create(selfAttestValues),
-                    masterSecret.Handle,
-                    FfiUIntList.Create(new List<IntPtr>()),
-                    FfiUIntList.Create(new List<IntPtr>()),
-                    ref presentationObjectHandle);
-            }
+            int errorCode = NativeMethods.credx_create_presentation(
+                presentationRequest.Handle,
+                FfiCredentialEntryList.Create(credentialEntries),
+                FfiCredentialProveList.Create(credentialProofs),
+                FfiStrList.Create(selfAttestNames),
+                FfiStrList.Create(selfAttestValues),
+                masterSecret.Handle,
+                FfiUIntList.Create(schemaHandles),
+                FfiUIntList.Create(credDefHandles),
+                ref presentationObjectHandle);
 
             if (errorCode != 0)
             {
@@ -147,49 +114,16 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 credDefHandles.Add(newCredDefHandle);
             }
 
-            int errorCode;
-            if (credentialEntries != null && credentialEntries.Any())
-            {
-                if(selfAttestNames != null && selfAttestNames.Any())
-                {
-                    errorCode = NativeMethods.credx_create_presentation(
-                        presentationRequestHandle,
-                        FfiCredentialEntryList.Create(credentialEntries),
-                        FfiCredentialProveList.Create(credentialProofs),
-                        FfiStrList.Create(selfAttestNames),
-                        FfiStrList.Create(selfAttestValues),
-                        masterSecretHandle,
-                        FfiUIntList.Create(schemaHandles),
-                        FfiUIntList.Create(credDefHandles),
-                        ref presentationObjectHandle);
-                }
-                else
-                {
-                    errorCode = NativeMethods.credx_create_presentation(
-                        presentationRequestHandle,
-                        FfiCredentialEntryList.Create(credentialEntries),
-                        FfiCredentialProveList.Create(credentialProofs),
-                        IntPtr.Zero,
-                        IntPtr.Zero,
-                        masterSecretHandle,
-                        FfiUIntList.Create(schemaHandles),
-                        FfiUIntList.Create(credDefHandles),
-                        ref presentationObjectHandle);
-                }
-            }
-            else
-            {
-                errorCode = NativeMethods.credx_create_presentation(
-                    presentationRequestHandle,
-                    FfiCredentialEntryList.Create(new List<CredentialEntry>()),
-                    FfiCredentialProveList.Create(new List<CredentialProof>()),
-                    FfiStrList.Create(selfAttestNames),
-                    FfiStrList.Create(selfAttestValues),
-                    masterSecretHandle,
-                    FfiUIntList.Create(new List<IntPtr>()),
-                    FfiUIntList.Create(new List<IntPtr>()),
-                    ref presentationObjectHandle);
-            }
+            int errorCode = NativeMethods.credx_create_presentation(
+                presentationRequestHandle,
+                FfiCredentialEntryList.Create(credentialEntries),
+                FfiCredentialProveList.Create(credentialProofs),
+                FfiStrList.Create(selfAttestNames),
+                FfiStrList.Create(selfAttestValues),
+                masterSecretHandle,
+                FfiUIntList.Create(schemaHandles),
+                FfiUIntList.Create(credDefHandles),
+                ref presentationObjectHandle);
 
             if (errorCode != 0)
             {
