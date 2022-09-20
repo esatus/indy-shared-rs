@@ -73,13 +73,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
             {
                 errorCode = NativeMethods.credx_create_presentation(
                     presentationRequest.Handle,
-                    IntPtr.Zero,
-                    IntPtr.Zero,
+                    FfiCredentialEntryList.Create(new List<CredentialEntry>()),
+                    FfiCredentialProveList.Create(new List<CredentialProof>()),
                     FfiStrList.Create(selfAttestNames),
                     FfiStrList.Create(selfAttestValues),
                     masterSecret.Handle,
-                    IntPtr.Zero,
-                    IntPtr.Zero,
+                    FfiUIntList.Create(new List<IntPtr>()),
+                    FfiUIntList.Create(new List<IntPtr>()),
                     ref presentationObjectHandle);
             }
 
@@ -181,13 +181,13 @@ namespace indy_shared_rs_dotnet.IndyCredx
             {
                 errorCode = NativeMethods.credx_create_presentation(
                     presentationRequestHandle,
-                    IntPtr.Zero,
-                    IntPtr.Zero,
+                    FfiCredentialEntryList.Create(new List<CredentialEntry>()),
+                    FfiCredentialProveList.Create(new List<CredentialProof>()),
                     FfiStrList.Create(selfAttestNames),
                     FfiStrList.Create(selfAttestValues),
                     masterSecretHandle,
-                    IntPtr.Zero,
-                    IntPtr.Zero,
+                    FfiUIntList.Create(new List<IntPtr>()),
+                    FfiUIntList.Create(new List<IntPtr>()),
                     ref presentationObjectHandle);
             }
 

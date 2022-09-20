@@ -216,21 +216,30 @@ namespace indy_shared_rs_dotnet.Models
         {
             public IntPtr count;
             public FfiCredentialEntry* data;
+
             public static FfiCredentialEntryList Create(CredentialEntry[] args)
             {
-                FfiCredentialEntryList list = new FfiCredentialEntryList()
+                FfiCredentialEntryList list = new FfiCredentialEntryList();
+
+                if(args != null && args.Any())
                 {
-                    count = (IntPtr)args.Length
-                };
-                FfiCredentialEntry[] ffiCredentialEntries = new FfiCredentialEntry[args.Length];
-                for (int i = 0; i < args.Length; i++)
-                {
-                    ffiCredentialEntries[i] = FfiCredentialEntry.Create(args[i]);
+                    list.count = (IntPtr)args.Length;
+                    FfiCredentialEntry[] ffiCredentialEntries = new FfiCredentialEntry[args.Length];
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        ffiCredentialEntries[i] = FfiCredentialEntry.Create(args[i]);
+                    }
+                    fixed (FfiCredentialEntry* ffiEntryP = &ffiCredentialEntries[0])
+                    {
+                        list.data = ffiEntryP;
+                    }
                 }
-                fixed (FfiCredentialEntry* ffiEntryP = &ffiCredentialEntries[0])
+                else
                 {
-                    list.data = ffiEntryP;
+                    list.count = IntPtr.Zero;
+                    list.data = null;
                 }
+                
                 return list;
             }
 
@@ -245,21 +254,30 @@ namespace indy_shared_rs_dotnet.Models
         {
             public IntPtr count;
             public FfiCredentialProof* data;
+
             public static FfiCredentialProveList Create(CredentialProof[] args)
             {
-                FfiCredentialProveList list = new FfiCredentialProveList()
+                FfiCredentialProveList list = new FfiCredentialProveList();
+
+                if(args != null && args.Any())
                 {
-                    count = (IntPtr)args.Length
-                };
-                FfiCredentialProof[] ffiCredentialProves = new FfiCredentialProof[args.Length];
-                for (int i = 0; i < args.Length; i++)
-                {
-                    ffiCredentialProves[i] = FfiCredentialProof.Create(args[i]);
+                    list.count = (IntPtr)args.Length;
+                    FfiCredentialProof[] ffiCredentialProves = new FfiCredentialProof[args.Length];
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        ffiCredentialProves[i] = FfiCredentialProof.Create(args[i]);
+                    }
+                    fixed (FfiCredentialProof* ffiProveP = &ffiCredentialProves[0])
+                    {
+                        list.data = ffiProveP;
+                    }
                 }
-                fixed (FfiCredentialProof* ffiProveP = &ffiCredentialProves[0])
+                else
                 {
-                    list.data = ffiProveP;
+                    list.count = IntPtr.Zero;
+                    list.data = null;
                 }
+
                 return list;
             }
 
@@ -274,16 +292,25 @@ namespace indy_shared_rs_dotnet.Models
         {
             public IntPtr count;
             public IntPtr* data;
+
             public static FfiUIntList Create(IntPtr[] args)
             {
-                FfiUIntList list = new FfiUIntList()
+                FfiUIntList list = new FfiUIntList();
+
+                if(args != null && args.Any())
                 {
-                    count = (IntPtr)args.Length
-                };
-                fixed (IntPtr* uintP = &args[0])
-                {
-                    list.data = uintP;
+                    list.count = (IntPtr)args.Length;
+                    fixed (IntPtr* uintP = &args[0])
+                    {
+                        list.data = uintP;
+                    }
                 }
+                else
+                {
+                    list.count = IntPtr.Zero;
+                    list.data = null;
+                }
+
                 return list;
             }
 

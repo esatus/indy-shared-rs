@@ -333,33 +333,8 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                         "}" +
                     "}" +
                 "}," +
-                "\"revealed_attrs_groups\": {}," +
                 "\"requested_predicates\": " +
                 "{" +
-                    "\"light\": " +
-                    "{" +
-                        "\"name\":\"pred\"," +
-                        "\"p_type\":\">=\"," +
-                        "\"p_value\":18," +
-                        "\"non_revoked\":" +
-                        "{ " +
-                            $"\"from\": {timestamp}, " +
-                            $"\"to\": {timestamp}" +
-                        "}," +
-                        "\"restrictions\":" +
-                        "[" +
-                            "{\"schema_name\": \"blubb\"," +
-                            "\"schema_version\": \"1.0\"}," +
-                            "{\"cred_def_id\": \"blubb2\"," +
-                            "\"schema_version\": \"2.0\"}," +
-                            "{\"not_an_attribute\": \"should Fail\"}" +
-                        "]" +
-                    "}" +
-                "}," +
-                "\"non_revoked\": " +
-                "{ " +
-                    $"\"from\": {timestamp}," +
-                    $"\"to\": {timestamp}" +
                 "}," +
                 "\"ver\": \"1.0\"" +
                 "}";
@@ -421,7 +396,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             List<string> selfAttestNames = new()
             {
-                "testSelfAttestName1"
+                "attr"
             };
 
             List<string> selfAttestValues = new()
@@ -444,16 +419,17 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             //Act
             string actual = await PresentationApi.CreatePresentationAsync(
                 presReqJson,
-                credentialEntries,
-                credentialProofs,
+                new List<string>(),
+                new List<string>(),
                 selfAttestNames,
                 selfAttestValues,
                 masterSecret,
-                schemas,
-                credentialDefinitions
+                new List<string>(),
+                new List<string>()
                 );
 
             //Assert
+            Console.WriteLine(actual);
             _ = actual.Should().NotBeNullOrEmpty();
         }
 
