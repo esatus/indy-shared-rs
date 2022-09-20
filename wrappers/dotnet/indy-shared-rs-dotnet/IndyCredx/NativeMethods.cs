@@ -128,6 +128,30 @@ namespace indy_shared_rs_dotnet.IndyCredx
             ref IntPtr presentationObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_presentation(
+            IntPtr presReqObjectHandle,
+            FfiCredentialEntryList credentials,
+            FfiCredentialProveList credentialsProof,
+            IntPtr selfAttestNames,
+            IntPtr selfAttestValues,
+            IntPtr masterSecret,
+            FfiUIntList schemas,
+            FfiUIntList credDefs,
+            ref IntPtr presentationObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+        internal static extern int credx_create_presentation(
+            IntPtr presReqObjectHandle,
+            IntPtr credentials,
+            IntPtr credentialsProof,
+            FfiStrList selfAttestNames,
+            FfiStrList selfAttestValues,
+            IntPtr masterSecret,
+            IntPtr schemas,
+            IntPtr credDefs,
+            ref IntPtr presentationObjectHandle);
+
+        [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
         internal static extern int credx_presentation_from_json(ByteBuffer presentationJson, ref IntPtr presentationObjectHandle);
 
         [DllImport(Consts.CREDX_LIB_NAME, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
