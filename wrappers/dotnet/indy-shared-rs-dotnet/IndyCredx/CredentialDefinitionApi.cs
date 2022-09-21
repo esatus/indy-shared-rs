@@ -139,7 +139,6 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
-        #region private methods
         /// <summary>
         /// Creates a <see cref="CredentialDefinition"/> object from json <see cref="string"/>.
         /// </summary>
@@ -161,6 +160,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             return await Task.FromResult(result);
         }
 
+        #region private methods
         private static async Task<CredentialDefinition> CreateCredentialDefinitonObject(IntPtr objectHandle)
         {
             string credDefJson = await ObjectApi.ToJsonAsync(objectHandle);

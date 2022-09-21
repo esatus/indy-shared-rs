@@ -258,7 +258,14 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiCredentialEntryList Create(List<CredentialEntry> args)
             {
-                return Create(args.ToArray());
+                if (args != null)
+                {
+                    return Create(args.ToArray());
+                }
+                else
+                {
+                    return Create(new List<CredentialEntry>());
+                }
             }
         }
 
@@ -296,7 +303,14 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiCredentialProveList Create(List<CredentialProof> args)
             {
-                return Create(args.ToArray());
+                if (args != null)
+                {
+                    return Create(args.ToArray());
+                }
+                else
+                {
+                    return Create(new List<CredentialProof>());
+                }
             }
         }
 
@@ -329,7 +343,14 @@ namespace indy_shared_rs_dotnet.Models
 
             public static FfiUIntList Create(List<IntPtr> args)
             {
-                return Create(args.ToArray());
+                if (args != null)
+                {
+                    return Create(args.ToArray());
+                }
+                else
+                {
+                    return Create(new List<IntPtr>());
+                }
             }
         }
 
@@ -338,27 +359,42 @@ namespace indy_shared_rs_dotnet.Models
         {
             public IntPtr count;
             public FfiRevocationEntry* data;
-            public static FfiRevocationEntryList Create(RevocationRegistryEntry[] args)
+            public static FfiRevocationEntryList Create(RevocationRegistryEntry[] args = null)
             {
-                FfiRevocationEntryList list = new FfiRevocationEntryList()
+                FfiRevocationEntryList list = new FfiRevocationEntryList();
+
+                if (args != null && args.Any())
                 {
-                    count = (IntPtr)args.Length
-                };
-                FfiRevocationEntry[] ffiRevocationEntries = new FfiRevocationEntry[args.Length];
-                for (int i = 0; i < args.Length; i++)
-                {
-                    ffiRevocationEntries[i] = FfiRevocationEntry.Create(args[i]);
+                    list.count = (IntPtr)args.Length;
+                    FfiRevocationEntry[] ffiRevocationEntries = new FfiRevocationEntry[args.Length];
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        ffiRevocationEntries[i] = FfiRevocationEntry.Create(args[i]);
+                    }
+                    fixed (FfiRevocationEntry* ffiEntryP = &ffiRevocationEntries[0])
+                    {
+                        list.data = ffiEntryP;
+                    }
                 }
-                fixed (FfiRevocationEntry* ffiEntryP = &ffiRevocationEntries[0])
+                else
                 {
-                    list.data = ffiEntryP;
+                    list.count = IntPtr.Zero;
+                    list.data = null;
                 }
+
                 return list;
             }
 
             public static FfiRevocationEntryList Create(List<RevocationRegistryEntry> args)
             {
-                return Create(args.ToArray());
+                if (args != null)
+                {
+                    return Create(args.ToArray());
+                }
+                else
+                {
+                    return Create(new List<RevocationRegistryEntry>());
+                }
             }
         }
     }
