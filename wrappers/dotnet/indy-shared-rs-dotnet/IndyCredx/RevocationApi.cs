@@ -524,7 +524,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
         /// Get the value of an <see cref="RevocationRegistryDefinition"/> attribute (Supported attribute names so far: id, max_cred_num, tails_hash or tails_location).
         /// </summary>
         /// <param name="revRegDefJson">Revocation registry definition from which the attribute is requested.</param>
-        /// <param name="attributeName">Name of the requested attribute.</param>
+        /// <param name="attributeName">Name of the requested attribute. Possible values are: id, max_cred_num, tails_hash, tails_location. </param>
         /// <exception cref="SharedRsException">Throws when provided <paramref name="attributeName"/> or <paramref name="revRegDefObject"/> are invalid.</exception>
         /// <returns>The value of the requested <paramref name="attributeName"/> from the provided <paramref name="revRegDefObject"/>.</returns>
         public static async Task<string> GetRevocationRegistryDefinitionAttributeAsync(

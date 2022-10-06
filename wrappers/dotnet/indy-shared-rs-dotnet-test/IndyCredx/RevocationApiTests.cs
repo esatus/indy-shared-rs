@@ -862,7 +862,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
         #region Tests for GetRevocationRegistryDefinitionAttribute
         [Test, TestCase(TestName = "GetRevocationRegistryDefinitionAttributeAsync() works for attribute name 'id'.")]
-        public async Task GetRevocationRegistryDefinitionAttributeAsyncWorks()
+        public async Task GetRevocationRegistryDefinitionAttributeAsyncIdWorks()
         {
             //Arrange
             List<string> attrNames = new() { "gender", "age", "sex" };
@@ -886,6 +886,99 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             string actual = await RevocationApi.GetRevocationRegistryDefinitionAttributeAsync(
                 revRegDefObject,
                 "id"
+                );
+
+            //Assert
+            actual.Should().NotBeNull();
+        }
+
+        [Test, TestCase(TestName = "GetRevocationRegistryDefinitionAttributeAsync() works for attribute name 'max_cred_num'.")]
+        public async Task GetRevocationRegistryDefinitionAttributeAsyncMaxCredNumWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
+
+            (RevocationRegistryDefinition revRegDefObject,
+                _,
+                _,
+                _) = await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            //Act
+            string actual = await RevocationApi.GetRevocationRegistryDefinitionAttributeAsync(
+                revRegDefObject,
+                "max_cred_num"
+                );
+
+            //Assert
+            actual.Should().NotBeNull();
+        }
+
+        [Test, TestCase(TestName = "GetRevocationRegistryDefinitionAttributeAsync() works for attribute name 'tails_hash'.")]
+        public async Task GetRevocationRegistryDefinitionAttributeAsyncTailsHashWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
+
+            (RevocationRegistryDefinition revRegDefObject,
+                _,
+                _,
+                _) = await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            //Act
+            string actual = await RevocationApi.GetRevocationRegistryDefinitionAttributeAsync(
+                revRegDefObject,
+                "tails_hash"
+                );
+
+            //Assert
+            actual.Should().NotBeNull();
+        }
+
+        [Test, TestCase(TestName = "GetRevocationRegistryDefinitionAttributeAsync() works for attribute name 'tails_location'.")]
+        public async Task GetRevocationRegistryDefinitionAttributeAsyncTailsLocationWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
+
+            (RevocationRegistryDefinition revRegDefObject,
+                _,
+                _,
+                _) = await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            //Act
+            string actual = await RevocationApi.GetRevocationRegistryDefinitionAttributeAsync(
+                revRegDefObject,
+                "tails_location"
                 );
 
             //Assert
