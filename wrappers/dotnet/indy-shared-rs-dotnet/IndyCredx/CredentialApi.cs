@@ -64,8 +64,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             else if (revocationRegistryDefinition != null
                 && revocationRegistryDefinitionPrivate != null
                 && revocationRegistry != null
-                && regIdx != -1
-                && regUsed != null)
+                && regIdx != -1)
             {
                 CredentialRevocationConfig credRevInfo = new CredentialRevocationConfig()
                 {
