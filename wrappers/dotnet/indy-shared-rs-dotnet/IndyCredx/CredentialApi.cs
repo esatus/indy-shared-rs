@@ -181,8 +181,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             else if(revocationRegistryDefinitionJson != null
                 && revocationRegistryDefinitionPrivateJson != null
                 && revocationRegistryJson != null
-                && regIdx != -1
-                && regUsed != null)
+                && regIdx != -1)
             {
                 IntPtr revocationRegistryDefinitionHandle = new IntPtr();
                 IntPtr revocationRegistryDefinitionPrivateJsonHandle = new IntPtr();
