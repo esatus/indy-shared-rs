@@ -401,7 +401,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             long revRegIndex,
             long timestamp,
             string tailsPath,
-            CredentialRevocationState revState)
+            CredentialRevocationState revState = null)
         {
             IntPtr credRevStateObjectHandle = new IntPtr();
 
@@ -411,7 +411,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
                 revRegIndex,
                 timestamp,
                 FfiStr.Create(tailsPath),
-                revState.Handle,
+                revState == null? new IntPtr() : revState.Handle,
                 ref credRevStateObjectHandle);
 
             if (errorCode != 0)
@@ -442,7 +442,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             long revRegIndex,
             long timestamp,
             string tailsPath,
-            string revStateJson)
+            string revStateJson = null)
         {
             IntPtr credRevStateObjectHandle = new IntPtr();
             IntPtr revRegDefHandle = new IntPtr();
@@ -451,7 +451,8 @@ namespace indy_shared_rs_dotnet.IndyCredx
 
             _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revRegDefHandle);
             _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revRegDeltaJson), ref revRegDeltaHandle);
-            _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revStateJson), ref revStateHandle);
+            if(revStateJson != null)
+                _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revStateJson), ref revStateHandle);
 
             int errorCode = NativeMethods.credx_create_or_update_revocation_state(
                 revRegDefHandle,

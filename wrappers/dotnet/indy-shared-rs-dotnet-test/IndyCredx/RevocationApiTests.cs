@@ -700,6 +700,40 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             actual.Should().NotBeNull();
         }
 
+        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() works with rev state equals null.")]
+        public async Task CreateOrUpdateRevocationStateNullAsyncWorks()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
+
+
+            (RevocationRegistryDefinition revRegDefObject, _, _, RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            //Act
+            CredentialRevocationState actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject,
+                revRegDeltaObject,
+                0,
+                0,
+                revRegDefObject.Value.TailsLocation,
+                null
+                );
+
+            //Assert
+            actual.Should().NotBeNull();
+        }
+
         [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() throws SharedRsException when revocation registry delta is invalid.")]
         public async Task CreateOrUpdateRevocationStateAsyncThrowsException()
         {
@@ -736,7 +770,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             await act.Should().ThrowAsync<SharedRsException>();
         }
 
-        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() works.")]
+        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateJsonAsync() works.")]
         public async Task CreateOrUpdateRevocationStateAsyncWorksWithJson()
         {
             //Arrange
@@ -772,7 +806,41 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             actual.Should().NotBeNull();
         }
 
-        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateAsync() throws SharedRsException when revocation registry delta is invalid.")]
+        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateJsonAsync() works with rev state equals null.")]
+        public async Task CreateOrUpdateRevocationStateNullAsyncWorksWithJson()
+        {
+            //Arrange
+            List<string> attrNames = new() { "gender", "age", "sex" };
+            string issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
+            string schemaName = "gvt";
+            string schemaVersion = "1.0";
+            string testTailsPath = null;
+
+            Schema schemaObject = await SchemaApi.CreateSchemaAsync(issuerDid, schemaName, schemaVersion, attrNames, 0);
+
+            (CredentialDefinition credDef,
+                _,
+                _) = await CredentialDefinitionApi.CreateCredentialDefinitionAsync(issuerDid, schemaObject, "tag", SignatureType.CL, true);
+
+
+            (RevocationRegistryDefinition revRegDefObject, _, _, RevocationRegistryDelta revRegDeltaObject) =
+                await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
+
+            //Act
+            CredentialRevocationState actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject,
+                revRegDeltaObject,
+                0,
+                0,
+                revRegDefObject.Value.TailsLocation,
+                null
+                );
+
+            //Assert
+            actual.Should().NotBeNull();
+        }
+
+        [Test, TestCase(TestName = "CreateOrUpdateRevocationStateJsonAsync() throws SharedRsException when revocation registry delta is invalid.")]
         public async Task CreateOrUpdateRevocationStateAsyncThrowsExceptionWithJson()
         {
             //Arrange
