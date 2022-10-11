@@ -683,18 +683,23 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
 
             (RevocationRegistryDefinition revRegDefObject, _, _, RevocationRegistryDelta revRegDeltaObject) =
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
-
-            CredentialRevocationState revState = new();
+            
+            CredentialRevocationState init = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject,
+                revRegDeltaObject,
+                1,
+                100,
+                revRegDefObject.Value.TailsLocation,
+                null);
 
             //Act
             CredentialRevocationState actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
                 revRegDefObject,
                 revRegDeltaObject,
-                0,
-                0,
+                2,
+                400,
                 revRegDefObject.Value.TailsLocation,
-                revState
-                );
+                init);
 
             //Assert
             actual.Should().NotBeNull();
@@ -724,11 +729,10 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             CredentialRevocationState actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
                 revRegDefObject,
                 revRegDeltaObject,
-                0,
-                0,
+                1,
+                200,
                 revRegDefObject.Value.TailsLocation,
-                null
-                );
+                null);
 
             //Assert
             actual.Should().NotBeNull();
@@ -763,8 +767,7 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                 0,
                 0,
                 revRegDefObject.Value.TailsLocation,
-                revState
-                );
+                revState);
 
             //Assert
             await act.Should().ThrowAsync<SharedRsException>();
@@ -790,17 +793,22 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             (RevocationRegistryDefinition revRegDefObject, _, _, RevocationRegistryDelta revRegDeltaObject) =
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
-            CredentialRevocationState revState = new();
+            string init = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject.JsonString,
+                revRegDeltaObject.JsonString,
+                1,
+                200,
+                revRegDefObject.Value.TailsLocation,
+                null);
 
             //Act
-            CredentialRevocationState actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
-                revRegDefObject,
-                revRegDeltaObject,
-                0,
-                0,
+            string actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject.JsonString,
+                revRegDeltaObject.JsonString,
+                2,
+                400,
                 revRegDefObject.Value.TailsLocation,
-                revState
-                );
+                init);
 
             //Assert
             actual.Should().NotBeNull();
@@ -827,14 +835,13 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
             //Act
-            CredentialRevocationState actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
-                revRegDefObject,
-                revRegDeltaObject,
-                0,
-                0,
+            string actual = await RevocationApi.CreateOrUpdateRevocationStateAsync(
+                revRegDefObject.JsonString,
+                revRegDeltaObject.JsonString,
+                1,
+                200,
                 revRegDefObject.Value.TailsLocation,
-                null
-                );
+                null);
 
             //Assert
             actual.Should().NotBeNull();
@@ -860,16 +867,14 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             (RevocationRegistryDefinition revRegDefObject, _, _, RevocationRegistryDelta revRegDeltaObject) =
                 await RevocationApi.CreateRevocationRegistryAsync(issuerDid, credDef, "test_tag", RegistryType.CL_ACCUM, IssuerType.ISSUANCE_BY_DEFAULT, 99, testTailsPath);
 
-            CredentialRevocationState revState = new();
-
             //Act
             Func<Task> act = async () => await RevocationApi.CreateOrUpdateRevocationStateAsync(
-                revRegDefObject,
-                new(),
-                0,
-                0,
+                revRegDefObject.JsonString,
+                "",
+                1,
+                200,
                 revRegDefObject.Value.TailsLocation,
-                revState
+                null
                 );
 
             //Assert
