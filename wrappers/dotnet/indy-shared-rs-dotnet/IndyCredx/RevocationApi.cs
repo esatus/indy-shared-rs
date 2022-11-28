@@ -452,7 +452,7 @@ namespace indy_shared_rs_dotnet.IndyCredx
             _ = NativeMethods.credx_revocation_registry_definition_from_json(ByteBuffer.Create(revRegDefJson), ref revRegDefHandle);
             _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revRegDeltaJson), ref revRegDeltaHandle);
             if(revStateJson != null)
-                _ = NativeMethods.credx_revocation_registry_delta_from_json(ByteBuffer.Create(revStateJson), ref revStateHandle);
+                _ = NativeMethods.credx_revocation_state_from_json(ByteBuffer.Create(revStateJson), ref revStateHandle);
 
             int errorCode = NativeMethods.credx_create_or_update_revocation_state(
                 revRegDefHandle,

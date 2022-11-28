@@ -250,17 +250,17 @@ namespace indy_shared_rs_dotnet_test.IndyCredx
             result.Should().NotBeNull();
         }
 
-        [Test, TestCase(TestName = "EncodeCredentialAttributesAsync() throws InvalidOperationException when given an empty list.")]
-        public async Task EncodeCredentialAttributesAsyncThrowsException()
+        [Test, TestCase(TestName = "EncodeCredentialAttributesAsync() works with empty list.")]
+        public async Task EncodeCredentialAttributesAsyncWorksWithEmptyList()
         {
             //Arrange
             List<string> rawAttributes = new List<string>();
 
             //Act
-            Func<Task> act = async () => await CredentialApi.EncodeCredentialAttributesAsync(rawAttributes);
+            List<string> result = await CredentialApi.EncodeCredentialAttributesAsync(rawAttributes);
 
             //Assert
-            await act.Should().ThrowAsync<InvalidOperationException>();
+            result.Should().NotBeNull();
         }
         #endregion
 
